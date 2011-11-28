@@ -1,0 +1,61 @@
+(Sorry this is still in Italian...)
+
+* Il modulo necessita un testing approfondito delle funzionalità avanzate
+* Lasciar personalizzare le espressioni regolari
+    rendere possibile cambiare il separatore tra le sottosezioni
+    rendere possibile trimmare virgolette attorno al valore di un'opzione
+* Lasciar personalizzare le tuple e il default di get_bool
+* Fare un commento introduttivo automatico alle opzioni e sezioni aggiunte con
+     'add' o 'upgrade'?
+    ad esempio: # {These options have|This section has} been added
+      automatically
+    ricordarsi che bisogna lasciar personalizzare il marker per i commenti
+* Migliorare le eccezioni
+   confrontarle con le eccezioni lanciate da configparser
+   soprattutto derivarle da eccezioni piu' specifiche che Exception
+   impostare piu' argomenti, invece che solo il messaggio
+* Disabilitare con __setattr__ la possibilita' di modificare gli attributi
+     direttamente?
+* Rendere possibile riordinare le sezioni e le opzioni?
+    ad esempio in ordine alfabetico ecc.
+* Permettere di impostare un'indentazione automatica per sezioni e opzioni
+    magari con una misura relativa rispetto alla sezione madre
+    nell'aggiornamento di un file esistente si potrebbe recuperare
+      l'indentazione esistente (mettendola in un gruppo a se' nella regexp)
+* Confrontare con configparse per le funzionalita' mancanti
+    commenti inline?
+* Forse la modalita' reset potrebbe commentare le righe non piu' presenti,
+    invece che cancellarle... (vedi anche clean mode)
+* Clean mode: scrivendo un file cancellare (o commentare) le righe invalide
+    commentare (o cancellare) anche le opzioni non piu' esistenti?
+* Implementare qualcos'altro di http://docs.python.org/py3k/reference/datamodel.html
+    3.3.2. Customizing attribute access
+      object.__getattr__(self, name)
+      object.__getattribute__(self, name)
+      object.__setattr__(self, name, value)
+      object.__delattr__(self, name)
+      object.__dir__(self)
+    3.3.6. Emulating container types
+      object.__len__(self)
+      object.__reversed__(self)
+* Esportando su un file nuovo, dare la possibilita' di inserire commenti?
+    con un metodo si potrebbe creare un dizionario apposito per i commenti
+* Rendere possibile l'inclusione di altri file di configurazione dai file
+    stessi?
+    ad esempio con:
+      include /etc/config.conf
+    controllare le inclusioni circolari
+* Nel caso di un'opzione ripetuta, creare una lista invece di sovrascrivere il
+    valore?
+  magari l'opzione dovrebbe sovrascriversi di default, ma se l'opzione e'
+    inizializzata come una lista, allora i valori si aggiungono
+  il codice si complicherebbe assai
+  un'alternativa sarebbe usare le opzioni con suffissi numerati, ad esempio:
+      option[1] = aaa
+      option[2] = bbb
+      option[3] = ccc
+    oppure un prefisso o un suffisso, per non dover specificare esplicitamente
+      gli indici:
+      *option = aaa
+      *option = bbb
+      *option = ccc

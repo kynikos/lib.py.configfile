@@ -1,6 +1,8 @@
 (Sorry this is still in Italian...)
 
 * Il modulo necessita un testing approfondito delle funzionalità avanzate
+* Al momento, quando esportando crea un file nuovo, se non ci sono opzioni
+  nella sezione root mette una linea vuota all'inizio del file
 * Lasciar personalizzare le espressioni regolari
     rendere possibile cambiare il separatore tra le sottosezioni
     rendere possibile trimmare virgolette attorno al valore di un'opzione

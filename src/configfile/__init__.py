@@ -20,8 +20,8 @@ ConfigFile class - Dynamically parse and edit configuration files.
 @author: Dario Giovannetti
 @copyright: Copyright (C) 2011 Dario Giovannetti <dev@dariogiovannetti.com>
 @license: GPLv3
-@version: 1.0
-@date: 2011-11-28
+@version: 1.0.0pb1
+@date: 2011-12-03
 """
 
 import re as _re

@@ -1,0 +1,10 @@
+* Update all version and date references (docstrings @version and @date)
+* Update setup.py
+* Export src
+* Remove .pyc and .pyo files
+* Put LICENSE in src
+* Rename src -> pkgname-version
+* Archive package
+* Update PKGBUILD and .install
+* Upload package to github and AUR
+* Remove old package from github

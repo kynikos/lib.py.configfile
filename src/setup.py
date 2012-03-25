@@ -1,5 +1,5 @@
 # ConfigFile class - Dynamically parse and edit configuration files.
-# Copyright (C) 2011 Dario Giovannetti <dev@dariogiovannetti.com>
+# Copyright (C) 2011 Dario Giovannetti <dev@dariogiovannetti.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ setup(name='configfile',
       version='1.0.0pb1',
       description='Dynamically parse and edit configuration files.',
       author='Dario Giovannetti',
-      author_email='dev@dariogiovannetti.com',
+      author_email='dev@dariogiovannetti.net',
       url='https://github.com/kynikos/configfile',
       license='GPLv3',
       packages=['configfile'])

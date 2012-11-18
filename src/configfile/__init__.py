@@ -659,7 +659,8 @@ class Section():
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
-        self.get(opt, fallback=fallback, inherit_options=inherit_options)
+        return(self.get(opt, fallback=fallback,
+                                              inherit_options=inherit_options))
     
     def get_int(self, opt, fallback=None, inherit_options=None):
         """

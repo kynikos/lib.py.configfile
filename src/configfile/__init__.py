@@ -1,5 +1,5 @@
 # ConfigFile class - Dynamically parse and edit configuration files.
-# Copyright (C) 2011 Dario Giovannetti <dev@dariogiovannetti.net>
+# Copyright (C) 2011-2013 Dario Giovannetti <dev@dariogiovannetti.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,10 +18,10 @@
 ConfigFile class - Dynamically parse and edit configuration files.
 
 @author: Dario Giovannetti
-@copyright: Copyright (C) 2011 Dario Giovannetti <dev@dariogiovannetti.net>
+@copyright: Copyright (C) 2011-2013 Dario Giovannetti <dev@dariogiovannetti.net>
 @license: GPLv3
-@version: 1.0.0pb1
-@date: 2011-12-03
+@version: 1.0.0
+@date: 2013-09-05
 """
 
 import re as _re

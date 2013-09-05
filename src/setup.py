@@ -1,5 +1,5 @@
 # ConfigFile class - Dynamically parse and edit configuration files.
-# Copyright (C) 2011 Dario Giovannetti <dev@dariogiovannetti.net>
+# Copyright (C) 2011-2013 Dario Giovannetti <dev@dariogiovannetti.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 from distutils.core import setup
 
 setup(name='configfile',
-      version='1.0.0pb1',
+      version='1.0.0',
       description='Dynamically parse and edit configuration files.',
       author='Dario Giovannetti',
       author_email='dev@dariogiovannetti.net',

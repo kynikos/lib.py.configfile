@@ -1,17 +1,17 @@
 # Maintainer: Dario Giovannetti <dev at dariogiovannetti dot net>
 
 pkgname='python2-configfile'
-pkgver='1.0.0pb1'
-pkgrel=2
-pkgdesc="Python2 library for dynamically parsing and editing configuration files (PRE-BETA!)."
+pkgver='1.0.0'
+pkgrel=1
+pkgdesc="Python2 library for dynamically parsing and editing configuration files"
 arch=('any')
 url="https://github.com/kynikos/configfile"
 license=('GPL3')
 depends=('python2')
-source=("http://www.dariogiovannetti.net/files/$pkgname-$pkgver.tar.gz")
-md5sums=('fd22911d581a20dd483e3d433370e8c2')
+source=("http://downloads.sourceforge.net/project/kynikos/arch/$pkgname-$pkgver.tar.bz2")
+sha256sums=('ba5361c403ed19de9de956fd95857d208c4afe267b71a101e5279453edcc261c')
 
 package() {
     cd "$srcdir/$pkgname-$pkgver"
-    python2 setup.py install --prefix="/usr" --root="$pkgdir" --optimize=1
+    python2 setup.py install --root="$pkgdir" --optimize=1
 }

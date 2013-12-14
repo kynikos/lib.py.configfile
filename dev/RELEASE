@@ -11,8 +11,9 @@
   5. Archive package
 * Copy PKGBUILD.* to PKGBUILD
 * Update file checksums in PKGBUILD.* and PKGBUILDs
-  Use makepkg -g
+  Use updpkgsums
 * Upload the archives to SourceForge
+* Check the PKGBUILDs with namcap
 * Test PKGBUILD installation
 * Commit changes
 * Tag release merge commit

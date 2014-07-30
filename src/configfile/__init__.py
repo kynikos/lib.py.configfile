@@ -24,6 +24,7 @@ ConfigFile class - Dynamically parse and edit configuration files.
 @date: 2013-09-05
 """
 
+import errno
 import re as _re
 import collections as _collections
 
@@ -352,8 +353,12 @@ class Section():
         try:
             stream = open(cfile, 'r')
         except EnvironmentError as e:
-            raise InvalidFileError('Cannot import configuration from {} ({})'
-                                             ''.format(e.filename, e.strerror))
+            if e.errno == errno.ENOENT:
+                raise NonExistentFileError('Cannot find {} ({})'.format(
+                                                    e.filename, e.strerror))
+            else:
+                raise InvalidFileError('Cannot import configuration from {} '
+                                        '({})'.format(e.filename, e.strerror))
         else:
             with stream:
                 cdict = _collections.OrderedDict()
@@ -1290,9 +1295,16 @@ class ParsingError(ConfigFileError):
     pass
 
 
+class NonExistentFileError(ConfigFileError):
+    """
+    A non-existent configuration file.
+    """
+    pass
+
+
 class InvalidFileError(ConfigFileError):
     """
-    An invalid or non-existent configuration file.
+    An invalid configuration file.
     """
     pass
 

@@ -791,10 +791,7 @@ class Section():
         """
         Return a list with a copy of the names of the child sections.
         """
-        d = []
-        for s in self._subsections:
-            d.append(s)
-        return(d)
+        return self._subsections.keys()
 
     def get_tree(self, ordered=True, path=False):
         """

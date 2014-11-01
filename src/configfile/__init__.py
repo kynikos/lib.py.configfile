@@ -57,12 +57,12 @@ class Section(object):
         self._PARSE_OPTION = '^\s*([^\=]+?)\s*\=\s*(.*?)\s*$'
         self._PARSE_COMMENT = '^\s*[#;]{1}\s*(.*?)\s*$'
         self._PARSE_IGNORE = '^\s*$'
-        
+
         if self._ENABLE_SUBSECTIONS:
             self._SECTION = '^[a-zA-Z_]+(?:\.?[a-zA-Z0-9_]+)*$'
         else:
             self._SECTION = '^[a-zA-Z_]+[a-zA-Z0-9_]*$'
-            
+
         self._OPTION = '^[a-zA-Z_]+[a-zA-Z0-9_]*$'
         self._VALUE = '^.*$'
 
@@ -314,9 +314,9 @@ class Section(object):
             for f in sources:
                 if not isinstance(f, dict):
                     f = self._parse_file(f)
-                    
+
                 self._import_dict(f, mode=mode)
-                
+
                 if interpolation:
                     self._interpolate(root=self)
         else:
@@ -331,6 +331,7 @@ class Section(object):
         """
         try:
             stream = open(cfile, 'r')
+
         except EnvironmentError as e:
             if e.errno == errno.ENOENT:
                 raise NonExistentFileError('Cannot find {} ({})'.format(
@@ -338,14 +339,17 @@ class Section(object):
             else:
                 raise InvalidFileError('Cannot import configuration from {} '
                                         '({})'.format(e.filename, e.strerror))
+
         else:
             with stream:
                 cdict = self._DICT_CLASS()
                 cdict[0] = self._DICT_CLASS()
                 lastsect = cdict
+
                 for lno, line in enumerate(stream):
                     # Note that the order the various types are evaluated
                     # matters!
+
                     if re_.match(self._PARSE_IGNORE, line, self._RE_I):
                         pass
                     elif re_.match(self._PARSE_COMMENT, line, self._RE_I):
@@ -640,7 +644,7 @@ class Section(object):
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
-            
+
         return self.get(opt, fallback=fallback,
                                               inherit_options=inherit_options)
 
@@ -659,7 +663,7 @@ class Section(object):
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
-            
+
         return int(self.get(opt, fallback=fallback,
                                              inherit_options=inherit_options))
 
@@ -678,7 +682,7 @@ class Section(object):
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
-            
+
         return float(self.get(opt, fallback=fallback,
                                              inherit_options=inherit_options))
 
@@ -730,7 +734,7 @@ class Section(object):
         """
         slist = [self, ]
         p = self._PARENT
-        
+
         while p:
             slist.append(p)
             p = p._PARENT
@@ -789,7 +793,7 @@ class Section(object):
         if path:
             p = self._PARENT
             n = self._NAME
-            
+
             while p:
                 if ordered:
                     e = self._DICT_CLASS()

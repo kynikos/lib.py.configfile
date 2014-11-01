@@ -1017,30 +1017,36 @@ class Section(object):
                 if re_.match(self._PARSE_IGNORE, line, self._RE_I) and \
                                                                      not reset:
                     stream.write(line)
-                elif re_.match(self._PARSE_COMMENT, line, self._RE_I) and \
+                    continue
+
+                if re_.match(self._PARSE_COMMENT, line, self._RE_I) and \
                                                                      not reset:
                     stream.write(line)
-                else:
-                    re_option = re_.match(self._PARSE_OPTION, line, self._RE_I)
-                    if re_option:
-                        striptree_pointer = self._export_file_option(mode,
-                                            reset, stream, tree_pointer,
-                                            striptree_pointer, line, re_option)
-                    else:
-                        re_section = re_.match(self._PARSE_SECTION, line,
-                                               self._RE_I)
-                        if re_section:
-                            striptree_pointer = \
-                                        self._export_file_remaining_options(
+                    continue
+
+                re_option = re_.match(self._PARSE_OPTION, line, self._RE_I)
+
+                if re_option:
+                    striptree_pointer = self._export_file_option(mode, reset,
+                                    stream, tree_pointer, striptree_pointer,
+                                    line, re_option)
+                    continue
+
+                re_section = re_.match(self._PARSE_SECTION, line, self._RE_I)
+
+                if re_section:
+                    striptree_pointer = self._export_file_remaining_options(
                                         mode, reset, stream, striptree_pointer)
-                            tree_pointer, striptree_pointer, reset = \
-                                self._export_file_update_pointers(
-                                mode, tree, striptree, ancestry, re_section)
-                            self._export_file_section(reset, stream,
-                                                            tree_pointer, line)
-                        elif not reset:
-                            # Invalid lines
-                            stream.write(line)
+                    tree_pointer, striptree_pointer, reset = \
+                                        self._export_file_update_pointers(mode,
+                                        tree, striptree, ancestry, re_section)
+                    self._export_file_section(reset, stream, tree_pointer,
+                                                                        line)
+                    continue
+
+                if not reset:
+                    # Invalid lines
+                    stream.write(line)
 
             # Export the remaining options for the last section in the original
             # file

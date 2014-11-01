@@ -152,16 +152,23 @@ class Section(object):
 
         opt (string): the name of the option that must be deleted
         """
-        if isinstance(opt, str):
-            for o in self._options:
-                if (self._IGNORE_CASE and opt.lower() == o.lower()) or \
-                                          (not self._IGNORE_CASE and opt == o):
-                    del self._options[o]
-                    break
-            else:
-                raise KeyError('Option not found: ' + opt)
+        try:
+            lopt = opt.lower()
+        except AttributeError:
+            raise TypeError('Option name must be a string: {}'.format(opt))
         else:
-            raise TypeError(str(opt) + ': option name must be a string')
+            if self._IGNORE_CASE:
+                for o in self._options:
+                    if opt.lower() == o.lower():
+                        del self._options[o]
+                        break
+                else:
+                    raise KeyError('Option not found: {}'.format(opt))
+            else:
+                try:
+                    del self._options[opt]
+                except KeyError:
+                    raise KeyError('Option not found: {}'.format(opt))
 
     def __iter__(self):
         """

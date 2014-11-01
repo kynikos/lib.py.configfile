@@ -46,54 +46,37 @@ class Section(object):
         compared ignoring case differences; regular expressions will use re.I
         flag
         """
-        # Store section name
         self._NAME = name
-
-        # Store parent reference
         self._PARENT = parent
-
-        # Enable/Disable subsections
-        self._ENABLE_SUBS = subsections
-
-        # Enable option inheritance
+        self._ENABLE_SUBSECTIONS = subsections
         self._INHERIT_OPTIONS = inherit_options
-
-        # Enable/Disable ignore case
         self._IGNORE_CASE = ignore_case
-        if self._IGNORE_CASE:
-            self._RE_I = _re.I
-        else:
-            self._RE_I = 0
+        self._RE_I = _re.I if self._IGNORE_CASE else 0
 
-        # Define regular expressions
         self._PARSE_SECTION = '^\s*\[(.+)\]\s*$'
         self._PARSE_OPTION = '^\s*([^\=]+?)\s*\=\s*(.*?)\s*$'
         self._PARSE_COMMENT = '^\s*[#;]{1}\s*(.*?)\s*$'
         self._PARSE_IGNORE = '^\s*$'
-        if self._ENABLE_SUBS:
+        
+        if self._ENABLE_SUBSECTIONS:
             self._SECTION = '^[a-zA-Z_]+(?:\.?[a-zA-Z0-9_]+)*$'
         else:
             self._SECTION = '^[a-zA-Z_]+[a-zA-Z0-9_]*$'
+            
         self._OPTION = '^[a-zA-Z_]+[a-zA-Z0-9_]*$'
         self._VALUE = '^.*$'
 
-        # Separators
         self._SECTION_SEP = '.'
         self._OPTION_SEP = ' = '
-        # This will be used with str.format(): section name will be written in
-        # place of {}
+        # "{}" will be replaced with the section name by str.format
         self._SECTION_MARKERS = '[{}]'
         self._COMMENT_MARKER = '# '
 
-        # get_bool tuples and default
-        self._GET_BOOLEAN_TRUE = ('true', '1', 'yes', 'on')
-        self._GET_BOOLEAN_FALSE = ('false', '0', 'no', 'off')
+        self._GET_BOOLEAN_TRUE = ('true', '1', 'yes', 'on', 'enabled')
+        self._GET_BOOLEAN_FALSE = ('false', '0', 'no', 'off', 'disabled')
         self._GET_BOOLEAN_DEFAULT = None
 
-        # Store subsections
         self._subsections = _collections.OrderedDict()
-
-        # Store options
         self._options = _collections.OrderedDict()
 
     ### DATA MODEL ###
@@ -401,7 +384,7 @@ class Section(object):
 
         re: regexp object
         """
-        if self._ENABLE_SUBS:
+        if self._ENABLE_SUBSECTIONS:
             subs = re.group(1).split(self._SECTION_SEP)
         else:
             subs = (re.group(1),)
@@ -524,7 +507,7 @@ class Section(object):
         Import the currently-examined subsection.
         """
         subsection = Section(name=sec, parent=self,
-                             subsections=self._ENABLE_SUBS,
+                             subsections=self._ENABLE_SUBSECTIONS,
                              inherit_options=self._INHERIT_OPTIONS,
                              ignore_case=self._IGNORE_CASE)
         subsection._import_dict(secd, mode=mode)

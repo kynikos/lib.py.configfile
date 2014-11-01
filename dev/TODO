@@ -13,6 +13,10 @@ NEW FEATURES
     rendere possibile cambiare il separatore tra le sottosezioni
     rendere possibile trimmare virgolette attorno al valore di un'opzione
 * Lasciar personalizzare le tuple e il default di get_bool
+* Supportare una sola classe di dizionario, ma lasciarla personalizzare;
+  questo dovrebbe anche semplificare tutte le opzioni "ordered" e tutti gli
+  "ignore case", infatti per ignorare il case basterebbe usare un dizionario
+  che salva le chiavi solo con caratteri minuscoli
 * Fare un commento introduttivo automatico alle opzioni e sezioni aggiunte con
      'add' o 'upgrade'?
     ad esempio: # {These options have|This section has} been added

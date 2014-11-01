@@ -175,7 +175,7 @@ class Section(object):
         Lets iterate over the options of the section (for example with a for
         loop).
         """
-        return(iter(self._options))
+        return iter(self._options)
 
     def __contains__(self, item):
         """

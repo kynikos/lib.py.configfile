@@ -23,7 +23,7 @@ ConfigFile class - Dynamically parse and edit configuration files.
 
 import errno
 import re as _re
-import collections as _collections
+import collections
 
 
 class Section(object):
@@ -76,8 +76,10 @@ class Section(object):
         self._GET_BOOLEAN_FALSE = ('false', '0', 'no', 'off', 'disabled')
         self._GET_BOOLEAN_DEFAULT = None
 
-        self._subsections = _collections.OrderedDict()
-        self._options = _collections.OrderedDict()
+        self._DICT_CLASS = collections.OrderedDict
+
+        self._subsections = self._DICT_CLASS()
+        self._options = self._DICT_CLASS()
 
     ### DATA MODEL ###
 
@@ -338,8 +340,8 @@ class Section(object):
                                         '({})'.format(e.filename, e.strerror))
         else:
             with stream:
-                cdict = _collections.OrderedDict()
-                cdict[0] = _collections.OrderedDict()
+                cdict = self._DICT_CLASS()
+                cdict[0] = self._DICT_CLASS()
                 lastsect = cdict
                 for lno, line in enumerate(stream):
                     # Note that the order the various types are evaluated
@@ -361,8 +363,8 @@ class Section(object):
                                 d = cdict
                                 for s in subs:
                                     if s not in d[0]:
-                                        d[0][s] = _collections.OrderedDict()
-                                        d[0][s][0] = _collections.OrderedDict()
+                                        d[0][s] = self._DICT_CLASS()
+                                        d[0][s][0] = self._DICT_CLASS()
                                     d = d[0][s]
                                 lastsect = d
 
@@ -441,8 +443,8 @@ class Section(object):
         (A:a,B:b,C:c) add (A:d,D:e) => (A:a,B:b,C:c,D:e)
         """
         if mode == 'reset':
-            self._subsections = _collections.OrderedDict()
-            self._options = _collections.OrderedDict()
+            self._subsections = self._DICT_CLASS()
+            self._options = self._DICT_CLASS()
 
         for e in cdict:
             if e == 0 and isinstance(cdict[0], dict):
@@ -750,7 +752,7 @@ class Section(object):
             inherit_options = self._INHERIT_OPTIONS
 
         if ordered:
-            d = _collections.OrderedDict()
+            d = self._DICT_CLASS()
         else:
             d = {}
 
@@ -790,8 +792,8 @@ class Section(object):
             
             while p:
                 if ordered:
-                    e = _collections.OrderedDict()
-                    e[0] = _collections.OrderedDict()
+                    e = self._DICT_CLASS()
+                    e[0] = self._DICT_CLASS()
                 else:
                     e = {}
                     e[0] = {}
@@ -809,7 +811,7 @@ class Section(object):
         d = self.get_options(ordered=ordered, inherit_options=False)
 
         if ordered:
-            d[0] = _collections.OrderedDict()
+            d[0] = self._DICT_CLASS()
         else:
             d[0] = {}
 

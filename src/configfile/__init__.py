@@ -1234,42 +1234,16 @@ class ConfigFile(Section):
         #             interpolation=False):
         # But to keep compatibility with Python 2 it has been changed to the
         # current
+        mode = kwargs.get('mode', 'upgrade')
+        subsections = kwargs.get('subsections', True)
+        inherit_options = kwargs.get('inherit_options', True)
+        ignore_case = kwargs.get('ignore_case', True)
+        interpolation = kwargs.get('interpolation', False)
 
-        # Necessary for Python 2 compatibility
-        if 'mode' in kwargs:
-            mode = kwargs['mode']
-        else:
-            mode = 'upgrade'
-
-        # Necessary for Python 2 compatibility
-        if 'subsections' in kwargs:
-            subsections = kwargs['subsections']
-        else:
-            subsections = True
-
-        # Necessary for Python 2 compatibility
-        if 'inherit_options' in kwargs:
-            inherit_options = kwargs['inherit_options']
-        else:
-            inherit_options = True
-
-        # Necessary for Python 2 compatibility
-        if 'ignore_case' in kwargs:
-            ignore_case = kwargs['ignore_case']
-        else:
-            ignore_case = True
-
-        # Necessary for Python 2 compatibility
-        if 'interpolation' in kwargs:
-            interpolation = kwargs['interpolation']
-        else:
-            interpolation = False
-
-        # Construct the root section
+        # Root section
         Section.__init__(self, name=None, parent=None, subsections=subsections,
                       inherit_options=inherit_options, ignore_case=ignore_case)
 
-        # Parse the files or dictionaries
         self._import(sources, mode=mode, interpolation=interpolation)
 
 

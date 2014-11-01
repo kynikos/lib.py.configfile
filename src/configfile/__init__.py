@@ -233,10 +233,7 @@ class Section(object):
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
         #def upgrade(self, *sources, interpolation=False):
-        if 'interpolation' in kwargs:
-            interpolation = kwargs['interpolation']
-        else:
-            interpolation = False
+        interpolation = kwargs.get('interpolation', False)
 
         self._import(sources, mode='upgrade', interpolation=interpolation)
 
@@ -254,10 +251,7 @@ class Section(object):
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
         #def upgrade(self, *sources, interpolation=False):
-        if 'interpolation' in kwargs:
-            interpolation = kwargs['interpolation']
-        else:
-            interpolation = False
+        interpolation = kwargs.get('interpolation', False)
 
         self._import(sources, mode='update', interpolation=interpolation)
 
@@ -275,10 +269,7 @@ class Section(object):
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
         #def upgrade(self, *sources, interpolation=False):
-        if 'interpolation' in kwargs:
-            interpolation = kwargs['interpolation']
-        else:
-            interpolation = False
+        interpolation = kwargs.get('interpolation', False)
 
         self._import(sources, mode='reset', interpolation=interpolation)
 
@@ -296,10 +287,7 @@ class Section(object):
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
         #def upgrade(self, *sources, interpolation=False):
-        if 'interpolation' in kwargs:
-            interpolation = kwargs['interpolation']
-        else:
-            interpolation = False
+        interpolation = kwargs.get('interpolation', False)
 
         self._import(sources, mode='add', interpolation=interpolation)
 

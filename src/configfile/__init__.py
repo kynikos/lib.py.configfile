@@ -999,10 +999,11 @@ class Section(object):
             tree_pointer = tree
             striptree_pointer = striptree
 
-            ancestry = [s._NAME for s in self._get_ancestors()][:-1]
-
             if self._IGNORE_CASE:
-                ancestry = [a.lower() for a in ancestry]
+                ancestry = [s._NAME.lower()
+                                        for s in self._get_ancestors()[:-1]]
+            else:
+                ancestry = [s._NAME for s in self._get_ancestors()[:-1]]
 
             ancestry.reverse()
 

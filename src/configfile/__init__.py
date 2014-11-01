@@ -312,11 +312,13 @@ class Section(object):
             for f in sources:
                 if not isinstance(f, dict):
                     f = self._parse_file(f)
+                    
                 self._import_dict(f, mode=mode)
+                
                 if interpolation:
                     self._interpolate(root=self)
         else:
-            raise ValueError('Unrecognized importing mode: ' + mode)
+            raise ValueError('Unrecognized importing mode: {}'.format(mode))
 
     def _parse_file(self, cfile):
         """

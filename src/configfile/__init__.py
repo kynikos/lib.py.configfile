@@ -26,7 +26,7 @@ import re as _re
 import collections as _collections
 
 
-class Section():
+class Section(object):
     """
     The class for a section in the configuration file.
 

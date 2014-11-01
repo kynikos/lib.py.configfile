@@ -368,11 +368,10 @@ class Section(object):
 
                             else:
                                 # Invalid lines
-                                raise ParsingError('Invalid line in ' + cfile +
-                                                   ': ' + line + ' (line ' +
-                                                   str(lno + 1) + ')')
+                                raise ParsingError('Invalid line in {}: {} '
+                                    '(line {})'.format(cfile, line, lno + 1))
 
-            return(cdict)
+            return cdict
 
     def _parse_subsections(self, re):
         """
@@ -382,10 +381,9 @@ class Section(object):
         re: regexp object
         """
         if self._ENABLE_SUBSECTIONS:
-            subs = re.group(1).split(self._SECTION_SEP)
+            return re.group(1).split(self._SECTION_SEP)
         else:
-            subs = (re.group(1),)
-        return subs
+            return (re.group(1), )
 
     def _import_dict(self, cdict, mode='upgrade'):
         """
@@ -454,21 +452,20 @@ class Section(object):
                             self._import_dict_subsection(mode, s, cdict[0][s])
                         else:
                             raise InvalidDictionaryError('Invalid section '
-                                                         'name: ' + s)
+                                                         'name: {}'.format(s))
                     else:
                         raise InvalidDictionaryError('The dictionary to be '
-                                                     'imported has invalid '
-                                                     'keys or values')
+                                        'imported has invalid keys or values')
             elif isinstance(e, str) and isinstance(cdict[e], str):
                 if _re.match(self._OPTION, e, self._RE_I) and \
                                   _re.match(self._VALUE, cdict[e], self._RE_I):
                     self._import_dict_option(mode, e, cdict[e])
                 else:
-                    raise InvalidDictionaryError('Invalid option or value: ' +
-                                                 e + ': ' + cdict[e])
+                    raise InvalidDictionaryError('Invalid option or value: '
+                                                '{}: {}'.format(e, cdict[e]))
             else:
                 raise InvalidDictionaryError('The dictionary to be imported '
-                                             'has invalid keys or values')
+                                                'has invalid keys or values')
 
     def _import_dict_subsection(self, mode, sec, secd):
         """
@@ -620,9 +617,9 @@ class Section(object):
             else:
                 # Note that if fallback is not specified, this returns None
                 # which is not a string as expected
-                return(fallback)
+                return fallback
         else:
-            raise TypeError(str(opt) + ': option name must be a string')
+            raise TypeError('Option name must be a string: {}'.format(opt))
 
     def get_str(self, opt, fallback=None, inherit_options=None):
         """
@@ -641,8 +638,9 @@ class Section(object):
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
-        return(self.get(opt, fallback=fallback,
-                                              inherit_options=inherit_options))
+            
+        return self.get(opt, fallback=fallback,
+                                              inherit_options=inherit_options)
 
     def get_int(self, opt, fallback=None, inherit_options=None):
         """
@@ -659,8 +657,9 @@ class Section(object):
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
-        return(int(self.get(opt, fallback=fallback,
-                                             inherit_options=inherit_options)))
+            
+        return int(self.get(opt, fallback=fallback,
+                                             inherit_options=inherit_options))
 
     def get_float(self, opt, fallback=None, inherit_options=None):
         """
@@ -677,8 +676,9 @@ class Section(object):
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
-        return(float(self.get(opt, fallback=fallback,
-                                             inherit_options=inherit_options)))
+            
+        return float(self.get(opt, fallback=fallback,
+                                             inherit_options=inherit_options))
 
     def get_bool(self, opt, true=(), false=(), default=None, fallback=None,
                                                          inherit_options=None):
@@ -713,13 +713,14 @@ class Section(object):
         v = str(self.get(opt, fallback=fallback,
                                       inherit_options=inherit_options)).lower()
         if v in true:
-            return(True)
+            return True
         elif v in false:
-            return(False)
+            return False
         elif default in (True, False):
-            return(default)
+            return default
         else:
-            raise ValueError('Unrecognized boolean status: ' + self[opt])
+            raise ValueError('Unrecognized boolean status: {}'.format(
+                                                                    self[opt]))
 
     def _get_ancestors(self):
         """
@@ -727,9 +728,11 @@ class Section(object):
         """
         slist = [self, ]
         p = self._PARENT
+        
         while p:
             slist.append(p)
             p = p._PARENT
+
         return slist
 
     def get_options(self, ordered=True, inherit_options=None):
@@ -762,7 +765,7 @@ class Section(object):
                 # There should be no need to check _IGNORE_CASE, in fact it has
                 # already been done at importing time
 
-        return(d)
+        return d
 
     def get_sections(self):
         """
@@ -784,6 +787,7 @@ class Section(object):
         if path:
             p = self._PARENT
             n = self._NAME
+            
             while p:
                 if ordered:
                     e = _collections.OrderedDict()
@@ -796,7 +800,7 @@ class Section(object):
                 n = p._NAME
                 p = p._PARENT
 
-        return(d)
+        return d
 
     def _recurse_tree(self, ordered=True):
         """
@@ -813,7 +817,7 @@ class Section(object):
         for s in subs:
             d[0][s] = subs[s]._recurse_tree(ordered=ordered)
 
-        return(d)
+        return d
 
     def _export(self, targets, mode='upgrade', path=True):
         """
@@ -830,7 +834,7 @@ class Section(object):
             for f in targets:
                 self._export_dict(f, mode=mode, path=path)
         else:
-            raise ValueError('Unrecognized exporting mode: ' + mode)
+            raise ValueError('Unrecognized exporting mode: {}'.format(mode))
 
     def export_upgrade(self, *targets, **kwargs):
         """

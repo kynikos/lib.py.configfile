@@ -186,22 +186,15 @@ class Section(object):
         item: a Section object or the name of an option
         """
         if isinstance(item, Section):
-            if item in self._subsections.values():
-                return(True)
+            return item in self._subsections.values()
+        elif self._IGNORE_CASE:
+            for o in self._options:
+                if item.lower() == o.lower():
+                    return True
             else:
-                return(False)
+                return False
         else:
-            if self._IGNORE_CASE:
-                for o in self._options:
-                    if item.lower() == o.lower():
-                        return(True)
-                else:
-                    return(False)
-            else:
-                if item in self._options:
-                    return(True)
-                else:
-                    return(False)
+            return item in self._options
 
     ### IMPORTING DATA ###
 

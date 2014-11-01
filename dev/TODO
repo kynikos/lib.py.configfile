@@ -30,8 +30,9 @@ NEW FEATURES
     magari con una misura relativa rispetto alla sezione madre
     nell'aggiornamento di un file esistente si potrebbe recuperare
       l'indentazione esistente (mettendola in un gruppo a se' nella regexp)
-* Confrontare con configparse per le funzionalita' mancanti
+* Confrontare con configparser per le funzionalita' mancanti
     commenti inline?
+* Supportare valori multilinea come configparser
 * Forse la modalita' reset potrebbe commentare le righe non piu' presenti,
     invece che cancellarle... (vedi anche clean mode)
 * Clean mode: scrivendo un file cancellare (o commentare) le righe invalide

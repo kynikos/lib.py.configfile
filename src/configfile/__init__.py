@@ -22,7 +22,7 @@ ConfigFile class - Dynamically parse and edit configuration files.
 """
 
 import errno
-import re as _re
+import re as re_
 import collections
 
 
@@ -51,7 +51,7 @@ class Section(object):
         self._ENABLE_SUBSECTIONS = subsections
         self._INHERIT_OPTIONS = inherit_options
         self._IGNORE_CASE = ignore_case
-        self._RE_I = _re.I if self._IGNORE_CASE else 0
+        self._RE_I = re_.I if self._IGNORE_CASE else 0
 
         self._PARSE_SECTION = '^\s*\[(.+)\]\s*$'
         self._PARSE_OPTION = '^\s*([^\=]+?)\s*\=\s*(.*?)\s*$'
@@ -346,17 +346,17 @@ class Section(object):
                 for lno, line in enumerate(stream):
                     # Note that the order the various types are evaluated
                     # matters!
-                    if _re.match(self._PARSE_IGNORE, line, self._RE_I):
+                    if re_.match(self._PARSE_IGNORE, line, self._RE_I):
                         pass
-                    elif _re.match(self._PARSE_COMMENT, line, self._RE_I):
+                    elif re_.match(self._PARSE_COMMENT, line, self._RE_I):
                         pass
                     else:
-                        re_option = _re.match(self._PARSE_OPTION, line,
+                        re_option = re_.match(self._PARSE_OPTION, line,
                                               self._RE_I)
                         if re_option:
                             lastsect[re_option.group(1)] = re_option.group(2)
                         else:
-                            re_section = _re.match(self._PARSE_SECTION, line,
+                            re_section = re_.match(self._PARSE_SECTION, line,
                                                    self._RE_I)
                             if re_section:
                                 subs = self._parse_subsections(re_section)
@@ -450,7 +450,7 @@ class Section(object):
             if e == 0 and isinstance(cdict[0], dict):
                 for s in cdict[0]:
                     if isinstance(s, str):
-                        if _re.match(self._SECTION, s, self._RE_I):
+                        if re_.match(self._SECTION, s, self._RE_I):
                             self._import_dict_subsection(mode, s, cdict[0][s])
                         else:
                             raise InvalidDictionaryError('Invalid section '
@@ -459,8 +459,8 @@ class Section(object):
                         raise InvalidDictionaryError('The dictionary to be '
                                         'imported has invalid keys or values')
             elif isinstance(e, str) and isinstance(cdict[e], str):
-                if _re.match(self._OPTION, e, self._RE_I) and \
-                                  _re.match(self._VALUE, cdict[e], self._RE_I):
+                if re_.match(self._OPTION, e, self._RE_I) and \
+                                  re_.match(self._VALUE, cdict[e], self._RE_I):
                     self._import_dict_option(mode, e, cdict[e])
                 else:
                     raise InvalidDictionaryError('Invalid option or value: '
@@ -558,7 +558,7 @@ class Section(object):
         section.
         """
         for o, v in self._options:
-            L = _re.split('(\$\$|\$\{|\$\:|\$\})', v)
+            L = re_.split('(\$\$|\$\{|\$\:|\$\})', v)
             resolve = []
             for i in L:
                 if i == '$$':
@@ -981,19 +981,19 @@ class Section(object):
 
             for line in lines:
                 # Note that the order the various types are evaluated matters!
-                if _re.match(self._PARSE_IGNORE, line, self._RE_I) and \
+                if re_.match(self._PARSE_IGNORE, line, self._RE_I) and \
                                                                      not reset:
                     stream.write(line)
-                elif _re.match(self._PARSE_COMMENT, line, self._RE_I) and \
+                elif re_.match(self._PARSE_COMMENT, line, self._RE_I) and \
                                                                      not reset:
                     stream.write(line)
                 else:
-                    re_option = _re.match(self._PARSE_OPTION, line, self._RE_I)
+                    re_option = re_.match(self._PARSE_OPTION, line, self._RE_I)
                     if re_option:
                         stp = self._export_dict_option(mode, reset, stream, tp,
                                                        stp, line, re_option)
                     else:
-                        re_section = _re.match(self._PARSE_SECTION, line,
+                        re_section = re_.match(self._PARSE_SECTION, line,
                                                self._RE_I)
                         if re_section:
                             stp = self._export_dict_remaining_options(mode,

@@ -351,31 +351,34 @@ class Section(object):
                     # matters!
 
                     if re_.match(self._PARSE_IGNORE, line, self._RE_I):
-                        pass
-                    elif re_.match(self._PARSE_COMMENT, line, self._RE_I):
-                        pass
-                    else:
-                        re_option = re_.match(self._PARSE_OPTION, line,
-                                              self._RE_I)
-                        if re_option:
-                            lastsect[re_option.group(1)] = re_option.group(2)
-                        else:
-                            re_section = re_.match(self._PARSE_SECTION, line,
-                                                   self._RE_I)
-                            if re_section:
-                                subs = self._parse_subsections(re_section)
-                                d = cdict
-                                for s in subs:
-                                    if s not in d[0]:
-                                        d[0][s] = self._DICT_CLASS()
-                                        d[0][s][0] = self._DICT_CLASS()
-                                    d = d[0][s]
-                                lastsect = d
+                        continue
 
-                            else:
-                                # Invalid lines
-                                raise ParsingError('Invalid line in {}: {} '
-                                    '(line {})'.format(cfile, line, lno + 1))
+                    if re_.match(self._PARSE_COMMENT, line, self._RE_I):
+                        continue
+
+                    re_option = re_.match(self._PARSE_OPTION, line, self._RE_I)
+                    if re_option:
+                        lastsect[re_option.group(1)] = re_option.group(2)
+                        continue
+
+                    re_section = re_.match(self._PARSE_SECTION, line,
+                                                                    self._RE_I)
+                    if re_section:
+                        subs = self._parse_subsections(re_section)
+                        d = cdict
+
+                        for s in subs:
+                            if s not in d[0]:
+                                d[0][s] = self._DICT_CLASS()
+                                d[0][s][0] = self._DICT_CLASS()
+
+                            d = d[0][s]
+
+                        lastsect = d
+                        continue
+
+                    raise ParsingError('Invalid line in {}: {} (line {})'
+                                            ''.format(cfile, line, lno + 1))
 
             return cdict
 

@@ -88,15 +88,22 @@ class Section(object):
 
         key (string): the name of the subsection
         """
-        if isinstance(key, str):
-            for k in self._subsections:
-                if (self._IGNORE_CASE and key.lower() == k.lower()) or \
-                                          (not self._IGNORE_CASE and key == k):
-                    return self._subsections[k]
-            else:
-                raise KeyError('Section not found: ' + key)
+        try:
+            lkey = key.lower()
+        except AttributeError:
+            raise TypeError('Section name must be a string: {}'.format(key))
         else:
-            raise TypeError(str(key) + ' section name must be a string')
+            if self._IGNORE_CASE:
+                for k in self._subsections:
+                    if lkey == k.lower():
+                        return self._subsections[k]
+                else:
+                    raise KeyError('Section not found: {}'.format(key))
+            else:
+                try:
+                    return self._subsections[key]
+                except KeyError:
+                    raise KeyError('Section not found: {}'.format(key))
 
     def __getitem__(self, opt):
         """

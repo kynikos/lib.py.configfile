@@ -1007,10 +1007,7 @@ class Section(object):
 
             ancestry.reverse()
 
-            if mode == 'reset' and self._NAME is None:
-                reset = True
-            else:
-                reset = False
+            reset = (mode == 'reset' and self._NAME is None)
 
             for line in lines:
                 # Note that the order the various types are evaluated matters!
@@ -1085,11 +1082,8 @@ class Section(object):
                     striptree_pointer = None
                     break
 
-            if mode == 'reset' and ancestry == [s.lower() for s in
-                                                         subs[:len(ancestry)]]:
-                reset = True
-            else:
-                reset = False
+            reset = (mode == 'reset' and ancestry == [s.lower() for s in
+                                                         subs[:len(ancestry)]])
         else:
             for s in subs:
                 # Loop tree_pointer instead of striptree_pointer, so if there
@@ -1103,10 +1097,7 @@ class Section(object):
                     striptree_pointer = None
                     break
 
-            if mode == 'reset' and ancestry == subs[:len(ancestry)]:
-                reset = True
-            else:
-                reset = False
+            reset = (mode == 'reset' and ancestry == subs[:len(ancestry)])
 
         return (tree_pointer, striptree_pointer, reset)
 

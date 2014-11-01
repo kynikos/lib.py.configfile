@@ -116,10 +116,10 @@ class Section(object):
         # self.get returns None as a fallback value if opt is not found:
         # however, for compatibility with usual dictionary operations,
         # __getitem__ should better raise KeyError in this case
-        if item == None:
-            raise KeyError('Option not found: ' + opt)
+        if item is None:
+            raise KeyError('Option not found: {}'.format(opt))
         else:
-            return(item)
+            return item
 
     def __setitem__(self, opt, val):
         """

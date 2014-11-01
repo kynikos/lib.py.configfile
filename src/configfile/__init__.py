@@ -135,16 +135,16 @@ class Section(object):
                 if self._IGNORE_CASE:
                     for o in self._options:
                         if opt.lower() == o.lower():
-                            self._options[o] = str(val)
+                            self._options[o] = val
                             break
                     else:
-                        self._options[opt] = str(val)
+                        self._options[opt] = val
                 else:
-                    self._options[opt] = str(val)
+                    self._options[opt] = val
             else:
-                raise TypeError(str(val) + ': value must be a string')
+                raise TypeError('Value must be a string: {}'.format(val))
         else:
-            raise TypeError(str(opt) + ': option name must be a string')
+            raise TypeError('Option name must be a string: {}'.format(opt))
 
     def __delitem__(self, opt):
         """

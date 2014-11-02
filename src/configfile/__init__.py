@@ -980,8 +980,7 @@ class Section(object):
 
         with open(cfile, 'w') as stream:
             tree = self.get_tree(path=path)
-            # Don't just do tree.copy(), as that would just copy the root
-            # level, and then make normal references for the other levels
+            # We need a deep copy here
             striptree = self.get_tree(path=path)
 
             tree_pointer = tree

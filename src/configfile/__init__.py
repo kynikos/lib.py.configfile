@@ -778,6 +778,22 @@ class Section(object):
 
         return slist
 
+    def _get_descendants(self):
+        """
+        Return a list with the descendants of the current section, but not the
+        current section itself.
+        """
+        # Don't do `slist = self._subsections.values()` because the descendants
+        #  for each subsection must be appended after the proper subsection,
+        #  not at the end of the list
+        slist = []
+
+        for section in self._subsections.values():
+            slist.append(section)
+            slist.extend(section._get_descendants())
+
+        return slist
+
     def get_options(self, ordered=True, inherit_options=None):
         """
         Return a dictionary with a copy of option names as keys and their

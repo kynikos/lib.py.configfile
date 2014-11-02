@@ -845,7 +845,7 @@ class Section(object):
 
     def _recurse_tree(self, ordered=True):
         """
-        Auxiliary recursor for tree().
+        Auxiliary recursor for get_tree().
         """
         options = self.get_options(ordered=ordered, inherit_options=False)
 

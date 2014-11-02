@@ -643,10 +643,10 @@ class Section(object):
             inherit_options = self._INHERIT_OPTIONS
 
         if isinstance(opt, str):
+            slist = [self, ]
+
             if inherit_options:
-                slist = self._get_ancestors()
-            else:
-                slist = [self, ]
+                slist.extend(self._get_ancestors())
 
             for s in slist:
                 for o in s._options:
@@ -766,9 +766,10 @@ class Section(object):
 
     def _get_ancestors(self):
         """
-        Return a list with the current section and its ancestors.
+        Return a list with the ancestors of the current section, but not the
+        current section itself.
         """
-        slist = [self, ]
+        slist = []
         p = self._PARENT
 
         while p:
@@ -796,10 +797,10 @@ class Section(object):
         else:
             d = {}
 
+        slist = [self, ]
+
         if inherit_options:
-            slist = self._get_ancestors()
-        else:
-            slist = [self, ]
+            slist.extend(self._get_ancestors())
 
         for s in slist:
             for o in s._options:

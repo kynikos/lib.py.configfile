@@ -495,27 +495,36 @@ class Section(object):
         """
         if reset:
             self._options[opt] = val
+            return True
 
-        elif self._IGNORE_CASE:
+        if self._IGNORE_CASE:
             for o in self._options:
                 if opt.lower() == o.lower():
                     # Don't even think of merging these two tests
                     if overwrite:
                         self._options[o] = val
+                        return True
 
                     break
 
             else:
+                # Going through the loop above makes sure the option is not yet
+                #  in the section
                 if add:
                     self._options[opt] = val
+                    return True
 
         elif opt in self._options:
             # Don't even think of merging these two tests
             if overwrite:
                 self._options[opt] = val
+                return True
 
         elif add:
             self._options[opt] = val
+            return True
+
+        return False
 
     def _import_object_subsection(self, overwrite, add, reset, sec, secd):
         """
@@ -525,30 +534,35 @@ class Section(object):
         """
         if reset:
             self._import_object_subsection_create(overwrite, add, sec, secd)
+            return True
 
-        elif self._IGNORE_CASE:
+        if self._IGNORE_CASE:
             for ss in self._subsections:
                 if sec.lower() == ss.lower():
-                    # Don't even think of merging these two tests
-                    if overwrite:
-                        self._subsections[ss]._import_object(secd,
-                            overwrite=overwrite, add=add)
-
-                    break
+                    # Don't test overwrite here
+                    self._subsections[ss]._import_object(secd,
+                                                overwrite=overwrite, add=add)
+                    return True
 
             else:
+                # Going through the loop above makes sure the section is not
+                #  yet a subsection of the visited section
                 if add:
                     self._import_object_subsection_create(overwrite, add, sec,
                                                                         secd)
+                    return True
 
         elif sec in self._subsections:
-            # Don't even think of merging these two tests
-            if overwrite:
-                self._subsections[sec]._import_object(secd,
-                                                overwrite=overwrite, add=add)
+            # Don't test overwrite here
+            self._subsections[sec]._import_object(secd, overwrite=overwrite,
+                                                                    add=add)
+            return True
 
         elif add:
             self._import_object_subsection_create(overwrite, add, sec, secd)
+            return True
+
+        return False
 
     def _import_object_subsection_create(self, overwrite, add, sec, secd):
         """

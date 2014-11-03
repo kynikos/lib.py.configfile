@@ -319,7 +319,8 @@ class Section(object):
         Distinction between the various source types is done automatically.
 
         sources: a sequence of all the files, dictionaries or special object to
-        be parsed; a value of None will be ignored.
+        be parsed; a value of None will be ignored (useful for creating empty
+        objects that will be populated programmatically).
         overwrite (bool): this sets whether the next source in the chain
         overwrites already imported sections and options; see _import_object
         for more details.

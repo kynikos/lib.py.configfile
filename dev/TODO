@@ -1,6 +1,7 @@
 (Sorry this is still in Italian...)
 
 BUGS
+* See the bugs reported directly in the source
 * Al momento, quando esportando crea un file nuovo, se non ci sono opzioni
   nella sezione root mette una linea vuota all'inizio del file
 * Se esportando vengono aggiunte delle nuove opzioni ad una sezione, una
@@ -8,6 +9,7 @@ BUGS
 * Il modulo necessita un testing approfondito delle funzionalità avanzate
 
 NEW FEATURES
+* See the notes reported directly in the source
 * Importare un oggetto Section (ad esempio da un'alstra istanza di ConfigFile)
 * Lasciar personalizzare le espressioni regolari
     rendere possibile cambiare il separatore tra le sottosezioni

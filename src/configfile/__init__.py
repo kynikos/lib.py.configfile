@@ -34,7 +34,7 @@ class Section(object):
     considered to be in the "root" section.
     """
     def __init__(self, name=None, parent=None, subsections=True,
-                                       inherit_options=True, ignore_case=True):
+                                    inherit_options=False, ignore_case=True):
         """
         Constructor.
 
@@ -1263,14 +1263,14 @@ class ConfigFile(Section):
         #             *sources,
         #             mode='upgrade',
         #             subsections=True,
-        #             inherit_options=True,
+        #             inherit_options=False,
         #             ignore_case=True,
         #             interpolation=False):
         # But to keep compatibility with Python 2 it has been changed to the
         # current
         mode = kwargs.get('mode', 'upgrade')
         subsections = kwargs.get('subsections', True)
-        inherit_options = kwargs.get('inherit_options', True)
+        inherit_options = kwargs.get('inherit_options', False)
         ignore_case = kwargs.get('ignore_case', True)
         interpolation = kwargs.get('interpolation', False)
 

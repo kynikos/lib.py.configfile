@@ -218,7 +218,7 @@ class Section(object):
         """
         sub = self._EMPTY_SECTION()
         sub[0][name] = self._EMPTY_SECTION()
-        self._import_object(sub, mode='add')
+        self._import_object(sub, overwrite=False)
 
     def delete(self):
         """
@@ -231,8 +231,11 @@ class Section(object):
         Import sections and options from a file, dictionary or special object
         with upgrade mode.
 
-        See _import_object for a description of available modes and object
-        compatibility.
+        If an option already exists, change its value; if it doesn't exist,
+        create it and store its value:
+        {A:a,B:b,C:c} upgrade {A:d,D:e} => {A:d,B:b,C:c,D:e}
+
+        See _import_object for object compatibility.
 
         sources: a sequence of files, dictionaries and/or special objects.
         interpolation (boolean): enable/disable value interpolation.
@@ -242,15 +245,18 @@ class Section(object):
         #def upgrade(self, *sources, interpolation=False):
         interpolation = kwargs.get('interpolation', False)
 
-        self._import(sources, mode='upgrade', interpolation=interpolation)
+        self._import(sources, interpolation=interpolation)
 
     def update(self, *sources, **kwargs):
         """
         Import sections and options from a file, dictionary or special object
         with update mode.
 
-        See _import_object for a description of available modes and object
-        compatibility.
+        If an option already exists, change its value; if it doesn't exist,
+        don't do anything:
+        {A:a,B:b,C:c} update {A:d,D:e} => {A:d,B:b,C:c}
+
+        See _import_object for object compatibility.
 
         sources: a sequence of files, dictionaries and/or special objects.
         interpolation (boolean): enable/disable value interpolation.
@@ -260,15 +266,18 @@ class Section(object):
         #def upgrade(self, *sources, interpolation=False):
         interpolation = kwargs.get('interpolation', False)
 
-        self._import(sources, mode='update', interpolation=interpolation)
+        self._import(sources, add=False, interpolation=interpolation)
 
     def reset(self, *sources, **kwargs):
         """
         Import sections and options from a file, dictionary or special object
         with reset mode.
 
-        See _import_object for a description of available modes and object
-        compatibility.
+        Delete all options and subsections and recreate everything from the
+        importing object:
+        {A:a,B:b,C:c} reset {A:d,D:e} => {A:d,D:e}
+
+        See _import_object for object compatibility.
 
         sources: a sequence of files, dictionaries and/or special objects.
         interpolation (boolean): enable/disable value interpolation.
@@ -278,15 +287,18 @@ class Section(object):
         #def upgrade(self, *sources, interpolation=False):
         interpolation = kwargs.get('interpolation', False)
 
-        self._import(sources, mode='reset', interpolation=interpolation)
+        self._import(sources, reset=True, interpolation=interpolation)
 
     def add(self, *sources, **kwargs):
         """
         Import sections and options from a file, dictionary or special object
         with add mode.
 
-        See _import_object for a description of available modes and object
-        compatibility.
+        If an option already exists, don't do anything; if it doesn't exist,
+        create it and store its value:
+        {A:a,B:b,C:c} add {A:d,D:e} => {A:a,B:b,C:c,D:e}
+
+        See _import_object for object compatibility.
 
         sources: a sequence of files, dictionaries and/or special objects.
         interpolation (boolean): enable/disable value interpolation.
@@ -296,9 +308,10 @@ class Section(object):
         #def upgrade(self, *sources, interpolation=False):
         interpolation = kwargs.get('interpolation', False)
 
-        self._import(sources, mode='add', interpolation=interpolation)
+        self._import(sources, overwrite=False, interpolation=interpolation)
 
-    def _import(self, sources, mode='upgrade', interpolation=False):
+    def _import(self, sources, overwrite=True, add=True, reset=False,
+                                                        interpolation=False):
         """
         Parse some files, dictionaries or special objects and add their
         configuration to the existing one.
@@ -307,35 +320,33 @@ class Section(object):
 
         sources: a sequence of all the files, dictionaries or special object to
         be parsed; a value of None will be ignored.
-        mode (string): this sets if and how the next source in the chain
-        overwrites already imported sections and options; available choices are
-        'upgrade', 'update', 'reset' and 'add' (see _import_object() for more
-        details)
+        overwrite (bool): this sets whether the next source in the chain
+        overwrites already imported sections and options; see _import_object
+        for more details.
+        add (bool): this sets whether the next source in the chain
+        adds non-pre-existing sections and options; see _import_object for more
+        details.
+        reset (bool): this sets whether the next source in the chain removes
+        all the data added by the previous sources.
         interpolation (boolean): if True, option values will be interpolated
         using values from other options through the special syntax
         ${section$:section$:option$}. Options will be interpolated only once at
         importing: all links among options will be lost after importing.
         """
-        if mode in ('upgrade', 'update', 'reset', 'add'):
-            for source in sources:
-                if source is None:
-                    continue
+        for source in sources:
+            if source is None:
+                continue
+            elif isinstance(source, str):
+                obj = self._parse_file(source)
+            elif isinstance(source, dict):
+                obj = ({}, source)
+            else:
+                obj = source
 
-                elif isinstance(source, str):
-                    obj = self._parse_file(source)
+            self._import_object(obj, overwrite=overwrite, add=add, reset=reset)
 
-                elif isinstance(source, dict):
-                    obj = ({}, source)
-
-                else:
-                    obj = source
-
-                self._import_object(obj, mode=mode)
-
-                if interpolation:
-                    self._interpolate(root=self)
-        else:
-            raise ValueError('Unrecognized importing mode: {}'.format(mode))
+            if interpolation:
+                self._interpolate(root=self)
 
     def _parse_file(self, cfile):
         """
@@ -408,7 +419,7 @@ class Section(object):
         else:
             return (re.group(1), )
 
-    def _import_object(self, cobj, mode='upgrade'):
+    def _import_object(self, cobj, overwrite=True, add=True, reset=False):
         """
         Import sections and options from a compatible object.
 
@@ -449,82 +460,66 @@ class Section(object):
             },
         )
 
-        mode (string): this is the mode of data import; available choices are
-        'upgrade', 'update', 'reset' and 'add', here described:
-
-        upgrade mode:
-        if an option already exists, change its value; if it doesn't exist,
-        create it and store its value:
-        {A:a,B:b,C:c} upgrade {A:d,D:e} => {A:d,B:b,C:c,D:e}
-
-        update mode:
-        if an option already exists, change its value; if it doesn't exist,
-        don't do anything:
-        {A:a,B:b,C:c} update {A:d,D:e} => {A:d,B:b,C:c}
-
-        reset mode:
-        delete all options and subsections and recreate everything from the
-        importing object:
-        {A:a,B:b,C:c} reset {A:d,D:e} => {A:d,D:e}
-
-        add mode:
-        if an option already exists, don't do anything; if it doesn't exist,
-        create it and store its value:
-        {A:a,B:b,C:c} add {A:d,D:e} => {A:a,B:b,C:c,D:e}
+        overwrite (bool): whether imported data will overwrite pre-existing
+        data.
+        add (bool): whether non-pre-existing data will be imported.
+        reset (bool): whether pre-existing data will be cleared.
         """
-        if mode == 'reset':
+        if reset:
             self._subsections = self._DICT_CLASS()
             self._options = self._DICT_CLASS()
 
         for s in cobj[0]:
             if isinstance(s, str) and re_.match(self._SECTION, s, self._RE_I):
-                self._import_object_subsection(mode, s, cobj[0][s])
+                self._import_object_subsection(overwrite, add, reset, s,
+                                                                    cobj[0][s])
             else:
-                raise InvalidObjectError('Invalid section name: {}'.format(
-                                                                            s))
+                raise InvalidObjectError('Invalid section name: {}'.format(s))
 
         for o in cobj[1]:
             if isinstance(o, str) and isinstance(cobj[1][o], str) and \
                                 re_.match(self._OPTION, o, self._RE_I) and \
                                 re_.match(self._VALUE, cobj[1][o], self._RE_I):
-                self._import_object_option(mode, o, cobj[1][o])
+                self._import_object_option(overwrite, add, reset, o,
+                                                                    cobj[1][o])
             else:
                 raise InvalidObjectError('Invalid option or value: {}: {}'
                                                     ''.format(o, cobj[1][o]))
 
-    def _import_object_subsection(self, mode, sec, secd):
+    def _import_object_subsection(self, overwrite, add, reset, sec, secd):
         """
         Auxiliary method for _import_object().
 
         Import the currently-examined subsection.
         """
-        if mode == 'reset':
-            self._import_object_subsection_create(mode, sec, secd)
+        if reset:
+            self._import_object_subsection_create(overwrite, add, sec, secd)
 
         elif self._IGNORE_CASE:
             for ss in self._subsections:
                 if sec.lower() == ss.lower():
-                    # Do not use "if sec.lower() == ss.lower() and mode in
-                    # ('upgrade', 'update')" because if mode is not in
-                    # ('upgrade', 'update') the loop never breaks, not even if
-                    # sec.lower() == ss.lower()
-                    if mode in ('upgrade', 'update'):
-                        self._subsections[ss]._import_object(secd, mode=mode)
+                    # Don't even think of merging these two tests
+                    if overwrite:
+                        self._subsections[ss]._import_object(secd,
+                            overwrite=overwrite, add=add)
 
                     break
 
             else:
-                if mode in ('upgrade', 'add'):
-                    self._import_object_subsection_create(mode, sec, secd)
+                if add:
+                    self._import_object_subsection_create(overwrite, add, sec,
+                                                                        secd)
 
-        else:
-            if sec in self._subsections and mode in ('upgrade', 'update'):
-                self._subsections[sec]._import_object(secd, mode=mode)
+        elif sec in self._subsections:
+            # Don't even think of merging these two tests
+            if overwrite:
+                self._subsections[sec]._import_object(secd,
+                                                overwrite=overwrite, add=add)
 
-            elif sec not in self._subsections and mode in ('upgrade', 'add'):
-                self._import_object_subsection_create(mode, sec, secd)
+        elif add:
+            self._import_object_subsection_create(overwrite, add, sec, secd)
 
-    def _import_object_subsection_create(self, mode, sec, secd):
+    def _import_object_subsection_create(self, overwrite, add, sec, secd):
         """
         Auxiliary method for _import_object_subsection().
 
@@ -534,36 +529,37 @@ class Section(object):
                              subsections=self._ENABLE_SUBSECTIONS,
                              inherit_options=self._INHERIT_OPTIONS,
                              ignore_case=self._IGNORE_CASE)
-        subsection._import_object(secd, mode=mode)
+        subsection._import_object(secd, overwrite=overwrite, add=add)
         self._subsections[sec] = subsection
 
-    def _import_object_option(self, mode, opt, val):
+    def _import_object_option(self, overwrite, add, reset, opt, val):
         """
         Auxiliary method for _import_object().
 
         Import the currently-examined option.
         """
-        if mode == 'reset':
+        if reset:
             self._options[opt] = val
 
         elif self._IGNORE_CASE:
             for o in self._options:
                 if opt.lower() == o.lower():
-                    # Do not use "if opt.lower() == o.lower() and mode in
-                    # ('upgrade', 'update')" because if mode is not in
-                    # ('upgrade', 'update') the loop never breaks, not even if
-                    # opt.lower() == o.lower()
-                    if mode in ('upgrade', 'update'):
+                    # Don't even think of merging these two tests
+                    if overwrite:
                         self._options[o] = val
 
                     break
 
             else:
-                if mode in ('upgrade', 'add'):
+                if add:
                     self._options[opt] = val
 
-        elif (opt in self._options and mode in ('upgrade', 'update')) or \
-                     (opt not in self._options and mode in ('upgrade', 'add')):
+        elif opt in self._options:
+            # Don't even think of merging these two tests
+            if overwrite:
+                self._options[opt] = val
+
+        elif add:
             self._options[opt] = val
 
     def _interpolate(self, root=None):
@@ -863,29 +859,32 @@ class Section(object):
 
         return d
 
-    def _export(self, targets, mode='upgrade', path=True):
+    def _export(self, targets, overwrite=True, add=True, reset=False,
+                                                                    path=True):
         """
         Export the configuration to one or more files.
 
         targets: a sequence with the target file names
-        mode (string): this sets if and how sections and options already
-        existing in the file are overwritten; available choices are 'upgrade',
-        'update', 'reset' and 'add' (see _export_file() for more details)
+        overwrite (bool): this sets whether sections and options in the
+        file are overwritten; see _import_object for more details.
+        add (bool): this sets whether non-pre-existing sections and option
+        are added; see _import_object for more details.
         path (boolean): if True, section names are exported with their full
         path
         """
-        if mode in ('upgrade', 'update', 'reset', 'add'):
-            for f in targets:
-                self._export_file(f, mode=mode, path=path)
-        else:
-            raise ValueError('Unrecognized exporting mode: {}'.format(mode))
+        for f in targets:
+            self._export_file(f, overwrite=overwrite, add=add, reset=reset,
+                                                                    path=path)
 
     def export_upgrade(self, *targets, **kwargs):
         """
         Export sections and options to one or more files with upgrade mode.
 
-        See _export_file for a description of available modes and object
-        compatibility.
+        If an option already exists, change its value; if it doesn't exist,
+        create it and store its value:
+        {A:d,D:e} upgrade {A:a,B:b,C:c} => {A:d,B:b,C:c,D:e}
+
+        See _export_file for object compatibility.
 
         targets: a sequence with the target file names
         path (boolean): if True, section names are exported with their full
@@ -896,14 +895,17 @@ class Section(object):
         #def export_upgrade(self, *targets, path=True):
         path = kwargs.get('path', True)
 
-        self._export(targets, mode='upgrade', path=path)
+        self._export(targets, path=path)
 
     def export_update(self, *targets, **kwargs):
         """
         Export sections and options to one or more files with update mode.
 
-        See _export_file for a description of available modes and object
-        compatibility.
+        If an option already exists, change its value; if it doesn't exist,
+        don't do anything:
+        {A:d,D:e} update {A:a,B:b,C:c} => {A:d,B:b,C:c}
+
+        See _export_file for object compatibility.
 
         targets: a sequence with the target file names
         path (boolean): if True, section names are exported with their full
@@ -914,14 +916,17 @@ class Section(object):
         #def export_upgrade(self, *targets, path=True):
         path = kwargs.get('path', True)
 
-        self._export(targets, mode='update', path=path)
+        self._export(targets, add=False, path=path)
 
     def export_reset(self, *targets, **kwargs):
         """
         Export sections and options to one or more files with reset mode.
 
-        See _export_file for a description of available modes and object
-        compatibility.
+        Delete all options and subsections and recreate everything from the
+        importing object:
+        {A:d,D:e} reset {A:a,B:b,C:c} => {A:d,D:e}
+
+        See _export_file for object compatibility.
 
         targets: a sequence with the target file names
         path (boolean): if True, section names are exported with their full
@@ -932,14 +937,17 @@ class Section(object):
         #def export_upgrade(self, *targets, path=True):
         path = kwargs.get('path', True)
 
-        self._export(targets, mode='reset', path=path)
+        self._export(targets, reset=True, path=path)
 
     def export_add(self, *targets, **kwargs):
         """
         Export sections and options to one or more files with add mode.
 
-        See _export_file for a description of available modes and object
-        compatibility.
+        If an option already exists, don't do anything; if it doesn't exist,
+        create it and store its value:
+        {A:d,D:e} add {A:a,B:b,C:c} => {A:a,B:b,C:c,D:e}
+
+        See _export_file for object compatibility.
 
         targets: a sequence with the target file names
         path (boolean): if True, section names are exported with their full
@@ -950,37 +958,17 @@ class Section(object):
         #def export_upgrade(self, *targets, path=True):
         path = kwargs.get('path', True)
 
-        self._export(targets, mode='add', path=path)
+        self._export(targets, overwrite=False, path=path)
 
-    def _export_file(self, cfile, mode='upgrade', path=True):
+    def _export_file(self, cfile, overwrite=True, add=True, reset=False,
+                                                                    path=True):
         """
         Export the sections tree to a file.
 
         efile (string): the target file name.
-        mode (string): this sets if and how sections and options already
-        existing in the file are overwritten; available choices are 'upgrade',
-        'update', 'reset' and 'add':
-
-        upgrade mode:
-        if an option already exists, change its value; if it doesn't exist,
-        create it and store its value:
-        {A:d,D:e} upgrade {A:a,B:b,C:c} => {A:d,B:b,C:c,D:e}
-
-        update mode:
-        if an option already exists, change its value; if it doesn't exist,
-        don't do anything:
-        {A:d,D:e} update {A:a,B:b,C:c} => {A:d,B:b,C:c}
-
-        reset mode:
-        delete all options and subsections and recreate everything from the
-        importing object:
-        {A:d,D:e} reset {A:a,B:b,C:c} => {A:d,D:e}
-
-        add mode:
-        if an option already exists, don't do anything; if it doesn't exist,
-        create it and store its value:
-        {A:d,D:e} add {A:a,B:b,C:c} => {A:a,B:b,C:c,D:e}
-
+        overwrite (bool): whether sections and options already existing in the
+        file are overwritten.
+        add (bool): whether non-pre-existing data will be exported.
         path (boolean): if True, section names are exported with their full
         path, otherwise they are left
         """
@@ -1007,55 +995,56 @@ class Section(object):
 
             ancestry.reverse()
 
-            reset = (mode == 'reset' and self._NAME is None)
+            resetmode = (reset and self._NAME is None)
 
             for line in lines:
                 # Note that the order the various types are evaluated matters!
 
                 if re_.match(self._PARSE_IGNORE, line, self._RE_I) and \
-                                                                     not reset:
+                                                                not resetmode:
                     stream.write(line)
                     continue
 
                 if re_.match(self._PARSE_COMMENT, line, self._RE_I) and \
-                                                                     not reset:
+                                                                not resetmode:
                     stream.write(line)
                     continue
 
                 re_option = re_.match(self._PARSE_OPTION, line, self._RE_I)
 
                 if re_option:
-                    striptree_pointer = self._export_file_option(mode, reset,
-                                    stream, tree_pointer, striptree_pointer,
-                                    line, re_option)
+                    striptree_pointer = self._export_file_option(overwrite,
+                                            resetmode, stream, tree_pointer,
+                                            striptree_pointer, line, re_option)
                     continue
 
                 re_section = re_.match(self._PARSE_SECTION, line, self._RE_I)
 
                 if re_section:
                     striptree_pointer = self._export_file_remaining_options(
-                                        mode, reset, stream, striptree_pointer)
-                    tree_pointer, striptree_pointer, reset = \
-                                        self._export_file_update_pointers(mode,
-                                        tree, striptree, ancestry, re_section)
-                    self._export_file_section(reset, stream, tree_pointer,
+                                    add, resetmode, stream, striptree_pointer)
+                    tree_pointer, striptree_pointer, resetmode = \
+                                            self._export_file_update_pointers(
+                                            overwrite, reset, tree, striptree,
+                                            ancestry, re_section)
+                    self._export_file_section(resetmode, stream, tree_pointer,
                                                                         line)
                     continue
 
-                if not reset:
+                if not resetmode:
                     # Invalid lines
                     stream.write(line)
 
             # Export the remaining options for the last section in the original
             # file
-            striptree_pointer = self._export_file_remaining_options(mode,
-                                    reset, stream, striptree_pointer, end=True)
+            striptree_pointer = self._export_file_remaining_options(add,
+                            resetmode, stream, striptree_pointer, end=True)
 
-            if mode != 'update':
+            if add:
                 self._export_file_recurse_remaining_sections(stream, striptree)
 
-    def _export_file_update_pointers(self, mode, tree, striptree, ancestry,
-                                                                re_section):
+    def _export_file_update_pointers(self, overwrite, reset, tree, striptree,
+                                                        ancestry, re_section):
         """
         Auxiliary method for _export_file().
 
@@ -1082,8 +1071,9 @@ class Section(object):
                     striptree_pointer = None
                     break
 
-            reset = (mode == 'reset' and ancestry == [s.lower() for s in
-                                                         subs[:len(ancestry)]])
+            resetmode = (reset and ancestry == [s.lower()
+                                                for s in subs[:len(ancestry)]])
+
         else:
             for s in subs:
                 # Loop tree_pointer instead of striptree_pointer, so if there
@@ -1097,20 +1087,20 @@ class Section(object):
                     striptree_pointer = None
                     break
 
-            reset = (mode == 'reset' and ancestry == subs[:len(ancestry)])
+            resetmode = (reset and ancestry == subs[:len(ancestry)])
 
-        return (tree_pointer, striptree_pointer, reset)
+        return (tree_pointer, striptree_pointer, resetmode)
 
-    def _export_file_section(self, reset, stream, tree_pointer, line):
+    def _export_file_section(self, resetmode, stream, tree_pointer, line):
         """
         Auxiliary method for _export_file().
 
         Write the section currently examined from the destination file.
         """
-        if not reset or (reset and tree_pointer):
+        if not resetmode or tree_pointer:
             stream.write(line)
 
-    def _export_file_option(self, mode, reset, stream, tree_pointer,
+    def _export_file_option(self, overwrite, resetmode, stream, tree_pointer,
                                         striptree_pointer, line, re_option):
         """
         Auxiliary method for _export_file().
@@ -1127,8 +1117,8 @@ class Section(object):
                         except KeyError:
                             pass
 
-                        if mode != 'add' and re_option.group(2) != \
-                                                            tree_pointer[1][o]:
+                        if overwrite and re_option.group(2) != tree_pointer[1
+                                                                        ][o]:
                             stream.write(''.join((o, self._OPTION_SEP,
                                                     tree_pointer[1][o], '\n')))
                         else:
@@ -1138,7 +1128,7 @@ class Section(object):
                         break
 
                 else:
-                    if not reset:
+                    if not resetmode:
                         # Section is in object, but option is not
                         stream.write(line)
 
@@ -1146,7 +1136,7 @@ class Section(object):
                 if re_option.group(1) in tree_pointer[1]:
                     del striptree_pointer[1][re_option.group(1)]
 
-                    if mode != 'add' and tree_pointer[1][re_option.group(1)
+                    if overwrite and tree_pointer[1][re_option.group(1)
                                                     ] != re_option.group(2):
                         stream.write(''.join((re_option.group(1),
                                             self._OPTION_SEP, tree_pointer[1][
@@ -1155,17 +1145,17 @@ class Section(object):
                     else:
                         stream.write(line)
 
-                elif not reset:
+                elif not resetmode:
                     # Section is in object, but option is not
                     stream.write(line)
 
-        elif not reset:
+        elif not resetmode:
             # Section is not in object
             stream.write(line)
 
         return striptree_pointer
 
-    def _export_file_remaining_options(self, mode, reset, stream,
+    def _export_file_remaining_options(self, add, resetmode, stream,
                                                 striptree_pointer, end=False):
         """
         Auxiliary method for _export_file().
@@ -1173,13 +1163,13 @@ class Section(object):
         Write the options from the origin object that were not found in the
         destination file.
         """
-        if mode != 'update' and striptree_pointer is not None:
+        if add and striptree_pointer is not None:
             # Prevent writing '\n' if there aren't options, unless the section
             # is being reset (normally '\n' is written because it was already
             # there)
             # Note that the if statement must include also the for loop, since
             # it may delete striptree_pointer[o]
-            if len(striptree_pointer[1]) > 0 or reset:
+            if len(striptree_pointer[1]) > 0 or resetmode:
                 for o in striptree_pointer[1]:
                     stream.write(''.join((o, self._OPTION_SEP,
                                             striptree_pointer[1][o], '\n')))
@@ -1190,8 +1180,7 @@ class Section(object):
 
         return striptree_pointer
 
-    def _export_file_recurse_remaining_sections(self, stream, dict_,
-                                                                    pathl=[]):
+    def _export_file_recurse_remaining_sections(self, stream, dict_, pathl=[]):
         """
         Auxiliary method for _export_file().
 
@@ -1242,8 +1231,8 @@ class ConfigFile(Section):
         parsed
         mode (string): this sets if and how the next source in the chain
         overwrites already imported sections and options; available choices are
-        'upgrade', 'update', 'reset' and 'add' (see _import_object() for more
-        details)
+        'upgrade', 'update', 'reset' and 'add' (see the respective methods for
+        more details)
         subsections (boolean): if True (default) subsections are allowed
         ignore_case (boolean): if True, section and option names will be
         compared ignoring case differences; regular expressions will use re.I
@@ -1273,7 +1262,18 @@ class ConfigFile(Section):
         Section.__init__(self, name=None, parent=None, subsections=subsections,
                       inherit_options=inherit_options, ignore_case=ignore_case)
 
-        self._import(sources, mode=mode, interpolation=interpolation)
+        try:
+            overwrite, add, reset = {
+                "upgrade": (True, True, False),
+                "update": (True, False, False),
+                "reset": (True, True, True),
+                "add": (False, True, False),
+            }[mode]
+        except KeyError:
+            raise ValueError('Unrecognized importing mode: {}'.format(mode))
+
+        self._import(sources, overwrite=overwrite, add=add, reset=reset,
+                                                interpolation=interpolation)
 
 
 ### EXCEPTIONS ###

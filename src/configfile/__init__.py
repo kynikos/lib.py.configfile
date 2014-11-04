@@ -1008,231 +1008,247 @@ class Section(object):
             with open(cfile, 'r') as stream:
                 lines = stream.readlines()
         except IOError:
-            lines = ()
+            lines = []
+        else:
+            # Exclude leading blank lines
+            for lineN, line in enumerate(lines):
+                if not re_.match(self._PARSE_IGNORE, line, self._RE_I):
+                    lines = lines[lineN:]
+                    break
+            else:
+                lines = []
 
         with open(cfile, 'w') as stream:
-            tree = self.get_tree(path=path)
-            # We need a deep copy here
-            striptree = self.get_tree(path=path)
+            BASE_SECTION = self
 
-            tree_pointer = tree
-            striptree_pointer = striptree
-
-            if self._IGNORE_CASE:
-                ancestry = [s._NAME.lower()
-                                        for s in self._get_ancestors()[:-1]]
+            try:
+                ROOT_SECTION = self._get_ancestors()[-1]
+            except IndexError:
+                ROOT_SECTION = self
+                readonly_section = False
+                remaining_descendants = []
             else:
-                ancestry = [s._NAME for s in self._get_ancestors()[:-1]]
+                if path:
+                    readonly_section = True
+                    remaining_descendants = [BASE_SECTION, ]
+                else:
+                    # The options without a section (i.e. at the top of the
+                    #  file) must be considered part of the current section if
+                    #  path is False
+                    readonly_section = False
+                    remaining_descendants = []
 
-            ancestry.reverse()
-
-            resetmode = (reset and self._NAME is None)
+            remaining_options = BASE_SECTION.get_options(inherit_options=False)
+            remaining_descendants.extend(BASE_SECTION._get_descendants())
+            other_lines = []
 
             for line in lines:
-                # Note that the order the various types are evaluated matters!
-
-                if re_.match(self._PARSE_IGNORE, line, self._RE_I) and \
-                                                                not resetmode:
-                    stream.write(line)
-                    continue
-
-                if re_.match(self._PARSE_COMMENT, line, self._RE_I) and \
-                                                                not resetmode:
-                    stream.write(line)
-                    continue
-
                 re_option = re_.match(self._PARSE_OPTION, line, self._RE_I)
 
                 if re_option:
-                    striptree_pointer = self._export_file_option(overwrite,
-                                            resetmode, stream, tree_pointer,
-                                            striptree_pointer, line, re_option)
+                    # This also changes other_lines in place
+                    self._export_other_lines(stream, other_lines,
+                                                    readonly_section, reset)
+
+                    self._export_file_existing_option(stream, line, re_option,
+                                        readonly_section, remaining_options,
+                                        overwrite, reset)
                     continue
 
                 re_section = re_.match(self._PARSE_SECTION, line, self._RE_I)
 
                 if re_section:
-                    striptree_pointer = self._export_file_remaining_options(
-                                    add, resetmode, stream, striptree_pointer)
-                    tree_pointer, striptree_pointer, resetmode = \
-                                            self._export_file_update_pointers(
-                                            overwrite, reset, tree, striptree,
-                                            ancestry, re_section)
-                    self._export_file_section(resetmode, stream, tree_pointer,
-                                                                        line)
+                    if add:
+                        self._export_file_remaining_options(stream,
+                                        readonly_section, remaining_options)
+
+                    # This also changes other_lines in place
+                    self._export_other_lines_before_existing_section(stream,
+                                        other_lines, readonly_section, reset)
+
+                    # This also changes remaining_descendants in place
+                    (readonly_section, remaining_options) = \
+                                            self._export_file_existing_section(
+                                            stream, line, re_section,
+                                            ROOT_SECTION, BASE_SECTION,
+                                            remaining_descendants, path)
                     continue
 
-                if not resetmode:
-                    # Invalid lines
-                    stream.write(line)
-
-            # Export the remaining options for the last section in the original
-            # file
-            striptree_pointer = self._export_file_remaining_options(add,
-                            resetmode, stream, striptree_pointer, end=True)
+                # Comments, ignored/invalid lines
+                other_lines.append(line)
 
             if add:
-                self._export_file_recurse_remaining_sections(stream, striptree)
+                self._export_file_remaining_options(stream, readonly_section,
+                                                            remaining_options)
 
-    def _export_file_update_pointers(self, overwrite, reset, tree, striptree,
-                                                        ancestry, re_section):
-        """
-        Auxiliary method for _export_file().
+            # Don't use _export_other_lines_before_existing_section here
+            #  because any pre-existing unrecognized lines must be restored in
+            #  any case, and since they're at the end of the original file,
+            #  they weren't meant to separate any further sections, so let
+            #  _export_file_remaining_sections handle the addition of a blank
+            #  line
+            # This also changes other_lines in place
+            self._export_other_lines(stream, other_lines, readonly_section,
+                                                                        reset)
 
-        Update the tree pointers according to the currently-examined section.
-        """
-        subs = self._parse_subsections(re_section)
+            if add:
+                self._export_file_remaining_sections(stream, BASE_SECTION,
+                                                remaining_descendants, path)
 
-        # Reset pointers
-        tree_pointer = tree
-        striptree_pointer = striptree
-
-        if self._IGNORE_CASE:
-            for s in subs:
-                # Loop tree_pointer instead of striptree_pointer, so if there
-                # are more occurrences of this section, all will be updated
-                for ss in tree_pointer[0]:
-                    if s.lower() == ss.lower():
-                        tree_pointer = tree_pointer[0][ss]
-                        striptree_pointer = striptree_pointer[0][ss]
-                        break
-                else:
-                    # Section is not in object
-                    tree_pointer = None
-                    striptree_pointer = None
-                    break
-
-            resetmode = (reset and ancestry == [s.lower()
-                                                for s in subs[:len(ancestry)]])
-
-        else:
-            for s in subs:
-                # Loop tree_pointer instead of striptree_pointer, so if there
-                # are more occurrences of this section, all will be updated
-                if s in tree_pointer[0]:
-                    tree_pointer = tree_pointer[0][ss]
-                    striptree_pointer = striptree_pointer[0][ss]
-                else:
-                    # Section is not in object
-                    tree_pointer = None
-                    striptree_pointer = None
-                    break
-
-            resetmode = (reset and ancestry == subs[:len(ancestry)])
-
-        return (tree_pointer, striptree_pointer, resetmode)
-
-    def _export_file_section(self, resetmode, stream, tree_pointer, line):
-        """
-        Auxiliary method for _export_file().
-
-        Write the section currently examined from the destination file.
-        """
-        if not resetmode or tree_pointer:
-            stream.write(line)
-
-    def _export_file_option(self, overwrite, resetmode, stream, tree_pointer,
-                                        striptree_pointer, line, re_option):
+    def _export_file_existing_option(self, stream, line, re_option,
+                        readonly_section, remaining_options, overwrite, reset):
         """
         Auxiliary method for _export_file().
 
         Write the option currently examined from the destination file.
         """
-        if tree_pointer:
-            # Section is in object
-            if self._IGNORE_CASE:
-                for o in tree_pointer[1]:
-                    if re_option.group(1).lower() == o.lower():
-                        try:
-                            del striptree_pointer[1][o]
-                        except KeyError:
-                            pass
+        if readonly_section:
+            stream.write(line)
+            return True
 
-                        if overwrite and re_option.group(2) != tree_pointer[1
-                                                                        ][o]:
-                            stream.write(''.join((o, self._OPTION_SEP,
-                                                    tree_pointer[1][o], '\n')))
-                        else:
-                            stream.write(line)
-                        # There shouldn't be more occurrences of this option
-                        # (though with different casing) in tree
-                        break
+        if self._IGNORE_CASE:
+            for option in remaining_options:
+                fkey = re_option.group(1)
+                fvalue = re_option.group(2)
 
-                else:
-                    if not resetmode:
-                        # Section is in object, but option is not
-                        stream.write(line)
-
-            else:
-                if re_option.group(1) in tree_pointer[1]:
-                    del striptree_pointer[1][re_option.group(1)]
-
-                    if overwrite and tree_pointer[1][re_option.group(1)
-                                                    ] != re_option.group(2):
-                        stream.write(''.join((re_option.group(1),
-                                            self._OPTION_SEP, tree_pointer[1][
-                                            re_option.group(1)], '\n')))
-
+                if fkey.lower() == option.lower():
+                    if overwrite and fvalue != remaining_options[option]:
+                        stream.write(''.join((fkey, self._OPTION_SEP,
+                                            remaining_options[option], '\n')))
                     else:
                         stream.write(line)
 
-                elif not resetmode:
-                    # Section is in object, but option is not
+                    del remaining_options[option]
+
+                    # There shouldn't be more occurrences of this option (even
+                    #  with different casing)
+                    return True
+
+        else:
+            fkey = re_option.group(1)
+            fvalue = re_option.group(2)
+
+            if fkey in remaining_options:
+                if overwrite and remaining_options[fkey] != fvalue:
+                    stream.write(''.join((fkey, self._OPTION_SEP,
+                                            remaining_options[fkey], '\n')))
+
+                else:
                     stream.write(line)
 
-        elif not resetmode:
-            # Section is not in object
+                del remaining_options[fkey]
+                return True
+
+        if not reset:
             stream.write(line)
+            return True
 
-        return striptree_pointer
+        return False
 
-    def _export_file_remaining_options(self, add, resetmode, stream,
-                                                striptree_pointer, end=False):
+    def _export_file_remaining_options(self, stream, readonly_section,
+                                                            remaining_options):
         """
         Auxiliary method for _export_file().
 
         Write the options from the origin object that were not found in the
         destination file.
         """
-        if add and striptree_pointer is not None:
-            # Prevent writing '\n' if there aren't options, unless the section
-            # is being reset (normally '\n' is written because it was already
-            # there)
-            # Note that the if statement must include also the for loop, since
-            # it may delete striptree_pointer[o]
-            if len(striptree_pointer[1]) > 0 or resetmode:
-                for o in striptree_pointer[1]:
-                    stream.write(''.join((o, self._OPTION_SEP,
-                                            striptree_pointer[1][o], '\n')))
-                    del striptree_pointer[1][o]
+        if not readonly_section:
+            for option in remaining_options:
+                stream.write(''.join((option, self._OPTION_SEP,
+                                            remaining_options[option], '\n')))
 
-                if not end:
-                    stream.write('\n')
+    def _export_file_existing_section(self, stream, line, re_section,
+                    ROOT_SECTION, BASE_SECTION, remaining_descendants, path):
+        """
+        Auxiliary method for _export_file().
 
-        return striptree_pointer
+        Write the section currently examined from the destination file.
+        """
+        if self._ENABLE_SUBSECTIONS:
+            names = re_section.group(1).split(self._SECTION_SEP)
+        else:
+            names = (re_section.group(1), )
 
-    def _export_file_recurse_remaining_sections(self, stream, dict_, pathl=[]):
+        current_section = ROOT_SECTION if path else BASE_SECTION
+
+        for name in names:
+            try:
+                current_section = current_section(name)
+            except KeyError:
+                # The currently parsed section is not in the configuration
+                #  object
+                readonly_section = True
+                remaining_options = self._DICT_CLASS()
+                break
+        else:
+            alist = [current_section, ]
+            alist.extend(current_section._get_ancestors())
+
+            if BASE_SECTION in alist:
+                readonly_section = False
+                remaining_options = current_section.get_options(
+                                                        inherit_options=False)
+                remaining_descendants.remove(current_section)
+            else:
+                readonly_section = True
+                remaining_options = self._DICT_CLASS()
+
+        stream.write(line)
+
+        return (readonly_section, remaining_options)
+
+    def _export_file_remaining_sections(self, stream, BASE_SECTION,
+                                                remaining_descendants, path):
         """
         Auxiliary method for _export_file().
 
         Write the sections and their options from the origin object that
         were not found in the destination file.
         """
-        for o in dict_[1]:
-            stream.write(''.join((o, self._OPTION_SEP, dict_[1][o], '\n')))
+        # Do not add an empty line if at the start of the file
+        BR = "\n" if stream.tell() > 0 else ""
 
-        for s in dict_[0]:
-            pathl.append(s)
+        for section in remaining_descendants:
+            if len(section._options) > 0:
+                ancestors = [section._NAME, ]
 
-            if len(dict_[0][s]) > 0:
-                stream.write('\n')
-                stream.write(''.join((self._SECTION_MARKERS, '\n')).format(
-                                                self._SECTION_SEP.join(pathl)))
+                for ancestor in section._get_ancestors()[:-1]:
+                    if not path and ancestor is BASE_SECTION:
+                        break
 
-            self._export_file_recurse_remaining_sections(stream, dict_[0][s],
-                                                                        pathl)
-        else:
-            pathl[-1:] = []
+                    ancestors.append(ancestor._NAME)
+
+                ancestors.reverse()
+
+                stream.write("".join((BR, self._SECTION_MARKERS, "\n")
+                                ).format(self._SECTION_SEP.join(ancestors)))
+
+                for option in section._options:
+                    stream.write("".join((option, self._OPTION_SEP,
+                                                    section[option], "\n")))
+
+                # All the subsequent sections will need a blank line in any
+                #  case (do not add a double line break after the last option
+                #  because the last option of the last section must have only
+                #  one break)
+                BR = "\n"
+
+    def _export_other_lines(self, stream, other_lines, readonly_section,
+                                                                        reset):
+        if readonly_section or not reset:
+            stream.writelines(other_lines)
+
+        other_lines[:] = []
+
+    def _export_other_lines_before_existing_section(self, stream, other_lines,
+                                                    readonly_section, reset):
+        if readonly_section or not reset:
+            stream.writelines(other_lines)
+        elif stream.tell() > 0:
+            stream.write("\n")
+
+        other_lines[:] = []
 
 
 class ConfigFile(Section):

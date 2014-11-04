@@ -78,6 +78,9 @@ class Section(object):
 
         self._DICT_CLASS = collections.OrderedDict
 
+        # Use lambda to create a new object every time
+        self._EMPTY_SECTION = lambda: (self._DICT_CLASS(), self._DICT_CLASS())
+
         self._subsections = self._DICT_CLASS()
         self._options = self._DICT_CLASS()
 
@@ -213,7 +216,9 @@ class Section(object):
 
         name (string): the name of the new subsection
         """
-        self._import_dict({0: {name: {0: {}}}}, mode='add')
+        sub = self._EMPTY_SECTION()
+        sub[0][name] = self._EMPTY_SECTION()
+        self._import_object(sub, mode='add')
 
     def delete(self):
         """
@@ -223,13 +228,13 @@ class Section(object):
 
     def upgrade(self, *sources, **kwargs):
         """
-        Import sections and options from a file or compatible dictionary with
-        upgrade mode.
+        Import sections and options from a file, dictionary or special object
+        with upgrade mode.
 
-        See _import_dict for a description of available modes and dictionary
+        See _import_object for a description of available modes and object
         compatibility.
 
-        sources: a sequence of files and/or dictionaries.
+        sources: a sequence of files, dictionaries and/or special objects.
         interpolation (boolean): enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
@@ -241,13 +246,13 @@ class Section(object):
 
     def update(self, *sources, **kwargs):
         """
-        Import sections and options from a file or compatible dictionary with
-        update mode.
+        Import sections and options from a file, dictionary or special object
+        with update mode.
 
-        See _import_dict for a description of available modes and dictionary
+        See _import_object for a description of available modes and object
         compatibility.
 
-        sources: a sequence of files and/or dictionaries.
+        sources: a sequence of files, dictionaries and/or special objects.
         interpolation (boolean): enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
@@ -259,13 +264,13 @@ class Section(object):
 
     def reset(self, *sources, **kwargs):
         """
-        Import sections and options from a file or compatible dictionary with
-        reset mode.
+        Import sections and options from a file, dictionary or special object
+        with reset mode.
 
-        See _import_dict for a description of available modes and dictionary
+        See _import_object for a description of available modes and object
         compatibility.
 
-        sources: a sequence of files and/or dictionaries.
+        sources: a sequence of files, dictionaries and/or special objects.
         interpolation (boolean): enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
@@ -277,13 +282,13 @@ class Section(object):
 
     def add(self, *sources, **kwargs):
         """
-        Import sections and options from a file or compatible dictionary with
-        add mode.
+        Import sections and options from a file, dictionary or special object
+        with add mode.
 
-        See _import_dict for a description of available modes and dictionary
+        See _import_object for a description of available modes and object
         compatibility.
 
-        sources: a sequence of files and/or dictionaries.
+        sources: a sequence of files, dictionaries and/or special objects.
         interpolation (boolean): enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
@@ -295,27 +300,37 @@ class Section(object):
 
     def _import(self, sources, mode='upgrade', interpolation=False):
         """
-        Parse some files or dictionaries and add their configuration to the
-        existing one.
+        Parse some files, dictionaries or special objects and add their
+        configuration to the existing one.
 
-        Distinction between files and dictionaries is done automatically.
+        Distinction between the various source types is done automatically.
 
-        sources: a sequence of all the files or dictionaries to be parsed.
-        mode (string): this sets if and how the next file or dictionary in the
-        chain overwrites already imported sections and options; available
-        choices are 'upgrade', 'update', 'reset' and 'add' (see _import_dict()
-        for more details)
+        sources: a sequence of all the files, dictionaries or special object to
+        be parsed; a value of None will be ignored.
+        mode (string): this sets if and how the next source in the chain
+        overwrites already imported sections and options; available choices are
+        'upgrade', 'update', 'reset' and 'add' (see _import_object() for more
+        details)
         interpolation (boolean): if True, option values will be interpolated
         using values from other options through the special syntax
         ${section$:section$:option$}. Options will be interpolated only once at
         importing: all links among options will be lost after importing.
         """
         if mode in ('upgrade', 'update', 'reset', 'add'):
-            for f in sources:
-                if not isinstance(f, dict):
-                    f = self._parse_file(f)
+            for source in sources:
+                if source is None:
+                    continue
 
-                self._import_dict(f, mode=mode)
+                elif isinstance(source, str):
+                    obj = self._parse_file(source)
+
+                elif isinstance(source, dict):
+                    obj = ({}, source)
+
+                else:
+                    obj = source
+
+                self._import_object(obj, mode=mode)
 
                 if interpolation:
                     self._interpolate(root=self)
@@ -324,7 +339,7 @@ class Section(object):
 
     def _parse_file(self, cfile):
         """
-        Parse a text file and translate it into a compatible dictionary, thus
+        Parse a text file and translate it into a compatible object, thus
         making it possible to import it.
 
         cfile (string): the name of the file to be parsed
@@ -342,8 +357,7 @@ class Section(object):
 
         else:
             with stream:
-                cdict = self._DICT_CLASS()
-                cdict[0] = self._DICT_CLASS()
+                cdict = self._EMPTY_SECTION()
                 lastsect = cdict
 
                 for lno, line in enumerate(stream):
@@ -357,8 +371,9 @@ class Section(object):
                         continue
 
                     re_option = re_.match(self._PARSE_OPTION, line, self._RE_I)
+
                     if re_option:
-                        lastsect[re_option.group(1)] = re_option.group(2)
+                        lastsect[1][re_option.group(1)] = re_option.group(2)
                         continue
 
                     re_section = re_.match(self._PARSE_SECTION, line,
@@ -369,8 +384,7 @@ class Section(object):
 
                         for s in subs:
                             if s not in d[0]:
-                                d[0][s] = self._DICT_CLASS()
-                                d[0][s][0] = self._DICT_CLASS()
+                                d[0][s] = self._EMPTY_SECTION()
 
                             d = d[0][s]
 
@@ -394,96 +408,99 @@ class Section(object):
         else:
             return (re.group(1), )
 
-    def _import_dict(self, cdict, mode='upgrade'):
+    def _import_object(self, cobj, mode='upgrade'):
         """
-        Import sections and options from a compatible dictionary.
+        Import sections and options from a compatible object.
 
-        cdict (mapping object): a dictionary (or compatible mapping object) to
-        be imported; it represents a section, and the keys which are strings
-        will be considered option names (and their values the option values),
-        while a special key 0 (integer) will be considered as the container for
-        subsections, like in this example:
-        cdict = {
-            0: {
-                'sectionA': {
-                    0: {
-                        'sectionC': {
-                            0: {},
-                            'optionC1': 'value',
-                            'optionC2': 'value'
-                        }
+        cobj (special nested object): a special object composed of
+        dictionaries (or compatible mapping object) and tuples to be imported;
+        a section is represented by a 2-tuple: its first value is a mapping
+        object that associates the names of subsections to their 2-tuples; its
+        second value is a mapping object that associates the names of options
+        to their values. For example:
+        cobj = (
+            {
+                'sectionA': (
+                    {
+                        'sectionC': (
+                            {},
+                            {
+                                'optionC1': 'value',
+                                'optionC2': 'value',
+                            }
+                        ),
                     },
-                    'optionA1': 'value',
-                    'optionA2': 'value'
-                },
-                'sectionB': {
-                    0: {},
-                    'optionB1': 'value',
-                    'optionB2': 'value'
-                }
+                    {
+                        'optionA1': 'value',
+                        'optionA2': 'value',
+                    },
+                ),
+                'sectionB': (
+                    {},
+                    {
+                        'optionB1': 'value',
+                        'optionB2': 'value'
+                    },
+                ),
             },
-            'option1': 'value',
-            'option2': 'value'
-        }
+            {
+                'option1': 'value',
+                'option2': 'value'
+            },
+        )
 
         mode (string): this is the mode of data import; available choices are
-        'upgrade', 'update', 'reset' and 'add', here descripted:
+        'upgrade', 'update', 'reset' and 'add', here described:
 
         upgrade mode:
         if an option already exists, change its value; if it doesn't exist,
         create it and store its value:
-        (A:a,B:b,C:c) upgrade (A:d,D:e) => (A:d,B:b,C:c,D:e)
+        {A:a,B:b,C:c} upgrade {A:d,D:e} => {A:d,B:b,C:c,D:e}
 
         update mode:
         if an option already exists, change its value; if it doesn't exist,
         don't do anything:
-        (A:a,B:b,C:c) update (A:d,D:e) => (A:d,B:b,C:c)
+        {A:a,B:b,C:c} update {A:d,D:e} => {A:d,B:b,C:c}
 
         reset mode:
         delete all options and subsections and recreate everything from the
-        importing dictionary:
-        (A:a,B:b,C:c) reset (A:d,D:e) => (A:d,D:e)
+        importing object:
+        {A:a,B:b,C:c} reset {A:d,D:e} => {A:d,D:e}
 
         add mode:
         if an option already exists, don't do anything; if it doesn't exist,
         create it and store its value:
-        (A:a,B:b,C:c) add (A:d,D:e) => (A:a,B:b,C:c,D:e)
+        {A:a,B:b,C:c} add {A:d,D:e} => {A:a,B:b,C:c,D:e}
         """
         if mode == 'reset':
             self._subsections = self._DICT_CLASS()
             self._options = self._DICT_CLASS()
 
-        for e in cdict:
-            if e == 0 and isinstance(cdict[0], dict):
-                for s in cdict[0]:
-                    if isinstance(s, str):
-                        if re_.match(self._SECTION, s, self._RE_I):
-                            self._import_dict_subsection(mode, s, cdict[0][s])
-                        else:
-                            raise InvalidDictionaryError('Invalid section '
-                                                         'name: {}'.format(s))
-                    else:
-                        raise InvalidDictionaryError('The dictionary to be '
-                                        'imported has invalid keys or values')
-            elif isinstance(e, str) and isinstance(cdict[e], str):
-                if re_.match(self._OPTION, e, self._RE_I) and \
-                                  re_.match(self._VALUE, cdict[e], self._RE_I):
-                    self._import_dict_option(mode, e, cdict[e])
-                else:
-                    raise InvalidDictionaryError('Invalid option or value: '
-                                                '{}: {}'.format(e, cdict[e]))
+        for s in cobj[0]:
+            if isinstance(s, str) and re_.match(self._SECTION, s, self._RE_I):
+                self._import_object_subsection(mode, s, cobj[0][s])
             else:
-                raise InvalidDictionaryError('The dictionary to be imported '
-                                                'has invalid keys or values')
+                raise InvalidObjectError('Invalid section name: {}'.format(
+                                                                            s))
 
-    def _import_dict_subsection(self, mode, sec, secd):
+        for o in cobj[1]:
+            if isinstance(o, str) and isinstance(cobj[1][o], str) and \
+                                re_.match(self._OPTION, o, self._RE_I) and \
+                                re_.match(self._VALUE, cobj[1][o], self._RE_I):
+                self._import_object_option(mode, o, cobj[1][o])
+            else:
+                raise InvalidObjectError('Invalid option or value: {}: {}'
+                                                    ''.format(o, cobj[1][o]))
+
+    def _import_object_subsection(self, mode, sec, secd):
         """
-        Auxiliary method for _import_dict().
+        Auxiliary method for _import_object().
 
         Import the currently-examined subsection.
         """
         if mode == 'reset':
-            self._import_dict_subsection_create(mode, sec, secd)
+            self._import_object_subsection_create(mode, sec, secd)
+
         elif self._IGNORE_CASE:
             for ss in self._subsections:
                 if sec.lower() == ss.lower():
@@ -492,20 +509,24 @@ class Section(object):
                     # ('upgrade', 'update') the loop never breaks, not even if
                     # sec.lower() == ss.lower()
                     if mode in ('upgrade', 'update'):
-                        self._subsections[ss]._import_dict(secd, mode=mode)
+                        self._subsections[ss]._import_object(secd, mode=mode)
+
                     break
+
             else:
                 if mode in ('upgrade', 'add'):
-                    self._import_dict_subsection_create(mode, sec, secd)
+                    self._import_object_subsection_create(mode, sec, secd)
+
         else:
             if sec in self._subsections and mode in ('upgrade', 'update'):
-                self._subsections[sec]._import_dict(secd, mode=mode)
-            elif sec not in self._subsections and mode in ('upgrade', 'add'):
-                self._import_dict_subsection_create(mode, sec, secd)
+                self._subsections[sec]._import_object(secd, mode=mode)
 
-    def _import_dict_subsection_create(self, mode, sec, secd):
+            elif sec not in self._subsections and mode in ('upgrade', 'add'):
+                self._import_object_subsection_create(mode, sec, secd)
+
+    def _import_object_subsection_create(self, mode, sec, secd):
         """
-        Auxiliary method for _import_dict_subsection().
+        Auxiliary method for _import_object_subsection().
 
         Import the currently-examined subsection.
         """
@@ -513,17 +534,18 @@ class Section(object):
                              subsections=self._ENABLE_SUBSECTIONS,
                              inherit_options=self._INHERIT_OPTIONS,
                              ignore_case=self._IGNORE_CASE)
-        subsection._import_dict(secd, mode=mode)
+        subsection._import_object(secd, mode=mode)
         self._subsections[sec] = subsection
 
-    def _import_dict_option(self, mode, opt, val):
+    def _import_object_option(self, mode, opt, val):
         """
-        Auxiliary method for _import_dict().
+        Auxiliary method for _import_object().
 
         Import the currently-examined option.
         """
         if mode == 'reset':
             self._options[opt] = val
+
         elif self._IGNORE_CASE:
             for o in self._options:
                 if opt.lower() == o.lower():
@@ -533,10 +555,13 @@ class Section(object):
                     # opt.lower() == o.lower()
                     if mode in ('upgrade', 'update'):
                         self._options[o] = val
+
                     break
+
             else:
                 if mode in ('upgrade', 'add'):
                     self._options[opt] = val
+
         elif (opt in self._options and mode in ('upgrade', 'update')) or \
                      (opt not in self._options and mode in ('upgrade', 'add')):
             self._options[opt] = val
@@ -567,6 +592,7 @@ class Section(object):
         for o, v in self._options:
             L = re_.split('(\$\$|\$\{|\$\:|\$\})', v)
             resolve = []
+
             for i in L:
                 if i == '$$':
                     i = '$'
@@ -574,23 +600,31 @@ class Section(object):
                 if i == '${' and not resolve:
                     resolve.append('')
                     continue
+
                 elif i == '$:' and resolve:
                     resolve.append('')
                     continue
+
                 elif i == '$}' and resolve:
                     option = resolve.pop(-1)
+
                     if len(resolve) == 0 or resolve[0] == '':
                         section = self
                     else:
                         section = root._subsections[resolve[0]]
+
                     for r in resolve[1:]:
                         section = section._subsections[r]
+
                     i = section._options[option]
                     resolve = []
                     continue
+
                 elif resolve:
                     resolve[-1][-1:] = i
+
             v = ''.join(L)
+
         for s, ss in self._subsections:
             ss._interpolate(root=root)
 
@@ -623,10 +657,12 @@ class Section(object):
                     if (self._IGNORE_CASE and opt.lower() == o.lower()) or \
                                           (not self._IGNORE_CASE and opt == o):
                         return s._options[o]
+
             else:
                 # Note that if fallback is not specified, this returns None
                 # which is not a string as expected
                 return fallback
+
         else:
             raise TypeError('Option name must be a string: {}'.format(opt))
 
@@ -719,6 +755,7 @@ class Section(object):
             default = self._GET_BOOLEAN_DEFAULT
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
+
         v = str(self.get(opt, fallback=fallback,
                                       inherit_options=inherit_options)).lower()
         if v in true:
@@ -784,10 +821,10 @@ class Section(object):
 
     def get_tree(self, ordered=True, path=False):
         """
-        Return a compatible dictionary with options and subsections.
+        Return a compatible object with options and subsections.
 
-        ordered (boolean): if True, return an ordered dictionary; otherwise
-        return a normal dictionary
+        ordered (boolean): if True, the object uses ordered dictionaries;
+        otherwise it uses normal dictionaries
         path (boolean): if True, return the current section as a subsection
         of the parent sections.
         """
@@ -799,11 +836,10 @@ class Section(object):
 
             while p:
                 if ordered:
-                    e = self._DICT_CLASS()
-                    e[0] = self._DICT_CLASS()
+                    e = self._EMPTY_SECTION()
                 else:
-                    e = {}
-                    e[0] = {}
+                    e = ({}, {})
+
                 e[0][n] = d
                 d = e
                 n = p._NAME
@@ -815,16 +851,15 @@ class Section(object):
         """
         Auxiliary recursor for tree().
         """
-        d = self.get_options(ordered=ordered, inherit_options=False)
+        options = self.get_options(ordered=ordered, inherit_options=False)
 
         if ordered:
-            d[0] = self._DICT_CLASS()
+            d = (self._DICT_CLASS(), options)
         else:
-            d[0] = {}
+            d = ({}, options)
 
-        subs = self._subsections
-        for s in subs:
-            d[0][s] = subs[s]._recurse_tree(ordered=ordered)
+        for s in self._subsections:
+            d[0][s] = self._subsections[s]._recurse_tree(ordered=ordered)
 
         return d
 
@@ -835,13 +870,13 @@ class Section(object):
         targets: a sequence with the target file names
         mode (string): this sets if and how sections and options already
         existing in the file are overwritten; available choices are 'upgrade',
-        'update', 'reset' and 'add' (see _export_dict() for more details)
+        'update', 'reset' and 'add' (see _export_file() for more details)
         path (boolean): if True, section names are exported with their full
         path
         """
         if mode in ('upgrade', 'update', 'reset', 'add'):
             for f in targets:
-                self._export_dict(f, mode=mode, path=path)
+                self._export_file(f, mode=mode, path=path)
         else:
             raise ValueError('Unrecognized exporting mode: {}'.format(mode))
 
@@ -849,7 +884,7 @@ class Section(object):
         """
         Export sections and options to one or more files with upgrade mode.
 
-        See _export_dict for a description of available modes and dictionary
+        See _export_file for a description of available modes and object
         compatibility.
 
         targets: a sequence with the target file names
@@ -859,10 +894,7 @@ class Section(object):
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
         #def export_upgrade(self, *targets, path=True):
-        if 'path' in kwargs:
-            path = kwargs['path']
-        else:
-            path = True
+        path = kwargs.get('path', True)
 
         self._export(targets, mode='upgrade', path=path)
 
@@ -870,7 +902,7 @@ class Section(object):
         """
         Export sections and options to one or more files with update mode.
 
-        See _export_dict for a description of available modes and dictionary
+        See _export_file for a description of available modes and object
         compatibility.
 
         targets: a sequence with the target file names
@@ -880,10 +912,7 @@ class Section(object):
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
         #def export_upgrade(self, *targets, path=True):
-        if 'path' in kwargs:
-            path = kwargs['path']
-        else:
-            path = True
+        path = kwargs.get('path', True)
 
         self._export(targets, mode='update', path=path)
 
@@ -891,7 +920,7 @@ class Section(object):
         """
         Export sections and options to one or more files with reset mode.
 
-        See _export_dict for a description of available modes and dictionary
+        See _export_file for a description of available modes and object
         compatibility.
 
         targets: a sequence with the target file names
@@ -901,10 +930,7 @@ class Section(object):
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
         #def export_upgrade(self, *targets, path=True):
-        if 'path' in kwargs:
-            path = kwargs['path']
-        else:
-            path = True
+        path = kwargs.get('path', True)
 
         self._export(targets, mode='reset', path=path)
 
@@ -912,7 +938,7 @@ class Section(object):
         """
         Export sections and options to one or more files with add mode.
 
-        See _export_dict for a description of available modes and dictionary
+        See _export_file for a description of available modes and object
         compatibility.
 
         targets: a sequence with the target file names
@@ -922,14 +948,11 @@ class Section(object):
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
         #def export_upgrade(self, *targets, path=True):
-        if 'path' in kwargs:
-            path = kwargs['path']
-        else:
-            path = True
+        path = kwargs.get('path', True)
 
         self._export(targets, mode='add', path=path)
 
-    def _export_dict(self, cfile, mode='upgrade', path=True):
+    def _export_file(self, cfile, mode='upgrade', path=True):
         """
         Export the sections tree to a file.
 
@@ -941,22 +964,22 @@ class Section(object):
         upgrade mode:
         if an option already exists, change its value; if it doesn't exist,
         create it and store its value:
-        (A:d,D:e) upgrade (A:a,B:b,C:c) => (A:d,B:b,C:c,D:e)
+        {A:d,D:e} upgrade {A:a,B:b,C:c} => {A:d,B:b,C:c,D:e}
 
         update mode:
         if an option already exists, change its value; if it doesn't exist,
         don't do anything:
-        (A:d,D:e) update (A:a,B:b,C:c) => (A:d,B:b,C:c)
+        {A:d,D:e} update {A:a,B:b,C:c} => {A:d,B:b,C:c}
 
         reset mode:
         delete all options and subsections and recreate everything from the
-        importing dictionary:
-        (A:d,D:e) reset (A:a,B:b,C:c) => (A:d,D:e)
+        importing object:
+        {A:d,D:e} reset {A:a,B:b,C:c} => {A:d,D:e}
 
         add mode:
         if an option already exists, don't do anything; if it doesn't exist,
         create it and store its value:
-        (A:d,D:e) add (A:a,B:b,C:c) => (A:a,B:b,C:c,D:e)
+        {A:d,D:e} add {A:a,B:b,C:c} => {A:a,B:b,C:c,D:e}
 
         path (boolean): if True, section names are exported with their full
         path, otherwise they are left
@@ -964,7 +987,7 @@ class Section(object):
         try:
             with open(cfile, 'r') as stream:
                 lines = stream.readlines()
-        except:
+        except IOError:
             lines = ()
 
         with open(cfile, 'w') as stream:
@@ -977,8 +1000,10 @@ class Section(object):
             stp = striptree
 
             ancestry = [s._NAME for s in self._get_ancestors()][:-1]
+
             if self._IGNORE_CASE:
                 ancestry = [a.lower() for a in ancestry]
+
             ancestry.reverse()
 
             if mode == 'reset' and self._NAME is None:
@@ -988,6 +1013,7 @@ class Section(object):
 
             for line in lines:
                 # Note that the order the various types are evaluated matters!
+
                 if re_.match(self._PARSE_IGNORE, line, self._RE_I) and \
                                                                      not reset:
                     stream.write(line)
@@ -997,36 +1023,37 @@ class Section(object):
                 else:
                     re_option = re_.match(self._PARSE_OPTION, line, self._RE_I)
                     if re_option:
-                        stp = self._export_dict_option(mode, reset, stream, tp,
-                                                       stp, line, re_option)
+                        stp = self._export_file_option(mode, reset, stream,
+                                                    tp, stp, line, re_option)
                     else:
                         re_section = re_.match(self._PARSE_SECTION, line,
                                                self._RE_I)
                         if re_section:
-                            stp = self._export_dict_remaining_options(mode,
+                            stp = self._export_file_remaining_options(mode,
                                                                       reset,
                                                                       stream,
                                                                       stp)
-                            tp, stp, reset = self._export_dict_update_pointers(
+                            tp, stp, reset = self._export_file_update_pointers(
                                                          mode, tree, striptree,
                                                           ancestry, re_section)
-                            self._export_dict_section(reset, stream, tp, line)
+                            self._export_file_section(reset, stream, tp,
+                                                                        line)
                         elif not reset:
                             # Invalid lines
                             stream.write(line)
 
             # Export the remaining options for the last section in the original
             # file
-            stp = self._export_dict_remaining_options(mode, reset, stream, stp,
-                                                      end=True)
+            stp = self._export_file_remaining_options(mode, reset, stream,
+                                                                stp, end=True)
 
             if mode != 'update':
-                self._export_dict_recurse_remaining_sections(stream, striptree)
+                self._export_file_recurse_remaining_sections(stream, striptree)
 
-    def _export_dict_update_pointers(self, mode, tree, striptree, ancestry,
-                                     re_section):
+    def _export_file_update_pointers(self, mode, tree, striptree, ancestry,
+                                                                re_section):
         """
-        Auxiliary method for _export_dict().
+        Auxiliary method for _export_file().
 
         Update the tree pointers according to the currently-examined section.
         """
@@ -1076,68 +1103,75 @@ class Section(object):
 
         return (tp, stp, reset)
 
-    def _export_dict_section(self, reset, stream, tp, line):
+    def _export_file_section(self, reset, stream, tp, line):
         """
-        Auxiliary method for _export_dict().
+        Auxiliary method for _export_file().
 
         Write the section currently examined from the destination file.
         """
         if not reset or (reset and tp):
             stream.write(line)
 
-    def _export_dict_option(self, mode, reset, stream, tp, stp, line,
+    def _export_file_option(self, mode, reset, stream, tp, stp, line,
                             re_option):
         """
-        Auxiliary method for _export_dict().
+        Auxiliary method for _export_file().
 
         Write the option currently examined from the destination file.
         """
         if tp:
             # Section is in object
             if self._IGNORE_CASE:
-                for o in tp:
-                    if o != 0 and re_option.group(1).lower() == o.lower():
-                        if o in stp:
-                            del stp[o]
+                for o in tp[1]:
+                    if re_option.group(1).lower() == o.lower():
+                        try:
+                            del stp[1][o]
+                        except KeyError:
+                            pass
 
-                        if mode != 'add' and re_option.group(2) != tp[o]:
+                        if mode != 'add' and re_option.group(2) != tp[1][o]:
                             stream.write(''.join((o, self._OPTION_SEP,
-                                                  tp[o], '\n')))
+                                                            tp[1][o], '\n')))
                         else:
                             stream.write(line)
                         # There shouldn't be more occurrences of this
                         # option (though with different casing) in tree
                         break
+
                 else:
                     if not reset:
                         # Section is in object, but option is not
                         stream.write(line)
+
             else:
-                if re_option.group(1) in tp:
-                    del stp[re_option.group(1)]
-                    if mode != 'add' and tp[re_option.group(1)] != \
-                                                        re_option.group(2):
+                if re_option.group(1) in tp[1]:
+                    del stp[1][re_option.group(1)]
+
+                    if mode != 'add' and tp[1][re_option.group(1)] != \
+                                                            re_option.group(2):
                         stream.write(''.join((re_option.group(1),
-                                              self._OPTION_SEP,
-                                              tp[re_option.group(1)],
-                                              '\n')))
+                                            self._OPTION_SEP,
+                                            tp[1][re_option.group(1)], '\n')))
+
                     else:
                         stream.write(line)
+
                 elif not reset:
                     # Section is in object, but option is not
                     stream.write(line)
+
         elif not reset:
             # Section is not in object
             stream.write(line)
 
         return stp
 
-    def _export_dict_remaining_options(self, mode, reset, stream, stp,
-                                       end=False):
+    def _export_file_remaining_options(self, mode, reset, stream, stp,
+                                                                    end=False):
         """
-        Auxiliary method for _export_dict().
+        Auxiliary method for _export_file().
 
-        Write the options from the origin dictionary that were not found in the
+        Write the options from the origin object that were not found in the
         destination file.
         """
         if mode != 'update' and stp is not None:
@@ -1146,36 +1180,38 @@ class Section(object):
             # there)
             # Note that the if statement must include also the for loop, since
             # it may delete stp[o]
-            if len(stp) > 1 or reset:
-                for o in stp:
-                    if o != 0:
-                        stream.write(''.join((o, self._OPTION_SEP, stp[o],
-                                              '\n')))
-                        del stp[o]
+            if len(stp[1]) > 0 or reset:
+                for o in stp[1]:
+                    stream.write(''.join((o, self._OPTION_SEP, stp[1][o],
+                                                                        '\n')))
+                    del stp[1][o]
+
                 if not end:
                     stream.write('\n')
 
         return stp
 
-    def _export_dict_recurse_remaining_sections(self, stream, dict_, pathl=[]):
+    def _export_file_recurse_remaining_sections(self, stream, dict_,
+                                                                    pathl=[]):
         """
-        Auxiliary method for _export_dict().
+        Auxiliary method for _export_file().
 
-        Write the sections and their options from the origin dictionary that
+        Write the sections and their options from the origin object that
         were not found in the destination file.
         """
-        for o in dict_:
-            if o != 0:
-                stream.write(''.join((o, self._OPTION_SEP, dict_[o], '\n')))
+        for o in dict_[1]:
+            stream.write(''.join((o, self._OPTION_SEP, dict_[1][o], '\n')))
 
         for s in dict_[0]:
             pathl.append(s)
-            if len(dict_[0][s]) > 1:
+
+            if len(dict_[0][s]) > 0:
                 stream.write('\n')
                 stream.write(''.join((self._SECTION_MARKERS, '\n')).format(
                                                 self._SECTION_SEP.join(pathl)))
-            self._export_dict_recurse_remaining_sections(stream, dict_[0][s],
-                                                         pathl)
+
+            self._export_file_recurse_remaining_sections(stream, dict_[0][s],
+                                                                        pathl)
         else:
             pathl[-1:] = []
 
@@ -1184,12 +1220,12 @@ class ConfigFile(Section):
     """
     A configuration file object.
 
-    One or more text files or compatible dictionaries can be initially parsed
-    with configfile.ConfigFile(file1, dict1, file2, ...).
+    One or more text files, dictionaries or compatible objects can be initially
+    parsed with configfile.ConfigFile(file1, dict1, file2, ...).
     This will instantiate a ConfigFile object with sections, subsections,
     options and values.
-    Even if you parse more files or dictionaries, this will instantiate a
-    unified object.
+    Even if you parse more files, dictionaries or special objects, this will
+    instantiate a unified object.
 
     A default set of values can be set by assigning a dictionary as the first
     argument.
@@ -1202,12 +1238,13 @@ class ConfigFile(Section):
         """
         Constructor: instantiate a ConfigFile object.
 
-        sources (string or dict): a sequence of all the files and dictionaries
-        to be parsed
-        mode (string): this sets if and how the next file or dictionary in the
-        chain overwrites already imported sections and options; available
-        choices are 'upgrade', 'update', 'reset' and 'add' (see _import_dict()
-        for more details)
+        sources (string, dict or special object (see _import_object)): a
+        sequence of all the files, dictionaries and special objects to be
+        parsed
+        mode (string): this sets if and how the next source in the chain
+        overwrites already imported sections and options; available choices are
+        'upgrade', 'update', 'reset' and 'add' (see _import_object() for more
+        details)
         subsections (boolean): if True (default) subsections are allowed
         ignore_case (boolean): if True, section and option names will be
         compared ignoring case differences; regular expressions will use re.I
@@ -1270,8 +1307,8 @@ class InvalidFileError(ConfigFileError):
     pass
 
 
-class InvalidDictionaryError(ConfigFileError):
+class InvalidObjectError(ConfigFileError):
     """
-    An invalid key found in an importing dictionary.
+    An invalid key found in an importing object.
     """
     pass

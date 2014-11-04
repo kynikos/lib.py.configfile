@@ -33,23 +33,23 @@ class Section(object):
     Possible options at the beginning of the file, before any section, are
     considered to be in the "root" section.
     """
-    def __init__(self, name=None, parent=None, subsections=True,
-                                    inherit_options=False, ignore_case=True):
+    def __init__(self, name=None, parent=None, inherit_options=False,
+                                        subsections=True, ignore_case=True):
         """
         Constructor.
 
         name (string): the name of the section
         parent (Section instance): a reference to the parent section object
-        subsections (boolean): if True, subsections are enabled; otherwise they
-        are disabled
         ignore_case (boolean): if True, section and option names will be
         compared ignoring case differences; regular expressions will use re.I
         flag
+        subsections (boolean): if True, subsections are enabled; otherwise they
+        are disabled
         """
         self._NAME = name
         self._PARENT = parent
-        self._ENABLE_SUBSECTIONS = subsections
         self._INHERIT_OPTIONS = inherit_options
+        self._ENABLE_SUBSECTIONS = subsections
         self._IGNORE_CASE = ignore_case
         self._RE_I = re_.I if self._IGNORE_CASE else 0
 
@@ -81,8 +81,8 @@ class Section(object):
         # Use lambda to create a new object every time
         self._EMPTY_SECTION = lambda: (self._DICT_CLASS(), self._DICT_CLASS())
 
-        self._subsections = self._DICT_CLASS()
         self._options = self._DICT_CLASS()
+        self._subsections = self._DICT_CLASS()
 
     ### DATA MODEL ###
 
@@ -217,7 +217,7 @@ class Section(object):
         name (string): the name of the new subsection
         """
         sub = self._EMPTY_SECTION()
-        sub[0][name] = self._EMPTY_SECTION()
+        sub[1][name] = self._EMPTY_SECTION()
         self._import_object(sub, overwrite=False)
 
     def delete(self):
@@ -340,7 +340,7 @@ class Section(object):
             elif isinstance(source, str):
                 obj = self._parse_file(source)
             elif isinstance(source, dict):
-                obj = ({}, source)
+                obj = (source, {})
             else:
                 obj = source
 
@@ -385,7 +385,7 @@ class Section(object):
                     re_option = re_.match(self._PARSE_OPTION, line, self._RE_I)
 
                     if re_option:
-                        lastsect[1][re_option.group(1)] = re_option.group(2)
+                        lastsect[0][re_option.group(1)] = re_option.group(2)
                         continue
 
                     re_section = re_.match(self._PARSE_SECTION, line,
@@ -395,10 +395,10 @@ class Section(object):
                         d = cdict
 
                         for s in subs:
-                            if s not in d[0]:
-                                d[0][s] = self._EMPTY_SECTION()
+                            if s not in d[1]:
+                                d[1][s] = self._EMPTY_SECTION()
 
-                            d = d[0][s]
+                            d = d[1][s]
 
                         lastsect = d
                         continue
@@ -427,37 +427,37 @@ class Section(object):
         cobj (special nested object): a special object composed of
         dictionaries (or compatible mapping object) and tuples to be imported;
         a section is represented by a 2-tuple: its first value is a mapping
-        object that associates the names of subsections to their 2-tuples; its
-        second value is a mapping object that associates the names of options
-        to their values. For example:
+        object that associates the names of options to their values; its second
+        value is a mapping object that associates the names of subsections to
+        their 2-tuples. For example:
         cobj = (
             {
+                'option1': 'value',
+                'option2': 'value'
+            },
+            {
                 'sectionA': (
-                    {
-                        'sectionC': (
-                            {},
-                            {
-                                'optionC1': 'value',
-                                'optionC2': 'value',
-                            }
-                        ),
-                    },
                     {
                         'optionA1': 'value',
                         'optionA2': 'value',
                     },
+                    {
+                        'sectionC': (
+                            {
+                                'optionC1': 'value',
+                                'optionC2': 'value',
+                            },
+                            {},
+                        ),
+                    },
                 ),
                 'sectionB': (
-                    {},
                     {
                         'optionB1': 'value',
                         'optionB2': 'value'
                     },
+                    {},
                 ),
-            },
-            {
-                'option1': 'value',
-                'option2': 'value'
             },
         )
 
@@ -467,25 +467,55 @@ class Section(object):
         reset (bool): whether pre-existing data will be cleared.
         """
         if reset:
-            self._subsections = self._DICT_CLASS()
             self._options = self._DICT_CLASS()
+            self._subsections = self._DICT_CLASS()
 
-        for s in cobj[0]:
+        for o in cobj[0]:
+            if isinstance(o, str) and isinstance(cobj[0][o], str) and \
+                                re_.match(self._OPTION, o, self._RE_I) and \
+                                re_.match(self._VALUE, cobj[0][o], self._RE_I):
+                self._import_object_option(overwrite, add, reset, o,
+                                                                    cobj[0][o])
+            else:
+                raise InvalidObjectError('Invalid option or value: {}: {}'
+                                                    ''.format(o, cobj[0][o]))
+
+        for s in cobj[1]:
             if isinstance(s, str) and re_.match(self._SECTION, s, self._RE_I):
                 self._import_object_subsection(overwrite, add, reset, s,
-                                                                    cobj[0][s])
+                                                                    cobj[1][s])
             else:
                 raise InvalidObjectError('Invalid section name: {}'.format(s))
 
-        for o in cobj[1]:
-            if isinstance(o, str) and isinstance(cobj[1][o], str) and \
-                                re_.match(self._OPTION, o, self._RE_I) and \
-                                re_.match(self._VALUE, cobj[1][o], self._RE_I):
-                self._import_object_option(overwrite, add, reset, o,
-                                                                    cobj[1][o])
+    def _import_object_option(self, overwrite, add, reset, opt, val):
+        """
+        Auxiliary method for _import_object().
+
+        Import the currently-examined option.
+        """
+        if reset:
+            self._options[opt] = val
+
+        elif self._IGNORE_CASE:
+            for o in self._options:
+                if opt.lower() == o.lower():
+                    # Don't even think of merging these two tests
+                    if overwrite:
+                        self._options[o] = val
+
+                    break
+
             else:
-                raise InvalidObjectError('Invalid option or value: {}: {}'
-                                                    ''.format(o, cobj[1][o]))
+                if add:
+                    self._options[opt] = val
+
+        elif opt in self._options:
+            # Don't even think of merging these two tests
+            if overwrite:
+                self._options[opt] = val
+
+        elif add:
+            self._options[opt] = val
 
     def _import_object_subsection(self, overwrite, add, reset, sec, secd):
         """
@@ -527,41 +557,11 @@ class Section(object):
         Import the currently-examined subsection.
         """
         subsection = Section(name=sec, parent=self,
-                             subsections=self._ENABLE_SUBSECTIONS,
                              inherit_options=self._INHERIT_OPTIONS,
+                             subsections=self._ENABLE_SUBSECTIONS,
                              ignore_case=self._IGNORE_CASE)
         subsection._import_object(secd, overwrite=overwrite, add=add)
         self._subsections[sec] = subsection
-
-    def _import_object_option(self, overwrite, add, reset, opt, val):
-        """
-        Auxiliary method for _import_object().
-
-        Import the currently-examined option.
-        """
-        if reset:
-            self._options[opt] = val
-
-        elif self._IGNORE_CASE:
-            for o in self._options:
-                if opt.lower() == o.lower():
-                    # Don't even think of merging these two tests
-                    if overwrite:
-                        self._options[o] = val
-
-                    break
-
-            else:
-                if add:
-                    self._options[opt] = val
-
-        elif opt in self._options:
-            # Don't even think of merging these two tests
-            if overwrite:
-                self._options[opt] = val
-
-        elif add:
-            self._options[opt] = val
 
     def _interpolate(self, root=None):
         """
@@ -854,7 +854,7 @@ class Section(object):
                 else:
                     e = ({}, {})
 
-                e[0][n] = d
+                e[1][n] = d
                 d = e
                 n = p._NAME
                 p = p._PARENT
@@ -868,12 +868,12 @@ class Section(object):
         options = self.get_options(ordered=ordered, inherit_options=False)
 
         if ordered:
-            d = (self._DICT_CLASS(), options)
+            d = (options, self._DICT_CLASS())
         else:
-            d = ({}, options)
+            d = (options, {})
 
         for s in self._subsections:
-            d[0][s] = self._subsections[s]._recurse_tree(ordered=ordered)
+            d[1][s] = self._subsections[s]._recurse_tree(ordered=ordered)
 
         return d
 
@@ -1250,10 +1250,10 @@ class ConfigFile(Section):
         overwrites already imported sections and options; available choices are
         'upgrade', 'update', 'reset' and 'add' (see the respective methods for
         more details)
-        subsections (boolean): if True (default) subsections are allowed
         ignore_case (boolean): if True, section and option names will be
         compared ignoring case differences; regular expressions will use re.I
         flag
+        subsections (boolean): if True (default) subsections are allowed
         interpolation (boolean): if True, option values will be interpolated
         using values from other options through the special syntax
         ${section$:section$:option$}. Options will be interpolated only once at
@@ -1263,21 +1263,23 @@ class ConfigFile(Section):
         #def __init__(self,
         #             *sources,
         #             mode='upgrade',
-        #             subsections=True,
         #             inherit_options=False,
+        #             subsections=True,
         #             ignore_case=True,
         #             interpolation=False):
         # But to keep compatibility with Python 2 it has been changed to the
         # current
         mode = kwargs.get('mode', 'upgrade')
-        subsections = kwargs.get('subsections', True)
         inherit_options = kwargs.get('inherit_options', False)
+        subsections = kwargs.get('subsections', True)
         ignore_case = kwargs.get('ignore_case', True)
         interpolation = kwargs.get('interpolation', False)
 
         # Root section
-        Section.__init__(self, name=None, parent=None, subsections=subsections,
-                      inherit_options=inherit_options, ignore_case=ignore_case)
+        Section.__init__(self, name=None, parent=None,
+                                            inherit_options=inherit_options,
+                                            subsections=subsections,
+                                            ignore_case=ignore_case)
 
         try:
             overwrite, add, reset = {

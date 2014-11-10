@@ -17,10 +17,10 @@
 from distutils.core import setup
 
 setup(name='configfile',
-      version='1.0.0',
+      version='1.1.0',
       description='Dynamically parse and edit configuration files.',
       author='Dario Giovannetti',
       author_email='dev@dariogiovannetti.net',
       url='https://github.com/kynikos/configfile',
       license='GPLv3',
-      packages=['configfile'])
+      packages=['configfile', ])

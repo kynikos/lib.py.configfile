@@ -21,6 +21,6 @@ setup(name='configfile',
       description='Dynamically parse and edit configuration files.',
       author='Dario Giovannetti',
       author_email='dev@dariogiovannetti.net',
-      url='https://github.com/kynikos/configfile',
+      url='https://github.com/kynikos/lib.py.configfile',
       license='GPLv3',
       packages=['configfile', ])

@@ -17,8 +17,12 @@
 """
 ConfigFile class - Dynamically parse and edit configuration files.
 
-@author: Dario Giovannetti <dev@dariogiovannetti.net>
-@license: GPLv3
+Author: Dario Giovannetti <dev@dariogiovannetti.net>
+
+License: GPLv3
+
+Module contents
+---------------
 """
 
 import errno

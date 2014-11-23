@@ -1,7 +1,19 @@
+* How to prepare the documentation from scratch:
+  1. $ sphinx-quickstart
+     And answer all the questions
+  2. Move the the 'source' folder and 'Makefile' to a separate directory
+     (e.g. src/dev/docs)
+     No need to copy 'build' folder; copying it may also create problems
+     because of the new relative path to the module
+  3. In source/config.py add
+       sys.path.insert(0, os.path.abspath('../../../src/'))
+     at the top
 * Update files:
   - Copyright dates
+  - docstrings for Sphinx
+  - dev/docs/source/config.py (at least 'version' and 'release')
+  - dev/docs/source/index.rst
   - setup.py
-  - docstrings (@version, @date...)
   - PKGBUILD.*
 * Create an archive for each Python version:
   1. Create a copy of the src folder
@@ -15,10 +27,14 @@
 * Upload the archives to SourceForge
 * Check the PKGBUILDs with namcap
 * Test PKGBUILD installation
+* Build and check documentation:
+  1. $ cd dev/docs
+  2. $ make html
 * Commit changes
 * Tag release merge commit
 * Push commits to GitHub
 * Update documentation:
+  - Sphinx docs
   - Changelog
   - New features
   - Links to downloads

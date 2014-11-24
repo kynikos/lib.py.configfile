@@ -32,6 +32,7 @@
   2. $ make html
 * Commit changes
 * Tag release merge commit
+* Update documentation on the gh-pages branch
 * Push commits to GitHub
 * Update documentation:
   - Sphinx docs

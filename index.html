@@ -51,6 +51,73 @@
 <span class="target" id="module-configfile"></span><p>ConfigFile class - Dynamically parse and edit configuration files.</p>
 <p>Author: Dario Giovannetti &lt;<a class="reference external" href="mailto:dev&#37;&#52;&#48;dariogiovannetti&#46;net">dev<span>&#64;</span>dariogiovannetti<span>&#46;</span>net</a>&gt;</p>
 <p>License: GPLv3</p>
+<p>GitHub: <a class="reference external" href="https://www.github.com/kynikos/lib.py.configfile">https://www.github.com/kynikos/lib.py.configfile</a></p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="initial-files">
+<h3>Initial files<a class="headerlink" href="#initial-files" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">/path/to/file</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">root_option</span> <span class="o">=</span> <span class="n">demo</span>
+
+<span class="p">[</span><span class="n">Section1</span><span class="p">]</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">ok</span>
+<span class="n">retest</span> <span class="o">=</span> <span class="n">no</span>
+<span class="n">test3</span> <span class="o">=</span> <span class="n">yes</span>
+
+<span class="p">[</span><span class="n">Section2</span><span class="o">.</span><span class="n">Section2A</span><span class="p">]</span>
+<span class="n">foo</span> <span class="o">=</span> <span class="n">fooo</span>
+
+<span class="p">[</span><span class="n">Section3</span><span class="p">]</span>
+<span class="n">bar</span> <span class="o">=</span> <span class="n">yay</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">/path/to/other_file</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">Section2C</span><span class="p">]</span>
+<span class="n">an_option</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="code">
+<h3>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre>conf = ConfigFile(&quot;/path/to/file&quot;)
+
+conf(&quot;Section2).upgrade(&quot;path/to/other_file&quot;)
+
+option = conf(&quot;Section2&quot;)(&quot;Section2C&quot;)[&quot;an_option&quot;]
+print(option)  # &quot;2&quot;
+
+option = conf(&quot;Section2&quot;)(&quot;Section2C&quot;).get_int(&quot;an_option&quot;)
+print(option)  # 2
+
+conf.export_add(&quot;/path/to/file&quot;)
+
+conf[&quot;root_option&quot;] = &quot;value&quot;
+
+conf(&quot;Section3&quot;).export_reset(&quot;/path/to/another_file&quot;)
+</pre></div>
+</div>
+</div>
+<div class="section" id="resulting-files">
+<h3>Resulting files<a class="headerlink" href="#resulting-files" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">/path/to/file</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">root_option</span> <span class="o">=</span> <span class="n">demo</span>
+
+<span class="p">[</span><span class="n">Section1</span><span class="p">]</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">ok</span>
+
+<span class="p">[</span><span class="n">Section2</span><span class="o">.</span><span class="n">Section2A</span><span class="p">]</span>
+<span class="n">foo</span> <span class="o">=</span> <span class="n">fooo</span>
+
+<span class="p">[</span><span class="n">Section2</span><span class="o">.</span><span class="n">Section2C</span><span class="p">]</span>
+<span class="n">an_option</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">/path/to/another_file</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">bar</span> <span class="o">=</span> <span class="n">yay</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="module-contents">
 <h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -674,6 +741,12 @@ importing: all links among options will be lost after importing.</p>
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Welcome to ConfigFile&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+<li><a class="reference internal" href="#initial-files">Initial files</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#resulting-files">Resulting files</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>

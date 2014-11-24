@@ -70,8 +70,77 @@
 
 <span class="sd">License: GPLv3</span>
 
-<span class="sd">Module contents</span>
+<span class="sd">GitHub: https://www.github.com/kynikos/lib.py.configfile</span>
+
+<span class="sd">Examples</span>
+<span class="sd">========</span>
+
+<span class="sd">Initial files</span>
+<span class="sd">-------------</span>
+
+<span class="sd">``/path/to/file``::</span>
+
+<span class="sd">    root_option = demo</span>
+
+<span class="sd">    [Section1]</span>
+<span class="sd">    test = ok</span>
+<span class="sd">    retest = no</span>
+<span class="sd">    test3 = yes</span>
+
+<span class="sd">    [Section2.Section2A]</span>
+<span class="sd">    foo = fooo</span>
+
+<span class="sd">    [Section3]</span>
+<span class="sd">    bar = yay</span>
+
+<span class="sd">``/path/to/other_file``::</span>
+
+<span class="sd">    [Section2C]</span>
+<span class="sd">    an_option = 2</span>
+
+<span class="sd">Code</span>
+<span class="sd">----</span>
+
+<span class="sd">::</span>
+
+<span class="sd">    conf = ConfigFile(&quot;/path/to/file&quot;)</span>
+
+<span class="sd">    conf(&quot;Section2).upgrade(&quot;path/to/other_file&quot;)</span>
+
+<span class="sd">    option = conf(&quot;Section2&quot;)(&quot;Section2C&quot;)[&quot;an_option&quot;]</span>
+<span class="sd">    print(option)  # &quot;2&quot;</span>
+
+<span class="sd">    option = conf(&quot;Section2&quot;)(&quot;Section2C&quot;).get_int(&quot;an_option&quot;)</span>
+<span class="sd">    print(option)  # 2</span>
+
+<span class="sd">    conf.export_add(&quot;/path/to/file&quot;)</span>
+
+<span class="sd">    conf[&quot;root_option&quot;] = &quot;value&quot;</span>
+
+<span class="sd">    conf(&quot;Section3&quot;).export_reset(&quot;/path/to/another_file&quot;)</span>
+
+<span class="sd">Resulting files</span>
 <span class="sd">---------------</span>
+
+<span class="sd">``/path/to/file``::</span>
+
+<span class="sd">    root_option = demo</span>
+
+<span class="sd">    [Section1]</span>
+<span class="sd">    test = ok</span>
+
+<span class="sd">    [Section2.Section2A]</span>
+<span class="sd">    foo = fooo</span>
+
+<span class="sd">    [Section2.Section2C]</span>
+<span class="sd">    an_option = 2</span>
+
+<span class="sd">``/path/to/another_file``::</span>
+
+<span class="sd">    bar = yay</span>
+
+<span class="sd">Module contents</span>
+<span class="sd">===============</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">errno</span>

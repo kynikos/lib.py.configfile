@@ -23,8 +23,75 @@ License: GPLv3
 
 GitHub: https://www.github.com/kynikos/lib.py.configfile
 
-Module contents
+Examples
+========
+
+Initial files
+-------------
+
+``/path/to/file``::
+
+    root_option = demo
+
+    [Section1]
+    test = ok
+    retest = no
+    test3 = yes
+
+    [Section2.Section2A]
+    foo = fooo
+
+    [Section3]
+    bar = yay
+
+``/path/to/other_file``::
+
+    [Section2C]
+    an_option = 2
+
+Code
+----
+
+::
+
+    conf = ConfigFile("/path/to/file")
+
+    conf("Section2).upgrade("path/to/other_file")
+
+    option = conf("Section2")("Section2C")["an_option"]
+    print(option)  # "2"
+
+    option = conf("Section2")("Section2C").get_int("an_option")
+    print(option)  # 2
+
+    conf.export_add("/path/to/file")
+
+    conf["root_option"] = "value"
+
+    conf("Section3").export_reset("/path/to/another_file")
+
+Resulting files
 ---------------
+
+``/path/to/file``::
+
+    root_option = demo
+
+    [Section1]
+    test = ok
+
+    [Section2.Section2A]
+    foo = fooo
+
+    [Section2.Section2C]
+    an_option = 2
+
+``/path/to/another_file``::
+
+    bar = yay
+
+Module contents
+===============
 """
 
 import errno

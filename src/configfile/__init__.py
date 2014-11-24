@@ -21,6 +21,8 @@ Author: Dario Giovannetti <dev@dariogiovannetti.net>
 
 License: GPLv3
 
+GitHub: https://www.github.com/kynikos/lib.py.configfile
+
 Module contents
 ---------------
 """

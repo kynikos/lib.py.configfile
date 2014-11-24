@@ -1,0 +1,721 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to ConfigFile’s documentation! &mdash; ConfigFile 1.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ConfigFile 1.1.0 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">ConfigFile 1.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-configfile-s-documentation">
+<h1>Welcome to ConfigFile&#8217;s documentation!<a class="headerlink" href="#welcome-to-configfile-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-configfile"></span><p>ConfigFile class - Dynamically parse and edit configuration files.</p>
+<p>Author: Dario Giovannetti &lt;<a class="reference external" href="mailto:dev&#37;&#52;&#48;dariogiovannetti&#46;net">dev<span>&#64;</span>dariogiovannetti<span>&#46;</span>net</a>&gt;</p>
+<p>License: GPLv3</p>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="configfile.Section">
+<em class="property">class </em><tt class="descclassname">configfile.</tt><tt class="descname">Section</tt><big>(</big><em>name=None</em>, <em>parent=None</em>, <em>inherit_options=False</em>, <em>subsections=True</em>, <em>ignore_case=True</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<p>The class for a section in the configuration file.</p>
+<p>Possible options at the beginning of the file, before any section, are
+considered to be in the &#8220;root&#8221; section.</p>
+<dl class="method">
+<dt id="configfile.Section.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>name=None</em>, <em>parent=None</em>, <em>inherit_options=False</em>, <em>subsections=True</em>, <em>ignore_case=True</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor.</p>
+<p>name (string): the name of the section
+parent (Section instance): a reference to the parent section object
+ignore_case (boolean): if True, section and option names will be
+compared ignoring case differences; regular expressions will use re.I
+flag
+subsections (boolean): if True, subsections are enabled; otherwise they
+are disabled</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.__call__">
+<tt class="descname">__call__</tt><big>(</big><em>key</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables calling directly the object with a string, returning the
+corresponding subsection object, if existent.</p>
+<p>key (string): the name of the subsection</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.__getitem__">
+<tt class="descname">__getitem__</tt><big>(</big><em>opt</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__getitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value for the option specified.</p>
+<p>opt (string): the name of the option whose value must be returned</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.__setitem__">
+<tt class="descname">__setitem__</tt><big>(</big><em>opt</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__setitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__setitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the provided value in the specified option.</p>
+<p>Both the option name and the value must be strings.</p>
+<p>opt (string): the name of the option
+val (string): the new value for the option</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.__delitem__">
+<tt class="descname">__delitem__</tt><big>(</big><em>opt</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__delitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__delitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the specified option.</p>
+<p>opt (string): the name of the option that must be deleted</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.__iter__">
+<tt class="descname">__iter__</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__iter__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lets iterate over the options of the section (for example with a for
+loop).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.__contains__">
+<tt class="descname">__contains__</tt><big>(</big><em>item</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__contains__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>If item is a Section object, this method returns True if item (the
+object, not its name) is a subsection of self; otherwise this returns
+True if item is the name of an option in self.</p>
+<p>item: a Section object or the name of an option</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.set">
+<tt class="descname">set</tt><big>(</big><em>opt</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is an alias for __setitem__().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.make_subsection">
+<tt class="descname">make_subsection</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.make_subsection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.make_subsection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an empty subsection under the current section if it doesn&#8217;t
+exist.</p>
+<p>name (string): the name of the new subsection</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.delete">
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the current section.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.upgrade">
+<tt class="descname">upgrade</tt><big>(</big><em>*sources</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.upgrade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.upgrade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import sections and options from a file, dictionary or special object
+with upgrade mode.</p>
+<p>If an option already exists, change its value; if it doesn&#8217;t exist,
+create it and store its value:
+{A:a,B:b,C:c} upgrade {A:d,D:e} =&gt; {A:d,B:b,C:c,D:e}</p>
+<p>See _import_object for object compatibility.</p>
+<p>sources: a sequence of files, dictionaries and/or special objects.
+interpolation (boolean): enable/disable value interpolation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.update">
+<tt class="descname">update</tt><big>(</big><em>*sources</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import sections and options from a file, dictionary or special object
+with update mode.</p>
+<p>If an option already exists, change its value; if it doesn&#8217;t exist,
+don&#8217;t do anything:
+{A:a,B:b,C:c} update {A:d,D:e} =&gt; {A:d,B:b,C:c}</p>
+<p>See _import_object for object compatibility.</p>
+<p>sources: a sequence of files, dictionaries and/or special objects.
+interpolation (boolean): enable/disable value interpolation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.reset">
+<tt class="descname">reset</tt><big>(</big><em>*sources</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import sections and options from a file, dictionary or special object
+with reset mode.</p>
+<p>Delete all options and subsections and recreate everything from the
+importing object:
+{A:a,B:b,C:c} reset {A:d,D:e} =&gt; {A:d,D:e}</p>
+<p>See _import_object for object compatibility.</p>
+<p>sources: a sequence of files, dictionaries and/or special objects.
+interpolation (boolean): enable/disable value interpolation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.add">
+<tt class="descname">add</tt><big>(</big><em>*sources</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import sections and options from a file, dictionary or special object
+with add mode.</p>
+<p>If an option already exists, don&#8217;t do anything; if it doesn&#8217;t exist,
+create it and store its value:
+{A:a,B:b,C:c} add {A:d,D:e} =&gt; {A:a,B:b,C:c,D:e}</p>
+<p>See _import_object for object compatibility.</p>
+<p>sources: a sequence of files, dictionaries and/or special objects.
+interpolation (boolean): enable/disable value interpolation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._import">
+<tt class="descname">_import</tt><big>(</big><em>sources</em>, <em>overwrite=True</em>, <em>add=True</em>, <em>reset=False</em>, <em>interpolation=False</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._import"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse some files, dictionaries or special objects and add their
+configuration to the existing one.</p>
+<p>Distinction between the various source types is done automatically.</p>
+<p>sources: a sequence of all the files, dictionaries or special object to
+be parsed; a value of None will be ignored (useful for creating empty
+objects that will be populated programmatically).
+overwrite (bool): this sets whether the next source in the chain
+overwrites already imported sections and options; see _import_object
+for more details.
+add (bool): this sets whether the next source in the chain
+adds non-pre-existing sections and options; see _import_object for more
+details.
+reset (bool): this sets whether the next source in the chain removes
+all the data added by the previous sources.
+interpolation (boolean): if True, option values will be interpolated
+using values from other options through the special syntax
+${section$:section$:option$}. Options will be interpolated only once at
+importing: all links among options will be lost after importing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._parse_file">
+<tt class="descname">_parse_file</tt><big>(</big><em>cfile</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._parse_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._parse_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a text file and translate it into a compatible object, thus
+making it possible to import it.</p>
+<p>cfile (string): the name of the file to be parsed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._parse_subsections">
+<tt class="descname">_parse_subsections</tt><big>(</big><em>re</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._parse_subsections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._parse_subsections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the sections hierarchy in a section line of a text file and
+return them in a list.</p>
+<p>re: regexp object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._import_object">
+<tt class="descname">_import_object</tt><big>(</big><em>cobj</em>, <em>overwrite=True</em>, <em>add=True</em>, <em>reset=False</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._import_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import sections and options from a compatible object.</p>
+<p>cobj (special nested object): a special object composed of
+dictionaries (or compatible mapping object) and tuples to be imported;
+a section is represented by a 2-tuple: its first value is a mapping
+object that associates the names of options to their values; its second
+value is a mapping object that associates the names of subsections to
+their 2-tuples. For example:
+cobj = (</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>{</dt>
+<dd>&#8216;option1&#8217;: &#8216;value&#8217;,
+&#8216;option2&#8217;: &#8216;value&#8217;</dd>
+</dl>
+<p>},
+{</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>&#8216;sectionA&#8217;: (</dt>
+<dd><dl class="first docutils">
+<dt>{</dt>
+<dd>&#8216;optionA1&#8217;: &#8216;value&#8217;,
+&#8216;optionA2&#8217;: &#8216;value&#8217;,</dd>
+</dl>
+<p>},
+{</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>&#8216;sectionC&#8217;: (</dt>
+<dd><dl class="first docutils">
+<dt>{</dt>
+<dd>&#8216;optionC1&#8217;: &#8216;value&#8217;,
+&#8216;optionC2&#8217;: &#8216;value&#8217;,</dd>
+</dl>
+<p class="last">},
+{},</p>
+</dd>
+</dl>
+<p>),</p>
+</div></blockquote>
+<p class="last">},</p>
+</dd>
+</dl>
+<p>),
+&#8216;sectionB&#8217;: (</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>{</dt>
+<dd>&#8216;optionB1&#8217;: &#8216;value&#8217;,
+&#8216;optionB2&#8217;: &#8216;value&#8217;</dd>
+</dl>
+<p>},
+{},</p>
+</div></blockquote>
+<p>),</p>
+</div></blockquote>
+<p>},</p>
+</div></blockquote>
+<p>)</p>
+<p>overwrite (bool): whether imported data will overwrite pre-existing
+data.
+add (bool): whether non-pre-existing data will be imported.
+reset (bool): whether pre-existing data will be cleared.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._import_object_option">
+<tt class="descname">_import_object_option</tt><big>(</big><em>overwrite</em>, <em>add</em>, <em>reset</em>, <em>opt</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._import_object_option"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import_object_option" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auxiliary method for _import_object().</p>
+<p>Import the currently-examined option.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._import_object_subsection">
+<tt class="descname">_import_object_subsection</tt><big>(</big><em>overwrite</em>, <em>add</em>, <em>reset</em>, <em>sec</em>, <em>secd</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._import_object_subsection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import_object_subsection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auxiliary method for _import_object().</p>
+<p>Import the currently-examined subsection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._import_object_subsection_create">
+<tt class="descname">_import_object_subsection_create</tt><big>(</big><em>overwrite</em>, <em>add</em>, <em>sec</em>, <em>secd</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._import_object_subsection_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import_object_subsection_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auxiliary method for _import_object_subsection().</p>
+<p>Import the currently-examined subsection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._interpolate">
+<tt class="descname">_interpolate</tt><big>(</big><em>root=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._interpolate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._interpolate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interpolate values among different options.</p>
+<p>root: the root section from which resolve interpolations.</p>
+<p>The &#8216;$&#8217; sign is a special character: a &#8216;$&#8217; not followed by &#8216;$&#8217;, &#8216;{&#8216;,
+&#8216;:&#8217; or &#8216;}&#8217; will be left &#8216;$&#8217;; &#8216;$$&#8217; will be translated as &#8216;$&#8217; both inside
+or outside an interpolation path; &#8216;${&#8216; will be considered as the
+beginning of an interpolation path, unless it&#8217;s found inside another
+interpolation path, and in the latter case it will be left &#8216;${&#8216;; &#8216;$:&#8217;
+will be considered as a separator between sections of an interpolation
+path, unless it&#8217;s found outside of an interpolation path, and in the
+latter case it will be left &#8216;$:&#8217;; &#8216;$}&#8217; will be considered as the end of
+an interpolation path, unless it&#8217;s found outside of an interpolation
+path, and in the latter case it will be left &#8216;$}&#8217;.
+Normally all paths will be resolved based on the root section of the
+file; anyway, if the interpolation path has only one item, it will be
+resolved as an option relative to the current section; otherwise, if
+the path starts with &#8216;$:&#8217;, the first item will be considered as a
+section (or an option, if last in the list) relative to the current
+section.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.get">
+<tt class="descname">get</tt><big>(</big><em>opt</em>, <em>fallback=None</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value for the option specified.</p>
+<p>opt (string): the name of the option whose value must be returned
+fallback (string, None): if set to a string, and the option is not
+found, this method returns that string; if set to None (default) it
+returns KeyError
+inherit_options (boolean): if True, if the option is not found in the
+current section, it&#8217;s searched in the parent sections; note that this
+can be set as a default for the object, but this setting overwrites it
+only for this call</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.get_str">
+<tt class="descname">get_str</tt><big>(</big><em>opt</em>, <em>fallback=None</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is an alias for get().</p>
+<p>This will always return a string.</p>
+<p>opt (string): the name of the option whose value must be returned
+fallback (string, None): if set to a string, and the option is not
+found, this method returns that string; if set to None (default) it
+returns KeyError
+inherit_options (boolean): if True, if the option is not found in the
+current section, it&#8217;s searched in the parent sections; note that this
+can be set as a default for the object, but this setting overwrites it
+only for this call</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.get_int">
+<tt class="descname">get_int</tt><big>(</big><em>opt</em>, <em>fallback=None</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method tries to return an integer from the value of an option.</p>
+<p>opt (string): the name of the option whose value must be returned
+fallback (string, None): if set to a string, and the option is not
+found, this method returns that string; if set to None (default) it
+returns KeyError
+inherit_options (boolean): if True, if the option is not found in the
+current section, it&#8217;s searched in the parent sections; note that this
+can be set as a default for the object, but this setting overwrites it
+only for this call</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.get_float">
+<tt class="descname">get_float</tt><big>(</big><em>opt</em>, <em>fallback=None</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method tries to return a float from the value of an option.</p>
+<p>opt (string): the name of the option whose value must be returned
+fallback (string, None): if set to a string, and the option is not
+found, this method returns that string; if set to None (default) it
+returns KeyError
+inherit_options (boolean): if True, if the option is not found in the
+current section, it&#8217;s searched in the parent sections; note that this
+can be set as a default for the object, but this setting overwrites it
+only for this call</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.get_bool">
+<tt class="descname">get_bool</tt><big>(</big><em>opt</em>, <em>true=()</em>, <em>false=()</em>, <em>default=None</em>, <em>fallback=None</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method tries to return a boolean status (True or False) from the
+value of an option.</p>
+<p>opt (string): the name of the option whose value must be returned
+true (tuple): a tuple with the strings to be recognized as True
+false (tuple): a tuple with the strings to be recognized as False
+default: if the value is neither in true nor in false tuples, return
+this boolean status; if set to None, it raises a ValueError exception
+fallback: if set to None (default), and the option is not found, it
+raises KeyError; otherwise this value is evaluated with the true and
+false tuples, or the default value
+inherit_options (boolean): if True, if the option is not found in the
+current section, it&#8217;s searched in the parent sections; note that this
+can be set as a default for the object, but this setting overwrites it
+only for this call</p>
+<p>Note that the characters in the strings are compared in lowercase, so
+there&#8217;s no need to specify all casing variations of a string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._get_ancestors">
+<tt class="descname">_get_ancestors</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._get_ancestors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._get_ancestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with the ancestors of the current section, but not the
+current section itself.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._get_descendants">
+<tt class="descname">_get_descendants</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._get_descendants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._get_descendants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with the descendants of the current section, but not the
+current section itself.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.get_options">
+<tt class="descname">get_options</tt><big>(</big><em>ordered=True</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary with a copy of option names as keys and their
+values as values.</p>
+<p>ordered (boolean): if True, return an ordered dictionary; otherwise
+return a normal dictionary
+inherit_options (boolean): if True, options are searched also in the
+parent sections; note that this can be set as a default for the object,
+but this setting overwrites it only for this call</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.get_sections">
+<tt class="descname">get_sections</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_sections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_sections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with a copy of the names of the child sections.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.get_tree">
+<tt class="descname">get_tree</tt><big>(</big><em>ordered=True</em>, <em>path=False</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a compatible object with options and subsections.</p>
+<p>ordered (boolean): if True, the object uses ordered dictionaries;
+otherwise it uses normal dictionaries
+path (boolean): if True, return the current section as a subsection
+of the parent sections.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._recurse_tree">
+<tt class="descname">_recurse_tree</tt><big>(</big><em>ordered=True</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._recurse_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._recurse_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auxiliary recursor for get_tree().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._export">
+<tt class="descname">_export</tt><big>(</big><em>targets</em>, <em>overwrite=True</em>, <em>add=True</em>, <em>reset=False</em>, <em>path=True</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the configuration to one or more files.</p>
+<p>targets: a sequence with the target file names
+overwrite (bool): this sets whether sections and options in the
+file are overwritten; see _import_object for more details.
+add (bool): this sets whether non-pre-existing sections and option
+are added; see _import_object for more details.
+path (boolean): if True, section names are exported with their full
+path</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.export_upgrade">
+<tt class="descname">export_upgrade</tt><big>(</big><em>*targets</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.export_upgrade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.export_upgrade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export sections and options to one or more files with upgrade mode.</p>
+<p>If an option already exists, change its value; if it doesn&#8217;t exist,
+create it and store its value:
+{A:d,D:e} upgrade {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c,D:e}</p>
+<p>See _export_file for object compatibility.</p>
+<p>targets: a sequence with the target file names
+path (boolean): if True, section names are exported with their full
+path</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.export_update">
+<tt class="descname">export_update</tt><big>(</big><em>*targets</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.export_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.export_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export sections and options to one or more files with update mode.</p>
+<p>If an option already exists, change its value; if it doesn&#8217;t exist,
+don&#8217;t do anything:
+{A:d,D:e} update {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c}</p>
+<p>See _export_file for object compatibility.</p>
+<p>targets: a sequence with the target file names
+path (boolean): if True, section names are exported with their full
+path</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.export_reset">
+<tt class="descname">export_reset</tt><big>(</big><em>*targets</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.export_reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.export_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export sections and options to one or more files with reset mode.</p>
+<p>Delete all options and subsections and recreate everything from the
+importing object:
+{A:d,D:e} reset {A:a,B:b,C:c} =&gt; {A:d,D:e}</p>
+<p>See _export_file for object compatibility.</p>
+<p>targets: a sequence with the target file names
+path (boolean): if True, section names are exported with their full
+path</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section.export_add">
+<tt class="descname">export_add</tt><big>(</big><em>*targets</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.export_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.export_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export sections and options to one or more files with add mode.</p>
+<p>If an option already exists, don&#8217;t do anything; if it doesn&#8217;t exist,
+create it and store its value:
+{A:d,D:e} add {A:a,B:b,C:c} =&gt; {A:a,B:b,C:c,D:e}</p>
+<p>See _export_file for object compatibility.</p>
+<p>targets: a sequence with the target file names
+path (boolean): if True, section names are exported with their full
+path</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._export_file">
+<tt class="descname">_export_file</tt><big>(</big><em>cfile</em>, <em>overwrite=True</em>, <em>add=True</em>, <em>reset=False</em>, <em>path=True</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the sections tree to a file.</p>
+<p>efile (string): the target file name.
+overwrite (bool): whether sections and options already existing in the
+file are overwritten.
+add (bool): whether non-pre-existing data will be exported.
+path (boolean): if True, section names are exported with their full
+path, otherwise they are left</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._export_file_existing_option">
+<tt class="descname">_export_file_existing_option</tt><big>(</big><em>stream</em>, <em>line</em>, <em>re_option</em>, <em>readonly_section</em>, <em>remaining_options</em>, <em>overwrite</em>, <em>reset</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_file_existing_option"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_existing_option" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auxiliary method for _export_file().</p>
+<p>Write the option currently examined from the destination file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._export_file_remaining_options">
+<tt class="descname">_export_file_remaining_options</tt><big>(</big><em>stream</em>, <em>readonly_section</em>, <em>remaining_options</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_file_remaining_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_remaining_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auxiliary method for _export_file().</p>
+<p>Write the options from the origin object that were not found in the
+destination file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._export_file_existing_section">
+<tt class="descname">_export_file_existing_section</tt><big>(</big><em>stream</em>, <em>line</em>, <em>re_section</em>, <em>ROOT_SECTION</em>, <em>BASE_SECTION</em>, <em>remaining_descendants</em>, <em>path</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_file_existing_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_existing_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auxiliary method for _export_file().</p>
+<p>Write the section currently examined from the destination file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._export_file_remaining_sections">
+<tt class="descname">_export_file_remaining_sections</tt><big>(</big><em>stream</em>, <em>BASE_SECTION</em>, <em>remaining_descendants</em>, <em>path</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_file_remaining_sections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_remaining_sections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auxiliary method for _export_file().</p>
+<p>Write the sections and their options from the origin object that
+were not found in the destination file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._export_other_lines">
+<tt class="descname">_export_other_lines</tt><big>(</big><em>stream</em>, <em>other_lines</em>, <em>readonly_section</em>, <em>reset</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_other_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_other_lines" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._export_other_lines_before_existing_section">
+<tt class="descname">_export_other_lines_before_existing_section</tt><big>(</big><em>stream</em>, <em>other_lines</em>, <em>readonly_section</em>, <em>reset</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_other_lines_before_existing_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_other_lines_before_existing_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="configfile.ConfigFile">
+<em class="property">class </em><tt class="descclassname">configfile.</tt><tt class="descname">ConfigFile</tt><big>(</big><em>*sources</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#ConfigFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.ConfigFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#configfile.Section" title="configfile.Section"><tt class="xref py py-class docutils literal"><span class="pre">configfile.Section</span></tt></a></p>
+<p>A configuration file object.</p>
+<p>One or more text files, dictionaries or compatible objects can be initially
+parsed with configfile.ConfigFile(file1, dict1, file2, ...).
+This will instantiate a ConfigFile object with sections, subsections,
+options and values.
+Even if you parse more files, dictionaries or special objects, this will
+instantiate a unified object.</p>
+<p>A default set of values can be set by assigning a dictionary as the first
+argument.</p>
+<p>By default, sections are allowed to contain both options or other sections
+(subsections): this behaviour can be disabled by instantiating ConfigFile
+with sub=False.</p>
+<dl class="method">
+<dt id="configfile.ConfigFile.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>*sources</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#ConfigFile.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.ConfigFile.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor: instantiate a ConfigFile object.</p>
+<p>sources (string, dict or special object (see _import_object)): a
+sequence of all the files, dictionaries and special objects to be
+parsed
+mode (string): this sets if and how the next source in the chain
+overwrites already imported sections and options; available choices are
+&#8216;upgrade&#8217;, &#8216;update&#8217;, &#8216;reset&#8217; and &#8216;add&#8217; (see the respective methods for
+more details)
+ignore_case (boolean): if True, section and option names will be
+compared ignoring case differences; regular expressions will use re.I
+flag
+subsections (boolean): if True (default) subsections are allowed
+interpolation (boolean): if True, option values will be interpolated
+using values from other options through the special syntax
+${section$:section$:option$}. Options will be interpolated only once at
+importing: all links among options will be lost after importing.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="configfile.ConfigFileError">
+<em class="property">exception </em><tt class="descclassname">configfile.</tt><tt class="descname">ConfigFileError</tt><a class="reference internal" href="_modules/configfile.html#ConfigFileError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.ConfigFileError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.Exception</span></tt></p>
+<p>The root exception, useful for catching generic errors from this module.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="configfile.ParsingError">
+<em class="property">exception </em><tt class="descclassname">configfile.</tt><tt class="descname">ParsingError</tt><a class="reference internal" href="_modules/configfile.html#ParsingError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.ParsingError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><tt class="xref py py-class docutils literal"><span class="pre">configfile.ConfigFileError</span></tt></a></p>
+<p>An error, overcome at parse time, due to bad file formatting.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="configfile.NonExistentFileError">
+<em class="property">exception </em><tt class="descclassname">configfile.</tt><tt class="descname">NonExistentFileError</tt><a class="reference internal" href="_modules/configfile.html#NonExistentFileError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.NonExistentFileError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><tt class="xref py py-class docutils literal"><span class="pre">configfile.ConfigFileError</span></tt></a></p>
+<p>A non-existent configuration file.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="configfile.InvalidFileError">
+<em class="property">exception </em><tt class="descclassname">configfile.</tt><tt class="descname">InvalidFileError</tt><a class="reference internal" href="_modules/configfile.html#InvalidFileError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.InvalidFileError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><tt class="xref py py-class docutils literal"><span class="pre">configfile.ConfigFileError</span></tt></a></p>
+<p>An invalid configuration file.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="configfile.InvalidObjectError">
+<em class="property">exception </em><tt class="descclassname">configfile.</tt><tt class="descname">InvalidObjectError</tt><a class="reference internal" href="_modules/configfile.html#InvalidObjectError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.InvalidObjectError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><tt class="xref py py-class docutils literal"><span class="pre">configfile.ConfigFileError</span></tt></a></p>
+<p>An invalid key found in an importing object.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to ConfigFile&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">ConfigFile 1.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dario Giovannetti.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

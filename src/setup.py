@@ -18,7 +18,8 @@ from distutils.core import setup
 
 setup(name='configfile',
       version='1.1.0',
-      description='Dynamically parse and edit configuration files.',
+      description='Dynamically parse and edit configuration files with '
+                                                    'support for subsections.',
       author='Dario Giovannetti',
       author_email='dev@dariogiovannetti.net',
       url='https://github.com/kynikos/lib.py.configfile',

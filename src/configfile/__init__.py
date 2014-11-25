@@ -15,7 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-ConfigFile class - Dynamically parse and edit configuration files.
+ConfigFile class - Dynamically parse and edit configuration files with support
+for subsections.
 
 Author: Dario Giovannetti <dev@dariogiovannetti.net>
 

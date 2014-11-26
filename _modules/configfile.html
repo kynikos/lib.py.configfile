@@ -64,7 +64,26 @@
 <span class="c"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">ConfigFile class - Dynamically parse and edit configuration files.</span>
+<span class="sd">This library provides the :py:class:`ConfigFile` class, whose goal is to</span>
+<span class="sd">provide an interface for parsing, modifying and writing configuration files.</span>
+
+<span class="sd">Main features:</span>
+
+<span class="sd">* Support for subsections. Support for sectionless options (root options).</span>
+<span class="sd">* Read from multiple sources (files, dictionaries or special compatible</span>
+<span class="sd">  objects) and compose them in a single :py:class:`ConfigFile` object.</span>
+<span class="sd">* When importing and exporting it is possible to choose what to do with</span>
+<span class="sd">  options only existing in the source, only existing in the destination, or</span>
+<span class="sd">  existing in both with different values.</span>
+<span class="sd">* Import a configuration source into a particular subsection of an existing</span>
+<span class="sd">  object. Export only a particular subsection of an existing object.</span>
+<span class="sd">* Preserve the order of sections and options when exporting. Try the best to</span>
+<span class="sd">  preserve any comments too.</span>
+<span class="sd">* Access sections and options with the</span>
+<span class="sd">  ``root(&#39;Section&#39;)(&#39;Subsection&#39;)[&#39;option&#39;]`` syntax.</span>
+<span class="sd">* save references to subsections with e.g.</span>
+<span class="sd">  ``subsection = section(&#39;Section&#39;)(&#39;Subsection&#39;)``.</span>
+<span class="sd">* Interpolation of option values between sections when importing.</span>
 
 <span class="sd">Author: Dario Giovannetti &lt;dev@dariogiovannetti.net&gt;</span>
 
@@ -72,13 +91,22 @@
 
 <span class="sd">GitHub: https://www.github.com/kynikos/lib.py.configfile</span>
 
-<span class="sd">Examples</span>
+<span class="sd">**Note:** as it is clear by reading this page, the documentation is still in a</span>
+<span class="sd">poor state. If you manage to understand how this library works and want to help</span>
+<span class="sd">documenting it, you are welcome to fork the GitHub repository and request to</span>
+<span class="sd">pull your improvements. Everything is written in docstrings in the only</span>
+<span class="sd">python module of the package.</span>
+
+<span class="sd">Also, if you have any questions, do not hesitate to write the author an email!</span>
+
+<span class="sd">Example</span>
 <span class="sd">========</span>
 
-<span class="sd">Initial files</span>
-<span class="sd">-------------</span>
+<span class="sd">Suppose you have these two files:</span>
 
-<span class="sd">``/path/to/file``::</span>
+<span class="sd">``/path/to/file``:</span>
+
+<span class="sd">.. code-block:: cfg</span>
 
 <span class="sd">    root_option = demo</span>
 
@@ -93,25 +121,28 @@
 <span class="sd">    [Section3]</span>
 <span class="sd">    bar = yay</span>
 
-<span class="sd">``/path/to/other_file``::</span>
+<span class="sd">``/path/to/other_file``:</span>
+
+<span class="sd">.. code-block:: cfg</span>
 
 <span class="sd">    [Section2C]</span>
 <span class="sd">    an_option = 2</span>
 
-<span class="sd">Code</span>
-<span class="sd">----</span>
+<span class="sd">Now run this script:</span>
 
 <span class="sd">::</span>
 
+<span class="sd">    from configfile import ConfigFile</span>
+
 <span class="sd">    conf = ConfigFile(&quot;/path/to/file&quot;)</span>
 
-<span class="sd">    conf(&quot;Section2).upgrade(&quot;path/to/other_file&quot;)</span>
+<span class="sd">    conf(&quot;Section2&quot;).upgrade(&quot;path/to/other_file&quot;)</span>
 
 <span class="sd">    option = conf(&quot;Section2&quot;)(&quot;Section2C&quot;)[&quot;an_option&quot;]</span>
-<span class="sd">    print(option)  # &quot;2&quot;</span>
+<span class="sd">    print(option, type(option))  # 2 &lt;class &#39;str&#39;&gt;</span>
 
 <span class="sd">    option = conf(&quot;Section2&quot;)(&quot;Section2C&quot;).get_int(&quot;an_option&quot;)</span>
-<span class="sd">    print(option)  # 2</span>
+<span class="sd">    print(option, type(option))  # 2 &lt;class &#39;int&#39;&gt;</span>
 
 <span class="sd">    conf.export_add(&quot;/path/to/file&quot;)</span>
 
@@ -119,15 +150,19 @@
 
 <span class="sd">    conf(&quot;Section3&quot;).export_reset(&quot;/path/to/another_file&quot;)</span>
 
-<span class="sd">Resulting files</span>
-<span class="sd">---------------</span>
+<span class="sd">You will end up with these files (``/path/to/other_file`` is left</span>
+<span class="sd">untouched):</span>
 
-<span class="sd">``/path/to/file``::</span>
+<span class="sd">``/path/to/file``:</span>
+
+<span class="sd">.. code-block:: cfg</span>
 
 <span class="sd">    root_option = demo</span>
 
 <span class="sd">    [Section1]</span>
 <span class="sd">    test = ok</span>
+<span class="sd">    retest = no</span>
+<span class="sd">    test3 = yes</span>
 
 <span class="sd">    [Section2.Section2A]</span>
 <span class="sd">    foo = fooo</span>
@@ -135,7 +170,12 @@
 <span class="sd">    [Section2.Section2C]</span>
 <span class="sd">    an_option = 2</span>
 
-<span class="sd">``/path/to/another_file``::</span>
+<span class="sd">    [Section3]</span>
+<span class="sd">    bar = yay</span>
+
+<span class="sd">``/path/to/another_file``:</span>
+
+<span class="sd">.. code-block:: cfg</span>
 
 <span class="sd">    bar = yay</span>
 
@@ -150,23 +190,23 @@
 
 <div class="viewcode-block" id="Section"><a class="viewcode-back" href="../index.html#configfile.Section">[docs]</a><span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The class for a section in the configuration file.</span>
-
-<span class="sd">    Possible options at the beginning of the file, before any section, are</span>
-<span class="sd">    considered to be in the &quot;root&quot; section.</span>
+<span class="sd">    The class for a section in the configuration file, including the root</span>
+<span class="sd">    section.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Section.__init__"><a class="viewcode-back" href="../index.html#configfile.Section.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                                         <span class="n">subsections</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor.</span>
 
-<span class="sd">        name (string): the name of the section</span>
-<span class="sd">        parent (Section instance): a reference to the parent section object</span>
-<span class="sd">        ignore_case (boolean): if True, section and option names will be</span>
-<span class="sd">        compared ignoring case differences; regular expressions will use re.I</span>
-<span class="sd">        flag</span>
-<span class="sd">        subsections (boolean): if True, subsections are enabled; otherwise they</span>
-<span class="sd">        are disabled</span>
+<span class="sd">        :param str name: The name of the section</span>
+<span class="sd">        :param Section parent: A reference to the parent section object</span>
+<span class="sd">        :param bool inherit_options: Whether the section will inherit the</span>
+<span class="sd">            options from its ancestors</span>
+<span class="sd">        :param bool subsections: if True, subsections are enabled; otherwise</span>
+<span class="sd">            they are disabled</span>
+<span class="sd">        :param bool ignore_case: If True, section and option names will be</span>
+<span class="sd">            compared ignoring case differences; regular expressions will use</span>
+<span class="sd">            ``re.I`` flag</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_NAME</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_PARENT</span> <span class="o">=</span> <span class="n">parent</span>
@@ -213,7 +253,7 @@
 <span class="sd">        Enables calling directly the object with a string, returning the</span>
 <span class="sd">        corresponding subsection object, if existent.</span>
 
-<span class="sd">        key (string): the name of the subsection</span>
+<span class="sd">        :param str key: The name of the subsection</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">lkey</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -236,7 +276,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the value for the option specified.</span>
 
-<span class="sd">        opt (string): the name of the option whose value must be returned</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                                          <span class="n">inherit_options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span><span class="p">)</span>
@@ -252,10 +292,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stores the provided value in the specified option.</span>
 
-<span class="sd">        Both the option name and the value must be strings.</span>
-
-<span class="sd">        opt (string): the name of the option</span>
-<span class="sd">        val (string): the new value for the option</span>
+<span class="sd">        :param str opt: The name of the option</span>
+<span class="sd">        :param str val: The new value for the option</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -277,7 +315,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes the specified option.</span>
 
-<span class="sd">        opt (string): the name of the option that must be deleted</span>
+<span class="sd">        :param str opt: The name of the option that must be deleted</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">lopt</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -306,11 +344,12 @@
 </div>
 <div class="viewcode-block" id="Section.__contains__"><a class="viewcode-back" href="../index.html#configfile.Section.__contains__">[docs]</a>    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        If item is a Section object, this method returns True if item (the</span>
-<span class="sd">        object, not its name) is a subsection of self; otherwise this returns</span>
-<span class="sd">        True if item is the name of an option in self.</span>
+<span class="sd">        If item is a :py:class:`Section` object, this method returns True if</span>
+<span class="sd">        item (the object, not its name) is a subsection of self; otherwise this</span>
+<span class="sd">        returns True if item is the name of an option in self.</span>
 
-<span class="sd">        item: a Section object or the name of an option</span>
+<span class="sd">        :param item: A :py:class:`Section` object or the name of an option</span>
+<span class="sd">        :type item: Section or str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Section</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
@@ -327,7 +366,7 @@
 </div>
 <div class="viewcode-block" id="Section.set"><a class="viewcode-back" href="../index.html#configfile.Section.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This is an alias for __setitem__().</span>
+<span class="sd">        This is an alias for :py:meth:`__setitem__`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="p">[</span><span class="n">opt</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
 </div>
@@ -336,7 +375,7 @@
 <span class="sd">        Create an empty subsection under the current section if it doesn&#39;t</span>
 <span class="sd">        exist.</span>
 
-<span class="sd">        name (string): the name of the new subsection</span>
+<span class="sd">        :param str name: The name of the new subsection</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EMPTY_SECTION</span><span class="p">()</span>
         <span class="n">sub</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EMPTY_SECTION</span><span class="p">()</span>
@@ -354,13 +393,15 @@
 <span class="sd">        with upgrade mode.</span>
 
 <span class="sd">        If an option already exists, change its value; if it doesn&#39;t exist,</span>
-<span class="sd">        create it and store its value:</span>
-<span class="sd">        {A:a,B:b,C:c} upgrade {A:d,D:e} =&gt; {A:d,B:b,C:c,D:e}</span>
+<span class="sd">        create it and store its value. For example:</span>
 
-<span class="sd">        See _import_object for object compatibility.</span>
+<span class="sd">        *{A:a,B:b,C:c} upgrade {A:d,D:e} =&gt; {A:d,B:b,C:c,D:e}*</span>
 
-<span class="sd">        sources: a sequence of files, dictionaries and/or special objects.</span>
-<span class="sd">        interpolation (boolean): enable/disable value interpolation.</span>
+<span class="sd">        See :py:meth:`_import_object` for object compatibility.</span>
+
+<span class="sd">        :param sources: A sequence of files, dictionaries and/or special</span>
+<span class="sd">            objects.</span>
+<span class="sd">        :param bool interpolation: Enable/disable value interpolation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -375,13 +416,15 @@
 <span class="sd">        with update mode.</span>
 
 <span class="sd">        If an option already exists, change its value; if it doesn&#39;t exist,</span>
-<span class="sd">        don&#39;t do anything:</span>
-<span class="sd">        {A:a,B:b,C:c} update {A:d,D:e} =&gt; {A:d,B:b,C:c}</span>
+<span class="sd">        don&#39;t do anything. For example:</span>
 
-<span class="sd">        See _import_object for object compatibility.</span>
+<span class="sd">        *{A:a,B:b,C:c} update {A:d,D:e} =&gt; {A:d,B:b,C:c}*</span>
 
-<span class="sd">        sources: a sequence of files, dictionaries and/or special objects.</span>
-<span class="sd">        interpolation (boolean): enable/disable value interpolation.</span>
+<span class="sd">        See :py:meth:`_import_object` for object compatibility.</span>
+
+<span class="sd">        :param sources: A sequence of files, dictionaries and/or special</span>
+<span class="sd">            objects.</span>
+<span class="sd">        :param bool interpolation: Enable/disable value interpolation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -396,13 +439,15 @@
 <span class="sd">        with reset mode.</span>
 
 <span class="sd">        Delete all options and subsections and recreate everything from the</span>
-<span class="sd">        importing object:</span>
-<span class="sd">        {A:a,B:b,C:c} reset {A:d,D:e} =&gt; {A:d,D:e}</span>
+<span class="sd">        importing object. For example:</span>
 
-<span class="sd">        See _import_object for object compatibility.</span>
+<span class="sd">        *{A:a,B:b,C:c} reset {A:d,D:e} =&gt; {A:d,D:e}*</span>
 
-<span class="sd">        sources: a sequence of files, dictionaries and/or special objects.</span>
-<span class="sd">        interpolation (boolean): enable/disable value interpolation.</span>
+<span class="sd">        See :py:meth:`_import_object` for object compatibility.</span>
+
+<span class="sd">        :param sources: A sequence of files, dictionaries and/or special</span>
+<span class="sd">            objects.</span>
+<span class="sd">        :param bool interpolation: Enable/disable value interpolation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -417,13 +462,15 @@
 <span class="sd">        with add mode.</span>
 
 <span class="sd">        If an option already exists, don&#39;t do anything; if it doesn&#39;t exist,</span>
-<span class="sd">        create it and store its value:</span>
-<span class="sd">        {A:a,B:b,C:c} add {A:d,D:e} =&gt; {A:a,B:b,C:c,D:e}</span>
+<span class="sd">        create it and store its value. For example:</span>
 
-<span class="sd">        See _import_object for object compatibility.</span>
+<span class="sd">        *{A:a,B:b,C:c} add {A:d,D:e} =&gt; {A:a,B:b,C:c,D:e}*</span>
 
-<span class="sd">        sources: a sequence of files, dictionaries and/or special objects.</span>
-<span class="sd">        interpolation (boolean): enable/disable value interpolation.</span>
+<span class="sd">        See :py:meth:`_import_object` for object compatibility.</span>
+
+<span class="sd">        :param sources: A sequence of files, dictionaries and/or special</span>
+<span class="sd">            objects.</span>
+<span class="sd">        :param bool interpolation: Enable/disable value interpolation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -440,21 +487,22 @@
 
 <span class="sd">        Distinction between the various source types is done automatically.</span>
 
-<span class="sd">        sources: a sequence of all the files, dictionaries or special object to</span>
-<span class="sd">        be parsed; a value of None will be ignored (useful for creating empty</span>
-<span class="sd">        objects that will be populated programmatically).</span>
-<span class="sd">        overwrite (bool): this sets whether the next source in the chain</span>
-<span class="sd">        overwrites already imported sections and options; see _import_object</span>
-<span class="sd">        for more details.</span>
-<span class="sd">        add (bool): this sets whether the next source in the chain</span>
-<span class="sd">        adds non-pre-existing sections and options; see _import_object for more</span>
-<span class="sd">        details.</span>
-<span class="sd">        reset (bool): this sets whether the next source in the chain removes</span>
-<span class="sd">        all the data added by the previous sources.</span>
-<span class="sd">        interpolation (boolean): if True, option values will be interpolated</span>
-<span class="sd">        using values from other options through the special syntax</span>
-<span class="sd">        ${section$:section$:option$}. Options will be interpolated only once at</span>
-<span class="sd">        importing: all links among options will be lost after importing.</span>
+<span class="sd">        :param sources: A sequence of all the files, dictionaries or special</span>
+<span class="sd">            object to be parsed; a value of None will be ignored (useful for</span>
+<span class="sd">            creating empty objects that will be populated programmatically).</span>
+<span class="sd">        :param bool overwrite: This sets whether the next source in the chain</span>
+<span class="sd">            overwrites already imported sections and options; see</span>
+<span class="sd">            :py:meth:`_import_object` for more details.</span>
+<span class="sd">        :param bool add: This sets whether the next source in the chain adds</span>
+<span class="sd">            non-pre-existing sections and options; see _import_object for more</span>
+<span class="sd">            details.</span>
+<span class="sd">        :param bool reset: This sets whether the next source in the chain</span>
+<span class="sd">            removes all the data added by the previous sources.</span>
+<span class="sd">        :param bool interpolation: If True, option values will be interpolated</span>
+<span class="sd">            using values from other options through the special syntax</span>
+<span class="sd">            ``${section$:section$:option$}``. Options will be interpolated only</span>
+<span class="sd">            once at importing: all links among options will be lost after</span>
+<span class="sd">            importing.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -476,7 +524,7 @@
 <span class="sd">        Parse a text file and translate it into a compatible object, thus</span>
 <span class="sd">        making it possible to import it.</span>
 
-<span class="sd">        cfile (string): the name of the file to be parsed</span>
+<span class="sd">        :param str cfile: The name of the file to be parsed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">stream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
@@ -535,7 +583,7 @@
 <span class="sd">        Parse the sections hierarchy in a section line of a text file and</span>
 <span class="sd">        return them in a list.</span>
 
-<span class="sd">        re: regexp object</span>
+<span class="sd">        :param re: regular expression object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ENABLE_SUBSECTIONS</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_SECTION_SEP</span><span class="p">)</span>
@@ -546,47 +594,48 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Import sections and options from a compatible object.</span>
 
-<span class="sd">        cobj (special nested object): a special object composed of</span>
-<span class="sd">        dictionaries (or compatible mapping object) and tuples to be imported;</span>
-<span class="sd">        a section is represented by a 2-tuple: its first value is a mapping</span>
-<span class="sd">        object that associates the names of options to their values; its second</span>
-<span class="sd">        value is a mapping object that associates the names of subsections to</span>
-<span class="sd">        their 2-tuples. For example:</span>
-<span class="sd">        cobj = (</span>
-<span class="sd">            {</span>
-<span class="sd">                &#39;option1&#39;: &#39;value&#39;,</span>
-<span class="sd">                &#39;option2&#39;: &#39;value&#39;</span>
-<span class="sd">            },</span>
-<span class="sd">            {</span>
-<span class="sd">                &#39;sectionA&#39;: (</span>
+<span class="sd">        :param cobj: A special object composed of dictionaries (or compatible</span>
+<span class="sd">            mapping object) and tuples to be imported; a section is represented</span>
+<span class="sd">            by a 2-tuple: its first value is a mapping object that associates</span>
+<span class="sd">            the names of options to their values; its second value is a mapping</span>
+<span class="sd">            object that associates the names of subsections to their 2-tuples.</span>
+<span class="sd">            For example::</span>
+
+<span class="sd">                cobj = (</span>
 <span class="sd">                    {</span>
-<span class="sd">                        &#39;optionA1&#39;: &#39;value&#39;,</span>
-<span class="sd">                        &#39;optionA2&#39;: &#39;value&#39;,</span>
+<span class="sd">                        &#39;option1&#39;: &#39;value&#39;,</span>
+<span class="sd">                        &#39;option2&#39;: &#39;value&#39;</span>
 <span class="sd">                    },</span>
 <span class="sd">                    {</span>
-<span class="sd">                        &#39;sectionC&#39;: (</span>
+<span class="sd">                        &#39;sectionA&#39;: (</span>
 <span class="sd">                            {</span>
-<span class="sd">                                &#39;optionC1&#39;: &#39;value&#39;,</span>
-<span class="sd">                                &#39;optionC2&#39;: &#39;value&#39;,</span>
+<span class="sd">                                &#39;optionA1&#39;: &#39;value&#39;,</span>
+<span class="sd">                                &#39;optionA2&#39;: &#39;value&#39;,</span>
+<span class="sd">                            },</span>
+<span class="sd">                            {</span>
+<span class="sd">                                &#39;sectionC&#39;: (</span>
+<span class="sd">                                    {</span>
+<span class="sd">                                        &#39;optionC1&#39;: &#39;value&#39;,</span>
+<span class="sd">                                        &#39;optionC2&#39;: &#39;value&#39;,</span>
+<span class="sd">                                    },</span>
+<span class="sd">                                    {},</span>
+<span class="sd">                                ),</span>
+<span class="sd">                            },</span>
+<span class="sd">                        ),</span>
+<span class="sd">                        &#39;sectionB&#39;: (</span>
+<span class="sd">                            {</span>
+<span class="sd">                                &#39;optionB1&#39;: &#39;value&#39;,</span>
+<span class="sd">                                &#39;optionB2&#39;: &#39;value&#39;</span>
 <span class="sd">                            },</span>
 <span class="sd">                            {},</span>
 <span class="sd">                        ),</span>
 <span class="sd">                    },</span>
-<span class="sd">                ),</span>
-<span class="sd">                &#39;sectionB&#39;: (</span>
-<span class="sd">                    {</span>
-<span class="sd">                        &#39;optionB1&#39;: &#39;value&#39;,</span>
-<span class="sd">                        &#39;optionB2&#39;: &#39;value&#39;</span>
-<span class="sd">                    },</span>
-<span class="sd">                    {},</span>
-<span class="sd">                ),</span>
-<span class="sd">            },</span>
-<span class="sd">        )</span>
+<span class="sd">                )</span>
 
-<span class="sd">        overwrite (bool): whether imported data will overwrite pre-existing</span>
-<span class="sd">        data.</span>
-<span class="sd">        add (bool): whether non-pre-existing data will be imported.</span>
-<span class="sd">        reset (bool): whether pre-existing data will be cleared.</span>
+<span class="sd">        :param bool overwrite: Whether imported data will overwrite</span>
+<span class="sd">            pre-existing data.</span>
+<span class="sd">        :param bool add: Whether non-pre-existing data will be imported.</span>
+<span class="sd">        :param bool reset: Whether pre-existing data will be cleared.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">reset</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">()</span>
@@ -611,7 +660,7 @@
 </div>
 <div class="viewcode-block" id="Section._import_object_option"><a class="viewcode-back" href="../index.html#configfile.Section._import_object_option">[docs]</a>    <span class="k">def</span> <span class="nf">_import_object_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">reset</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Auxiliary method for _import_object().</span>
+<span class="sd">        Auxiliary method for :py:meth:`_import_object`.</span>
 
 <span class="sd">        Import the currently-examined option.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -650,7 +699,7 @@
 </div>
 <div class="viewcode-block" id="Section._import_object_subsection"><a class="viewcode-back" href="../index.html#configfile.Section._import_object_subsection">[docs]</a>    <span class="k">def</span> <span class="nf">_import_object_subsection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">reset</span><span class="p">,</span> <span class="n">sec</span><span class="p">,</span> <span class="n">secd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Auxiliary method for _import_object().</span>
+<span class="sd">        Auxiliary method for :py:meth:`_import_object`.</span>
 
 <span class="sd">        Import the currently-examined subsection.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -688,7 +737,7 @@
 </div>
 <div class="viewcode-block" id="Section._import_object_subsection_create"><a class="viewcode-back" href="../index.html#configfile.Section._import_object_subsection_create">[docs]</a>    <span class="k">def</span> <span class="nf">_import_object_subsection_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">sec</span><span class="p">,</span> <span class="n">secd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Auxiliary method for _import_object_subsection().</span>
+<span class="sd">        Auxiliary method for :py:meth:`_import_object_subsection`.</span>
 
 <span class="sd">        Import the currently-examined subsection.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -703,22 +752,24 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interpolate values among different options.</span>
 
-<span class="sd">        root: the root section from which resolve interpolations.</span>
+<span class="sd">        :param root: The root section from which resolve interpolations.</span>
 
-<span class="sd">        The &#39;$&#39; sign is a special character: a &#39;$&#39; not followed by &#39;$&#39;, &#39;{&#39;,</span>
-<span class="sd">        &#39;:&#39; or &#39;}&#39; will be left &#39;$&#39;; &#39;$$&#39; will be translated as &#39;$&#39; both inside</span>
-<span class="sd">        or outside an interpolation path; &#39;${&#39; will be considered as the</span>
-<span class="sd">        beginning of an interpolation path, unless it&#39;s found inside another</span>
-<span class="sd">        interpolation path, and in the latter case it will be left &#39;${&#39;; &#39;$:&#39;</span>
-<span class="sd">        will be considered as a separator between sections of an interpolation</span>
-<span class="sd">        path, unless it&#39;s found outside of an interpolation path, and in the</span>
-<span class="sd">        latter case it will be left &#39;$:&#39;; &#39;$}&#39; will be considered as the end of</span>
-<span class="sd">        an interpolation path, unless it&#39;s found outside of an interpolation</span>
-<span class="sd">        path, and in the latter case it will be left &#39;$}&#39;.</span>
+<span class="sd">        The ``$`` sign is a special character: a ``$`` not followed by ``$``,</span>
+<span class="sd">        ``{``, ``:`` or ``}`` will be left ``$``; ``$$`` will be translated as</span>
+<span class="sd">        ``$`` both inside or outside an interpolation path; ``${`` will be</span>
+<span class="sd">        considered as the beginning of an interpolation path, unless it&#39;s found</span>
+<span class="sd">        inside another interpolation path, and in the latter case it will be</span>
+<span class="sd">        left ``${``; ``$:`` will be considered as a separator between sections</span>
+<span class="sd">        of an interpolation path, unless it&#39;s found outside of an interpolation</span>
+<span class="sd">        path, and in the latter case it will be left ``$:``; ``$}`` will be</span>
+<span class="sd">        considered as the end of an interpolation path, unless it&#39;s found</span>
+<span class="sd">        outside of an interpolation path, and in the latter case it will be</span>
+<span class="sd">        left ``$}``.</span>
+
 <span class="sd">        Normally all paths will be resolved based on the root section of the</span>
 <span class="sd">        file; anyway, if the interpolation path has only one item, it will be</span>
 <span class="sd">        resolved as an option relative to the current section; otherwise, if</span>
-<span class="sd">        the path starts with &#39;$:&#39;, the first item will be considered as a</span>
+<span class="sd">        the path starts with ``$:``, the first item will be considered as a</span>
 <span class="sd">        section (or an option, if last in the list) relative to the current</span>
 <span class="sd">        section.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -767,14 +818,15 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the value for the option specified.</span>
 
-<span class="sd">        opt (string): the name of the option whose value must be returned</span>
-<span class="sd">        fallback (string, None): if set to a string, and the option is not</span>
-<span class="sd">        found, this method returns that string; if set to None (default) it</span>
-<span class="sd">        returns KeyError</span>
-<span class="sd">        inherit_options (boolean): if True, if the option is not found in the</span>
-<span class="sd">        current section, it&#39;s searched in the parent sections; note that this</span>
-<span class="sd">        can be set as a default for the object, but this setting overwrites it</span>
-<span class="sd">        only for this call</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
+<span class="sd">        :param fallback: If set to a string, and the option is not found, this</span>
+<span class="sd">            method returns that string; if set to None (default) it returns</span>
+<span class="sd">            KeyError</span>
+<span class="sd">        :type fallback: str or None</span>
+<span class="sd">        :param bool inherit_options: If True, if the option is not found in the</span>
+<span class="sd">            current section, it&#39;s searched in the parent sections; note that</span>
+<span class="sd">            this can be set as a default for the object, but this setting</span>
+<span class="sd">            overwrites it only for this call</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
@@ -801,18 +853,19 @@
 </div>
 <div class="viewcode-block" id="Section.get_str"><a class="viewcode-back" href="../index.html#configfile.Section.get_str">[docs]</a>    <span class="k">def</span> <span class="nf">get_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This is an alias for get().</span>
+<span class="sd">        This is an alias for :py:meth:`get`.</span>
 
 <span class="sd">        This will always return a string.</span>
 
-<span class="sd">        opt (string): the name of the option whose value must be returned</span>
-<span class="sd">        fallback (string, None): if set to a string, and the option is not</span>
-<span class="sd">        found, this method returns that string; if set to None (default) it</span>
-<span class="sd">        returns KeyError</span>
-<span class="sd">        inherit_options (boolean): if True, if the option is not found in the</span>
-<span class="sd">        current section, it&#39;s searched in the parent sections; note that this</span>
-<span class="sd">        can be set as a default for the object, but this setting overwrites it</span>
-<span class="sd">        only for this call</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
+<span class="sd">        :param fallback: If set to a string, and the option is not found, this</span>
+<span class="sd">            method returns that string; if set to None (default) it returns</span>
+<span class="sd">            KeyError</span>
+<span class="sd">        :type fallback: str or None</span>
+<span class="sd">        :param bool inherit_options: If True, if the option is not found in the</span>
+<span class="sd">            current section, it&#39;s searched in the parent sections; note that</span>
+<span class="sd">            this can be set as a default for the object, but this setting</span>
+<span class="sd">            overwrites it only for this call</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
@@ -824,14 +877,15 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method tries to return an integer from the value of an option.</span>
 
-<span class="sd">        opt (string): the name of the option whose value must be returned</span>
-<span class="sd">        fallback (string, None): if set to a string, and the option is not</span>
-<span class="sd">        found, this method returns that string; if set to None (default) it</span>
-<span class="sd">        returns KeyError</span>
-<span class="sd">        inherit_options (boolean): if True, if the option is not found in the</span>
-<span class="sd">        current section, it&#39;s searched in the parent sections; note that this</span>
-<span class="sd">        can be set as a default for the object, but this setting overwrites it</span>
-<span class="sd">        only for this call</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
+<span class="sd">        :param fallback: If set to a string, and the option is not found, this</span>
+<span class="sd">            method returns that string; if set to None (default) it returns</span>
+<span class="sd">            KeyError</span>
+<span class="sd">        :type fallback: str or None</span>
+<span class="sd">        :param bool inherit_options: If True, if the option is not found in the</span>
+<span class="sd">            current section, it&#39;s searched in the parent sections; note that</span>
+<span class="sd">            this can be set as a default for the object, but this setting</span>
+<span class="sd">            overwrites it only for this call</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
@@ -843,14 +897,15 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method tries to return a float from the value of an option.</span>
 
-<span class="sd">        opt (string): the name of the option whose value must be returned</span>
-<span class="sd">        fallback (string, None): if set to a string, and the option is not</span>
-<span class="sd">        found, this method returns that string; if set to None (default) it</span>
-<span class="sd">        returns KeyError</span>
-<span class="sd">        inherit_options (boolean): if True, if the option is not found in the</span>
-<span class="sd">        current section, it&#39;s searched in the parent sections; note that this</span>
-<span class="sd">        can be set as a default for the object, but this setting overwrites it</span>
-<span class="sd">        only for this call</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
+<span class="sd">        :param fallback: If set to a string, and the option is not found, this</span>
+<span class="sd">            method returns that string; if set to None (default) it returns</span>
+<span class="sd">            KeyError</span>
+<span class="sd">        :type fallback: str or None</span>
+<span class="sd">        :param bool inherit_options: If True, if the option is not found in the</span>
+<span class="sd">            current section, it&#39;s searched in the parent sections; note that</span>
+<span class="sd">            this can be set as a default for the object, but this setting</span>
+<span class="sd">            overwrites it only for this call</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
@@ -864,18 +919,19 @@
 <span class="sd">        This method tries to return a boolean status (True or False) from the</span>
 <span class="sd">        value of an option.</span>
 
-<span class="sd">        opt (string): the name of the option whose value must be returned</span>
-<span class="sd">        true (tuple): a tuple with the strings to be recognized as True</span>
-<span class="sd">        false (tuple): a tuple with the strings to be recognized as False</span>
-<span class="sd">        default: if the value is neither in true nor in false tuples, return</span>
-<span class="sd">        this boolean status; if set to None, it raises a ValueError exception</span>
-<span class="sd">        fallback: if set to None (default), and the option is not found, it</span>
-<span class="sd">        raises KeyError; otherwise this value is evaluated with the true and</span>
-<span class="sd">        false tuples, or the default value</span>
-<span class="sd">        inherit_options (boolean): if True, if the option is not found in the</span>
-<span class="sd">        current section, it&#39;s searched in the parent sections; note that this</span>
-<span class="sd">        can be set as a default for the object, but this setting overwrites it</span>
-<span class="sd">        only for this call</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
+<span class="sd">        :param tuple true: A tuple with the strings to be recognized as True</span>
+<span class="sd">        :param tuple false: A tuple with the strings to be recognized as False</span>
+<span class="sd">        :param default: If the value is neither in true nor in false tuples,</span>
+<span class="sd">            return this boolean status; if set to None, it raises a ValueError</span>
+<span class="sd">            exception</span>
+<span class="sd">        :param fallback: If set to None (default), and the option is not found,</span>
+<span class="sd">            it raises KeyError; otherwise this value is evaluated with the true</span>
+<span class="sd">            and false tuples, or the default value</span>
+<span class="sd">        :param bool inherit_options: If True, if the option is not found in the</span>
+<span class="sd">            current section, it&#39;s searched in the parent sections; note that</span>
+<span class="sd">            this can be set as a default for the object, but this setting</span>
+<span class="sd">            overwrites it only for this call</span>
 
 <span class="sd">        Note that the characters in the strings are compared in lowercase, so</span>
 <span class="sd">        there&#39;s no need to specify all casing variations of a string</span>
@@ -936,11 +992,11 @@
 <span class="sd">        Return a dictionary with a copy of option names as keys and their</span>
 <span class="sd">        values as values.</span>
 
-<span class="sd">        ordered (boolean): if True, return an ordered dictionary; otherwise</span>
-<span class="sd">        return a normal dictionary</span>
-<span class="sd">        inherit_options (boolean): if True, options are searched also in the</span>
-<span class="sd">        parent sections; note that this can be set as a default for the object,</span>
-<span class="sd">        but this setting overwrites it only for this call</span>
+<span class="sd">        :param bool ordered: If True, return an ordered dictionary; otherwise</span>
+<span class="sd">            return a normal dictionary</span>
+<span class="sd">        :param bool inherit_options: If True, options are searched also in the</span>
+<span class="sd">            parent sections; note that this can be set as a default for the</span>
+<span class="sd">            object, but this setting overwrites it only for this call</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
@@ -973,10 +1029,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a compatible object with options and subsections.</span>
 
-<span class="sd">        ordered (boolean): if True, the object uses ordered dictionaries;</span>
-<span class="sd">        otherwise it uses normal dictionaries</span>
-<span class="sd">        path (boolean): if True, return the current section as a subsection</span>
-<span class="sd">        of the parent sections.</span>
+<span class="sd">        :param bool ordered: If True, the object uses ordered dictionaries;</span>
+<span class="sd">            otherwise it uses normal dictionaries</span>
+<span class="sd">        :param bool path: If True, return the current section as a subsection</span>
+<span class="sd">            of the parent sections.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recurse_tree</span><span class="p">(</span><span class="n">ordered</span><span class="o">=</span><span class="n">ordered</span><span class="p">)</span>
 
@@ -999,7 +1055,7 @@
 </div>
 <div class="viewcode-block" id="Section._recurse_tree"><a class="viewcode-back" href="../index.html#configfile.Section._recurse_tree">[docs]</a>    <span class="k">def</span> <span class="nf">_recurse_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Auxiliary recursor for get_tree().</span>
+<span class="sd">        Auxiliary recursor for :py:meth:`get_tree`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_options</span><span class="p">(</span><span class="n">ordered</span><span class="o">=</span><span class="n">ordered</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
@@ -1018,13 +1074,13 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export the configuration to one or more files.</span>
 
-<span class="sd">        targets: a sequence with the target file names</span>
-<span class="sd">        overwrite (bool): this sets whether sections and options in the</span>
-<span class="sd">        file are overwritten; see _import_object for more details.</span>
-<span class="sd">        add (bool): this sets whether non-pre-existing sections and option</span>
-<span class="sd">        are added; see _import_object for more details.</span>
-<span class="sd">        path (boolean): if True, section names are exported with their full</span>
-<span class="sd">        path</span>
+<span class="sd">        :param targets: A sequence with the target file names</span>
+<span class="sd">        :param bool overwrite: This sets whether sections and options in the</span>
+<span class="sd">            file are overwritten; see _import_object for more details.</span>
+<span class="sd">        :param bool add: This sets whether non-pre-existing sections and option</span>
+<span class="sd">            are added; see _import_object for more details.</span>
+<span class="sd">        :param  bool path: If True, section names are exported with their full</span>
+<span class="sd">            path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_export_file</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="n">add</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="n">reset</span><span class="p">,</span>
@@ -1035,14 +1091,15 @@
 <span class="sd">        Export sections and options to one or more files with upgrade mode.</span>
 
 <span class="sd">        If an option already exists, change its value; if it doesn&#39;t exist,</span>
-<span class="sd">        create it and store its value:</span>
-<span class="sd">        {A:d,D:e} upgrade {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c,D:e}</span>
+<span class="sd">        create it and store its value. For example:</span>
 
-<span class="sd">        See _export_file for object compatibility.</span>
+<span class="sd">        *{A:d,D:e} upgrade {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c,D:e}*</span>
 
-<span class="sd">        targets: a sequence with the target file names</span>
-<span class="sd">        path (boolean): if True, section names are exported with their full</span>
-<span class="sd">        path</span>
+<span class="sd">        See :py:meth:`_export_file` for object compatibility.</span>
+
+<span class="sd">        :param targets: A sequence with the target file names</span>
+<span class="sd">        :param bool path: If True, section names are exported with their full</span>
+<span class="sd">            path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -1056,14 +1113,15 @@
 <span class="sd">        Export sections and options to one or more files with update mode.</span>
 
 <span class="sd">        If an option already exists, change its value; if it doesn&#39;t exist,</span>
-<span class="sd">        don&#39;t do anything:</span>
-<span class="sd">        {A:d,D:e} update {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c}</span>
+<span class="sd">        don&#39;t do anything. For example:</span>
 
-<span class="sd">        See _export_file for object compatibility.</span>
+<span class="sd">        *{A:d,D:e} update {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c}*</span>
 
-<span class="sd">        targets: a sequence with the target file names</span>
-<span class="sd">        path (boolean): if True, section names are exported with their full</span>
-<span class="sd">        path</span>
+<span class="sd">        See :py:meth:`_export_file` for object compatibility.</span>
+
+<span class="sd">        :param targets: A sequence with the target file names</span>
+<span class="sd">        :param bool path: If True, section names are exported with their full</span>
+<span class="sd">            path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -1077,14 +1135,15 @@
 <span class="sd">        Export sections and options to one or more files with reset mode.</span>
 
 <span class="sd">        Delete all options and subsections and recreate everything from the</span>
-<span class="sd">        importing object:</span>
-<span class="sd">        {A:d,D:e} reset {A:a,B:b,C:c} =&gt; {A:d,D:e}</span>
+<span class="sd">        importing object. For example:</span>
 
-<span class="sd">        See _export_file for object compatibility.</span>
+<span class="sd">        *{A:d,D:e} reset {A:a,B:b,C:c} =&gt; {A:d,D:e}*</span>
 
-<span class="sd">        targets: a sequence with the target file names</span>
-<span class="sd">        path (boolean): if True, section names are exported with their full</span>
-<span class="sd">        path</span>
+<span class="sd">        See :py:meth:`_export_file` for object compatibility.</span>
+
+<span class="sd">        :param targets: A sequence with the target file names</span>
+<span class="sd">        :param bool path: If True, section names are exported with their full</span>
+<span class="sd">            path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -1098,14 +1157,15 @@
 <span class="sd">        Export sections and options to one or more files with add mode.</span>
 
 <span class="sd">        If an option already exists, don&#39;t do anything; if it doesn&#39;t exist,</span>
-<span class="sd">        create it and store its value:</span>
-<span class="sd">        {A:d,D:e} add {A:a,B:b,C:c} =&gt; {A:a,B:b,C:c,D:e}</span>
+<span class="sd">        create it and store its value. For example:</span>
 
-<span class="sd">        See _export_file for object compatibility.</span>
+<span class="sd">        *{A:d,D:e} add {A:a,B:b,C:c} =&gt; {A:a,B:b,C:c,D:e}*</span>
 
-<span class="sd">        targets: a sequence with the target file names</span>
-<span class="sd">        path (boolean): if True, section names are exported with their full</span>
-<span class="sd">        path</span>
+<span class="sd">        See :py:meth:`_export_file` for object compatibility.</span>
+
+<span class="sd">        :param targets: A sequence with the target file names</span>
+<span class="sd">        :param bool path: If True, section names are exported with their full</span>
+<span class="sd">            path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -1119,12 +1179,12 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export the sections tree to a file.</span>
 
-<span class="sd">        efile (string): the target file name.</span>
-<span class="sd">        overwrite (bool): whether sections and options already existing in the</span>
-<span class="sd">        file are overwritten.</span>
-<span class="sd">        add (bool): whether non-pre-existing data will be exported.</span>
-<span class="sd">        path (boolean): if True, section names are exported with their full</span>
-<span class="sd">        path, otherwise they are left</span>
+<span class="sd">        :param str efile: The target file name.</span>
+<span class="sd">        :param bool overwrite: Whether sections and options already existing in</span>
+<span class="sd">            the file are overwritten.</span>
+<span class="sd">        :param bool add: Whether non-pre-existing data will be exported.</span>
+<span class="sd">        :param bool path: If True, section names are exported with their full</span>
+<span class="sd">            path, otherwise they are left</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
@@ -1220,7 +1280,7 @@
 <div class="viewcode-block" id="Section._export_file_existing_option"><a class="viewcode-back" href="../index.html#configfile.Section._export_file_existing_option">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_existing_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">re_option</span><span class="p">,</span>
                         <span class="n">readonly_section</span><span class="p">,</span> <span class="n">remaining_options</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">reset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Auxiliary method for _export_file().</span>
+<span class="sd">        Auxiliary method for :py:meth:`_export_file`.</span>
 
 <span class="sd">        Write the option currently examined from the destination file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1270,7 +1330,7 @@
 <div class="viewcode-block" id="Section._export_file_remaining_options"><a class="viewcode-back" href="../index.html#configfile.Section._export_file_remaining_options">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_remaining_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">readonly_section</span><span class="p">,</span>
                                                             <span class="n">remaining_options</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Auxiliary method for _export_file().</span>
+<span class="sd">        Auxiliary method for :py:meth:`_export_file`.</span>
 
 <span class="sd">        Write the options from the origin object that were not found in the</span>
 <span class="sd">        destination file.</span>
@@ -1283,7 +1343,7 @@
 <div class="viewcode-block" id="Section._export_file_existing_section"><a class="viewcode-back" href="../index.html#configfile.Section._export_file_existing_section">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_existing_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">re_section</span><span class="p">,</span>
                     <span class="n">ROOT_SECTION</span><span class="p">,</span> <span class="n">BASE_SECTION</span><span class="p">,</span> <span class="n">remaining_descendants</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Auxiliary method for _export_file().</span>
+<span class="sd">        Auxiliary method for :py:meth:`_export_file`.</span>
 
 <span class="sd">        Write the section currently examined from the destination file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1323,7 +1383,7 @@
 <div class="viewcode-block" id="Section._export_file_remaining_sections"><a class="viewcode-back" href="../index.html#configfile.Section._export_file_remaining_sections">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_remaining_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">BASE_SECTION</span><span class="p">,</span>
                                                 <span class="n">remaining_descendants</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Auxiliary method for _export_file().</span>
+<span class="sd">        Auxiliary method for :py:meth:`_export_file`.</span>
 
 <span class="sd">        Write the sections and their options from the origin object that</span>
 <span class="sd">        were not found in the destination file.</span>
@@ -1358,6 +1418,9 @@
 </div>
 <div class="viewcode-block" id="Section._export_other_lines"><a class="viewcode-back" href="../index.html#configfile.Section._export_other_lines">[docs]</a>    <span class="k">def</span> <span class="nf">_export_other_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">other_lines</span><span class="p">,</span> <span class="n">readonly_section</span><span class="p">,</span>
                                                                         <span class="n">reset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Auxiliary method for :py:meth:`_export_file`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">readonly_section</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">reset</span><span class="p">:</span>
             <span class="n">stream</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">other_lines</span><span class="p">)</span>
 
@@ -1365,6 +1428,9 @@
 </div>
 <div class="viewcode-block" id="Section._export_other_lines_before_existing_section"><a class="viewcode-back" href="../index.html#configfile.Section._export_other_lines_before_existing_section">[docs]</a>    <span class="k">def</span> <span class="nf">_export_other_lines_before_existing_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">other_lines</span><span class="p">,</span>
                                                     <span class="n">readonly_section</span><span class="p">,</span> <span class="n">reset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Auxiliary method for :py:meth:`_export_file`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">readonly_section</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">reset</span><span class="p">:</span>
             <span class="n">stream</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">other_lines</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">stream</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -1375,12 +1441,14 @@
 </div></div>
 <div class="viewcode-block" id="ConfigFile"><a class="viewcode-back" href="../index.html#configfile.ConfigFile">[docs]</a><span class="k">class</span> <span class="nc">ConfigFile</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A configuration file object.</span>
+<span class="sd">    A configuration object.</span>
 
 <span class="sd">    One or more text files, dictionaries or compatible objects can be initially</span>
-<span class="sd">    parsed with configfile.ConfigFile(file1, dict1, file2, ...).</span>
-<span class="sd">    This will instantiate a ConfigFile object with sections, subsections,</span>
-<span class="sd">    options and values.</span>
+<span class="sd">    parsed with ``ConfigFile(file1, dict1, file2, ...)``.</span>
+
+<span class="sd">    This will instantiate a :py:class:`ConfigFile` object with sections,</span>
+<span class="sd">    subsections, options and values.</span>
+
 <span class="sd">    Even if you parse more files, dictionaries or special objects, this will</span>
 <span class="sd">    instantiate a unified object.</span>
 
@@ -1388,28 +1456,33 @@
 <span class="sd">    argument.</span>
 
 <span class="sd">    By default, sections are allowed to contain both options or other sections</span>
-<span class="sd">    (subsections): this behaviour can be disabled by instantiating ConfigFile</span>
-<span class="sd">    with sub=False.</span>
+<span class="sd">    (subsections): this behaviour can be disabled by instantiating</span>
+<span class="sd">    :py:class:`ConfigFile` with ``sub=False``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ConfigFile.__init__"><a class="viewcode-back" href="../index.html#configfile.ConfigFile.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Constructor: instantiate a ConfigFile object.</span>
+<span class="sd">        Constructor: instantiate a :py:class:`ConfigFile` object.</span>
 
-<span class="sd">        sources (string, dict or special object (see _import_object)): a</span>
-<span class="sd">        sequence of all the files, dictionaries and special objects to be</span>
-<span class="sd">        parsed</span>
-<span class="sd">        mode (string): this sets if and how the next source in the chain</span>
-<span class="sd">        overwrites already imported sections and options; available choices are</span>
-<span class="sd">        &#39;upgrade&#39;, &#39;update&#39;, &#39;reset&#39; and &#39;add&#39; (see the respective methods for</span>
-<span class="sd">        more details)</span>
-<span class="sd">        ignore_case (boolean): if True, section and option names will be</span>
-<span class="sd">        compared ignoring case differences; regular expressions will use re.I</span>
-<span class="sd">        flag</span>
-<span class="sd">        subsections (boolean): if True (default) subsections are allowed</span>
-<span class="sd">        interpolation (boolean): if True, option values will be interpolated</span>
-<span class="sd">        using values from other options through the special syntax</span>
-<span class="sd">        ${section$:section$:option$}. Options will be interpolated only once at</span>
-<span class="sd">        importing: all links among options will be lost after importing.</span>
+<span class="sd">        :param sources: A sequence of all the files, dictionaries and special</span>
+<span class="sd">            objects to be parsed</span>
+<span class="sd">        :type sources: str, dict or special object (see</span>
+<span class="sd">            :py:meth:`Section._import_object`)</span>
+<span class="sd">        :param str mode: This sets if and how the next source in the chain</span>
+<span class="sd">            overwrites already imported sections and options; available choices</span>
+<span class="sd">            are ``&#39;upgrade&#39;``, ``&#39;update&#39;``, ``&#39;reset&#39;`` and ``&#39;add&#39;`` (see the</span>
+<span class="sd">            respective methods for more details)</span>
+<span class="sd">        :param bool ignore_case: If True, section and option names will be</span>
+<span class="sd">            compared ignoring case differences; regular expressions will use</span>
+<span class="sd">            ``re.I`` flag</span>
+<span class="sd">        :param bool subsections: If True (default) subsections are allowed</span>
+<span class="sd">        :param bool interpolation: If True, option values will be interpolated</span>
+<span class="sd">            using values from other options through the special syntax</span>
+<span class="sd">            ``${section$:section$:option$}``. Options will be interpolated only</span>
+<span class="sd">            once at importing: all links among options will be lost after</span>
+<span class="sd">            importing.</span>
+
+<span class="sd">        Possible options at the beginning of the file, before any section, are</span>
+<span class="sd">        considered to be in the &quot;root&quot; section.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># The Python 3 definition was:</span>
         <span class="c">#def __init__(self,</span>

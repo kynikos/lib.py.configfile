@@ -48,74 +48,101 @@
 <h1>Welcome to ConfigFile&#8217;s documentation!<a class="headerlink" href="#welcome-to-configfile-s-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<span class="target" id="module-configfile"></span><p>ConfigFile class - Dynamically parse and edit configuration files.</p>
+<span class="target" id="module-configfile"></span><p>This library provides the <a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><tt class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></tt></a> class, whose goal is to
+provide an interface for parsing, modifying and writing configuration files.</p>
+<p>Main features:</p>
+<ul class="simple">
+<li>Support for subsections. Support for sectionless options (root options).</li>
+<li>Read from multiple sources (files, dictionaries or special compatible
+objects) and compose them in a single <a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><tt class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></tt></a> object.</li>
+<li>When importing and exporting it is possible to choose what to do with
+options only existing in the source, only existing in the destination, or
+existing in both with different values.</li>
+<li>Import a configuration source into a particular subsection of an existing
+object. Export only a particular subsection of an existing object.</li>
+<li>Preserve the order of sections and options when exporting. Try the best to
+preserve any comments too.</li>
+<li>Access sections and options with the
+<tt class="docutils literal"><span class="pre">root('Section')('Subsection')['option']</span></tt> syntax.</li>
+<li>save references to subsections with e.g.
+<tt class="docutils literal"><span class="pre">subsection</span> <span class="pre">=</span> <span class="pre">section('Section')('Subsection')</span></tt>.</li>
+<li>Interpolation of option values between sections when importing.</li>
+</ul>
 <p>Author: Dario Giovannetti &lt;<a class="reference external" href="mailto:dev&#37;&#52;&#48;dariogiovannetti&#46;net">dev<span>&#64;</span>dariogiovannetti<span>&#46;</span>net</a>&gt;</p>
 <p>License: GPLv3</p>
 <p>GitHub: <a class="reference external" href="https://www.github.com/kynikos/lib.py.configfile">https://www.github.com/kynikos/lib.py.configfile</a></p>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="initial-files">
-<h3>Initial files<a class="headerlink" href="#initial-files" title="Permalink to this headline">¶</a></h3>
+<p><strong>Note:</strong> as it is clear by reading this page, the documentation is still in a
+poor state. If you manage to understand how this library works and want to help
+documenting it, you are welcome to fork the GitHub repository and request to
+pull your improvements. Everything is written in docstrings in the only
+python module of the package.</p>
+<p>Also, if you have any questions, do not hesitate to write the author an email!</p>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Suppose you have these two files:</p>
 <p><tt class="docutils literal"><span class="pre">/path/to/file</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">root_option</span> <span class="o">=</span> <span class="n">demo</span>
+<div class="highlight-cfg"><div class="highlight"><pre><span class="na">root_option</span> <span class="o">=</span> <span class="s">demo</span>
 
-<span class="p">[</span><span class="n">Section1</span><span class="p">]</span>
-<span class="n">test</span> <span class="o">=</span> <span class="n">ok</span>
-<span class="n">retest</span> <span class="o">=</span> <span class="n">no</span>
-<span class="n">test3</span> <span class="o">=</span> <span class="n">yes</span>
+<span class="k">[Section1]</span>
+<span class="na">test</span> <span class="o">=</span> <span class="s">ok</span>
+<span class="na">retest</span> <span class="o">=</span> <span class="s">no</span>
+<span class="na">test3</span> <span class="o">=</span> <span class="s">yes</span>
 
-<span class="p">[</span><span class="n">Section2</span><span class="o">.</span><span class="n">Section2A</span><span class="p">]</span>
-<span class="n">foo</span> <span class="o">=</span> <span class="n">fooo</span>
+<span class="k">[Section2.Section2A]</span>
+<span class="na">foo</span> <span class="o">=</span> <span class="s">fooo</span>
 
-<span class="p">[</span><span class="n">Section3</span><span class="p">]</span>
-<span class="n">bar</span> <span class="o">=</span> <span class="n">yay</span>
+<span class="k">[Section3]</span>
+<span class="na">bar</span> <span class="o">=</span> <span class="s">yay</span>
 </pre></div>
 </div>
 <p><tt class="docutils literal"><span class="pre">/path/to/other_file</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">Section2C</span><span class="p">]</span>
-<span class="n">an_option</span> <span class="o">=</span> <span class="mi">2</span>
+<div class="highlight-cfg"><div class="highlight"><pre><span class="k">[Section2C]</span>
+<span class="na">an_option</span> <span class="o">=</span> <span class="s">2</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="code">
-<h3>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python"><div class="highlight"><pre>conf = ConfigFile(&quot;/path/to/file&quot;)
+<p>Now run this script:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">configfile</span> <span class="kn">import</span> <span class="n">ConfigFile</span>
 
-conf(&quot;Section2).upgrade(&quot;path/to/other_file&quot;)
+<span class="n">conf</span> <span class="o">=</span> <span class="n">ConfigFile</span><span class="p">(</span><span class="s">&quot;/path/to/file&quot;</span><span class="p">)</span>
 
-option = conf(&quot;Section2&quot;)(&quot;Section2C&quot;)[&quot;an_option&quot;]
-print(option)  # &quot;2&quot;
+<span class="n">conf</span><span class="p">(</span><span class="s">&quot;Section2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upgrade</span><span class="p">(</span><span class="s">&quot;path/to/other_file&quot;</span><span class="p">)</span>
 
-option = conf(&quot;Section2&quot;)(&quot;Section2C&quot;).get_int(&quot;an_option&quot;)
-print(option)  # 2
+<span class="n">option</span> <span class="o">=</span> <span class="n">conf</span><span class="p">(</span><span class="s">&quot;Section2&quot;</span><span class="p">)(</span><span class="s">&quot;Section2C&quot;</span><span class="p">)[</span><span class="s">&quot;an_option&quot;</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">option</span><span class="p">))</span>  <span class="c"># 2 &lt;class &#39;str&#39;&gt;</span>
 
-conf.export_add(&quot;/path/to/file&quot;)
+<span class="n">option</span> <span class="o">=</span> <span class="n">conf</span><span class="p">(</span><span class="s">&quot;Section2&quot;</span><span class="p">)(</span><span class="s">&quot;Section2C&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="s">&quot;an_option&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">option</span><span class="p">))</span>  <span class="c"># 2 &lt;class &#39;int&#39;&gt;</span>
 
-conf[&quot;root_option&quot;] = &quot;value&quot;
+<span class="n">conf</span><span class="o">.</span><span class="n">export_add</span><span class="p">(</span><span class="s">&quot;/path/to/file&quot;</span><span class="p">)</span>
 
-conf(&quot;Section3&quot;).export_reset(&quot;/path/to/another_file&quot;)
+<span class="n">conf</span><span class="p">[</span><span class="s">&quot;root_option&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;value&quot;</span>
+
+<span class="n">conf</span><span class="p">(</span><span class="s">&quot;Section3&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">export_reset</span><span class="p">(</span><span class="s">&quot;/path/to/another_file&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="resulting-files">
-<h3>Resulting files<a class="headerlink" href="#resulting-files" title="Permalink to this headline">¶</a></h3>
+<p>You will end up with these files (<tt class="docutils literal"><span class="pre">/path/to/other_file</span></tt> is left
+untouched):</p>
 <p><tt class="docutils literal"><span class="pre">/path/to/file</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">root_option</span> <span class="o">=</span> <span class="n">demo</span>
+<div class="highlight-cfg"><div class="highlight"><pre><span class="na">root_option</span> <span class="o">=</span> <span class="s">demo</span>
 
-<span class="p">[</span><span class="n">Section1</span><span class="p">]</span>
-<span class="n">test</span> <span class="o">=</span> <span class="n">ok</span>
+<span class="k">[Section1]</span>
+<span class="na">test</span> <span class="o">=</span> <span class="s">ok</span>
+<span class="na">retest</span> <span class="o">=</span> <span class="s">no</span>
+<span class="na">test3</span> <span class="o">=</span> <span class="s">yes</span>
 
-<span class="p">[</span><span class="n">Section2</span><span class="o">.</span><span class="n">Section2A</span><span class="p">]</span>
-<span class="n">foo</span> <span class="o">=</span> <span class="n">fooo</span>
+<span class="k">[Section2.Section2A]</span>
+<span class="na">foo</span> <span class="o">=</span> <span class="s">fooo</span>
 
-<span class="p">[</span><span class="n">Section2</span><span class="o">.</span><span class="n">Section2C</span><span class="p">]</span>
-<span class="n">an_option</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">[Section2.Section2C]</span>
+<span class="na">an_option</span> <span class="o">=</span> <span class="s">2</span>
+
+<span class="k">[Section3]</span>
+<span class="na">bar</span> <span class="o">=</span> <span class="s">yay</span>
 </pre></div>
 </div>
 <p><tt class="docutils literal"><span class="pre">/path/to/another_file</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">bar</span> <span class="o">=</span> <span class="n">yay</span>
+<div class="highlight-cfg"><div class="highlight"><pre><span class="na">bar</span> <span class="o">=</span> <span class="s">yay</span>
 </pre></div>
-</div>
 </div>
 </div>
 <div class="section" id="module-contents">
@@ -124,20 +151,31 @@ conf(&quot;Section3&quot;).export_reset(&quot;/path/to/another_file&quot;)
 <dt id="configfile.Section">
 <em class="property">class </em><tt class="descclassname">configfile.</tt><tt class="descname">Section</tt><big>(</big><em>name=None</em>, <em>parent=None</em>, <em>inherit_options=False</em>, <em>subsections=True</em>, <em>ignore_case=True</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<p>The class for a section in the configuration file.</p>
-<p>Possible options at the beginning of the file, before any section, are
-considered to be in the &#8220;root&#8221; section.</p>
+<p>The class for a section in the configuration file, including the root
+section.</p>
 <dl class="method">
 <dt id="configfile.Section.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>name=None</em>, <em>parent=None</em>, <em>inherit_options=False</em>, <em>subsections=True</em>, <em>ignore_case=True</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor.</p>
-<p>name (string): the name of the section
-parent (Section instance): a reference to the parent section object
-ignore_case (boolean): if True, section and option names will be
-compared ignoring case differences; regular expressions will use re.I
-flag
-subsections (boolean): if True, subsections are enabled; otherwise they
-are disabled</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the section</li>
+<li><strong>parent</strong> (<em>Section</em>) &#8211; A reference to the parent section object</li>
+<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; Whether the section will inherit the
+options from its ancestors</li>
+<li><strong>subsections</strong> (<em>bool</em>) &#8211; if True, subsections are enabled; otherwise
+they are disabled</li>
+<li><strong>ignore_case</strong> (<em>bool</em>) &#8211; If True, section and option names will be
+compared ignoring case differences; regular expressions will use
+<tt class="docutils literal"><span class="pre">re.I</span></tt> flag</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -145,30 +183,60 @@ are disabled</p>
 <tt class="descname">__call__</tt><big>(</big><em>key</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enables calling directly the object with a string, returning the
 corresponding subsection object, if existent.</p>
-<p>key (string): the name of the subsection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; The name of the subsection</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section.__getitem__">
 <tt class="descname">__getitem__</tt><big>(</big><em>opt</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__getitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__getitem__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the value for the option specified.</p>
-<p>opt (string): the name of the option whose value must be returned</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section.__setitem__">
 <tt class="descname">__setitem__</tt><big>(</big><em>opt</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__setitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__setitem__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores the provided value in the specified option.</p>
-<p>Both the option name and the value must be strings.</p>
-<p>opt (string): the name of the option
-val (string): the new value for the option</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option</li>
+<li><strong>val</strong> (<em>str</em>) &#8211; The new value for the option</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section.__delitem__">
 <tt class="descname">__delitem__</tt><big>(</big><em>opt</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__delitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__delitem__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes the specified option.</p>
-<p>opt (string): the name of the option that must be deleted</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>opt</strong> (<em>str</em>) &#8211; The name of the option that must be deleted</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -181,16 +249,23 @@ loop).</p>
 <dl class="method">
 <dt id="configfile.Section.__contains__">
 <tt class="descname">__contains__</tt><big>(</big><em>item</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.__contains__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__contains__" title="Permalink to this definition">¶</a></dt>
-<dd><p>If item is a Section object, this method returns True if item (the
-object, not its name) is a subsection of self; otherwise this returns
-True if item is the name of an option in self.</p>
-<p>item: a Section object or the name of an option</p>
+<dd><p>If item is a <a class="reference internal" href="#configfile.Section" title="configfile.Section"><tt class="xref py py-class docutils literal"><span class="pre">Section</span></tt></a> object, this method returns True if
+item (the object, not its name) is a subsection of self; otherwise this
+returns True if item is the name of an option in self.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>item</strong> (<em>Section or str</em>) &#8211; A <a class="reference internal" href="#configfile.Section" title="configfile.Section"><tt class="xref py py-class docutils literal"><span class="pre">Section</span></tt></a> object or the name of an option</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section.set">
 <tt class="descname">set</tt><big>(</big><em>opt</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.set" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is an alias for __setitem__().</p>
+<dd><p>This is an alias for <a class="reference internal" href="#configfile.Section.__setitem__" title="configfile.Section.__setitem__"><tt class="xref py py-meth docutils literal"><span class="pre">__setitem__()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -198,7 +273,14 @@ True if item is the name of an option in self.</p>
 <tt class="descname">make_subsection</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.make_subsection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.make_subsection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an empty subsection under the current section if it doesn&#8217;t
 exist.</p>
-<p>name (string): the name of the new subsection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; The name of the new subsection</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -213,11 +295,22 @@ exist.</p>
 <dd><p>Import sections and options from a file, dictionary or special object
 with upgrade mode.</p>
 <p>If an option already exists, change its value; if it doesn&#8217;t exist,
-create it and store its value:
-{A:a,B:b,C:c} upgrade {A:d,D:e} =&gt; {A:d,B:b,C:c,D:e}</p>
-<p>See _import_object for object compatibility.</p>
-<p>sources: a sequence of files, dictionaries and/or special objects.
-interpolation (boolean): enable/disable value interpolation.</p>
+create it and store its value. For example:</p>
+<p><em>{A:a,B:b,C:c} upgrade {A:d,D:e} =&gt; {A:d,B:b,C:c,D:e}</em></p>
+<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><tt class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></tt></a> for object compatibility.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sources</strong> &#8211; A sequence of files, dictionaries and/or special
+objects.</li>
+<li><strong>interpolation</strong> (<em>bool</em>) &#8211; Enable/disable value interpolation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -226,11 +319,22 @@ interpolation (boolean): enable/disable value interpolation.</p>
 <dd><p>Import sections and options from a file, dictionary or special object
 with update mode.</p>
 <p>If an option already exists, change its value; if it doesn&#8217;t exist,
-don&#8217;t do anything:
-{A:a,B:b,C:c} update {A:d,D:e} =&gt; {A:d,B:b,C:c}</p>
-<p>See _import_object for object compatibility.</p>
-<p>sources: a sequence of files, dictionaries and/or special objects.
-interpolation (boolean): enable/disable value interpolation.</p>
+don&#8217;t do anything. For example:</p>
+<p><em>{A:a,B:b,C:c} update {A:d,D:e} =&gt; {A:d,B:b,C:c}</em></p>
+<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><tt class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></tt></a> for object compatibility.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sources</strong> &#8211; A sequence of files, dictionaries and/or special
+objects.</li>
+<li><strong>interpolation</strong> (<em>bool</em>) &#8211; Enable/disable value interpolation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -239,11 +343,22 @@ interpolation (boolean): enable/disable value interpolation.</p>
 <dd><p>Import sections and options from a file, dictionary or special object
 with reset mode.</p>
 <p>Delete all options and subsections and recreate everything from the
-importing object:
-{A:a,B:b,C:c} reset {A:d,D:e} =&gt; {A:d,D:e}</p>
-<p>See _import_object for object compatibility.</p>
-<p>sources: a sequence of files, dictionaries and/or special objects.
-interpolation (boolean): enable/disable value interpolation.</p>
+importing object. For example:</p>
+<p><em>{A:a,B:b,C:c} reset {A:d,D:e} =&gt; {A:d,D:e}</em></p>
+<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><tt class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></tt></a> for object compatibility.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sources</strong> &#8211; A sequence of files, dictionaries and/or special
+objects.</li>
+<li><strong>interpolation</strong> (<em>bool</em>) &#8211; Enable/disable value interpolation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -252,11 +367,22 @@ interpolation (boolean): enable/disable value interpolation.</p>
 <dd><p>Import sections and options from a file, dictionary or special object
 with add mode.</p>
 <p>If an option already exists, don&#8217;t do anything; if it doesn&#8217;t exist,
-create it and store its value:
-{A:a,B:b,C:c} add {A:d,D:e} =&gt; {A:a,B:b,C:c,D:e}</p>
-<p>See _import_object for object compatibility.</p>
-<p>sources: a sequence of files, dictionaries and/or special objects.
-interpolation (boolean): enable/disable value interpolation.</p>
+create it and store its value. For example:</p>
+<p><em>{A:a,B:b,C:c} add {A:d,D:e} =&gt; {A:a,B:b,C:c,D:e}</em></p>
+<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><tt class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></tt></a> for object compatibility.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sources</strong> &#8211; A sequence of files, dictionaries and/or special
+objects.</li>
+<li><strong>interpolation</strong> (<em>bool</em>) &#8211; Enable/disable value interpolation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -265,21 +391,32 @@ interpolation (boolean): enable/disable value interpolation.</p>
 <dd><p>Parse some files, dictionaries or special objects and add their
 configuration to the existing one.</p>
 <p>Distinction between the various source types is done automatically.</p>
-<p>sources: a sequence of all the files, dictionaries or special object to
-be parsed; a value of None will be ignored (useful for creating empty
-objects that will be populated programmatically).
-overwrite (bool): this sets whether the next source in the chain
-overwrites already imported sections and options; see _import_object
-for more details.
-add (bool): this sets whether the next source in the chain
-adds non-pre-existing sections and options; see _import_object for more
-details.
-reset (bool): this sets whether the next source in the chain removes
-all the data added by the previous sources.
-interpolation (boolean): if True, option values will be interpolated
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sources</strong> &#8211; A sequence of all the files, dictionaries or special
+object to be parsed; a value of None will be ignored (useful for
+creating empty objects that will be populated programmatically).</li>
+<li><strong>overwrite</strong> (<em>bool</em>) &#8211; This sets whether the next source in the chain
+overwrites already imported sections and options; see
+<a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><tt class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></tt></a> for more details.</li>
+<li><strong>add</strong> (<em>bool</em>) &#8211; This sets whether the next source in the chain adds
+non-pre-existing sections and options; see _import_object for more
+details.</li>
+<li><strong>reset</strong> (<em>bool</em>) &#8211; This sets whether the next source in the chain
+removes all the data added by the previous sources.</li>
+<li><strong>interpolation</strong> (<em>bool</em>) &#8211; If True, option values will be interpolated
 using values from other options through the special syntax
-${section$:section$:option$}. Options will be interpolated only once at
-importing: all links among options will be lost after importing.</p>
+<tt class="docutils literal"><span class="pre">${section$:section$:option$}</span></tt>. Options will be interpolated only
+once at importing: all links among options will be lost after
+importing.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -287,7 +424,14 @@ importing: all links among options will be lost after importing.</p>
 <tt class="descname">_parse_file</tt><big>(</big><em>cfile</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._parse_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._parse_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a text file and translate it into a compatible object, thus
 making it possible to import it.</p>
-<p>cfile (string): the name of the file to be parsed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cfile</strong> (<em>str</em>) &#8211; The name of the file to be parsed</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -295,95 +439,93 @@ making it possible to import it.</p>
 <tt class="descname">_parse_subsections</tt><big>(</big><em>re</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._parse_subsections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._parse_subsections" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse the sections hierarchy in a section line of a text file and
 return them in a list.</p>
-<p>re: regexp object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>re</strong> &#8211; regular expression object</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._import_object">
 <tt class="descname">_import_object</tt><big>(</big><em>cobj</em>, <em>overwrite=True</em>, <em>add=True</em>, <em>reset=False</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._import_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import_object" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import sections and options from a compatible object.</p>
-<p>cobj (special nested object): a special object composed of
-dictionaries (or compatible mapping object) and tuples to be imported;
-a section is represented by a 2-tuple: its first value is a mapping
-object that associates the names of options to their values; its second
-value is a mapping object that associates the names of subsections to
-their 2-tuples. For example:
-cobj = (</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>{</dt>
-<dd>&#8216;option1&#8217;: &#8216;value&#8217;,
-&#8216;option2&#8217;: &#8216;value&#8217;</dd>
-</dl>
-<p>},
-{</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>&#8216;sectionA&#8217;: (</dt>
-<dd><dl class="first docutils">
-<dt>{</dt>
-<dd>&#8216;optionA1&#8217;: &#8216;value&#8217;,
-&#8216;optionA2&#8217;: &#8216;value&#8217;,</dd>
-</dl>
-<p>},
-{</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>&#8216;sectionC&#8217;: (</dt>
-<dd><dl class="first docutils">
-<dt>{</dt>
-<dd>&#8216;optionC1&#8217;: &#8216;value&#8217;,
-&#8216;optionC2&#8217;: &#8216;value&#8217;,</dd>
-</dl>
-<p class="last">},
-{},</p>
-</dd>
-</dl>
-<p>),</p>
-</div></blockquote>
-<p class="last">},</p>
-</dd>
-</dl>
-<p>),
-&#8216;sectionB&#8217;: (</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>{</dt>
-<dd>&#8216;optionB1&#8217;: &#8216;value&#8217;,
-&#8216;optionB2&#8217;: &#8216;value&#8217;</dd>
-</dl>
-<p>},
-{},</p>
-</div></blockquote>
-<p>),</p>
-</div></blockquote>
-<p>},</p>
-</div></blockquote>
-<p>)</p>
-<p>overwrite (bool): whether imported data will overwrite pre-existing
-data.
-add (bool): whether non-pre-existing data will be imported.
-reset (bool): whether pre-existing data will be cleared.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cobj</strong> &#8211; <p>A special object composed of dictionaries (or compatible
+mapping object) and tuples to be imported; a section is represented
+by a 2-tuple: its first value is a mapping object that associates
+the names of options to their values; its second value is a mapping
+object that associates the names of subsections to their 2-tuples.
+For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cobj</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s">&#39;option1&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
+        <span class="s">&#39;option2&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s">&#39;sectionA&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s">&#39;optionA1&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
+                <span class="s">&#39;optionA2&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s">&#39;sectionC&#39;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s">&#39;optionC1&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
+                        <span class="s">&#39;optionC2&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                    <span class="p">{},</span>
+                <span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">),</span>
+        <span class="s">&#39;sectionB&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s">&#39;optionB1&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
+                <span class="s">&#39;optionB2&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span>
+            <span class="p">},</span>
+            <span class="p">{},</span>
+        <span class="p">),</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><strong>overwrite</strong> (<em>bool</em>) &#8211; Whether imported data will overwrite
+pre-existing data.</li>
+<li><strong>add</strong> (<em>bool</em>) &#8211; Whether non-pre-existing data will be imported.</li>
+<li><strong>reset</strong> (<em>bool</em>) &#8211; Whether pre-existing data will be cleared.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._import_object_option">
 <tt class="descname">_import_object_option</tt><big>(</big><em>overwrite</em>, <em>add</em>, <em>reset</em>, <em>opt</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._import_object_option"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import_object_option" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for _import_object().</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><tt class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></tt></a>.</p>
 <p>Import the currently-examined option.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._import_object_subsection">
 <tt class="descname">_import_object_subsection</tt><big>(</big><em>overwrite</em>, <em>add</em>, <em>reset</em>, <em>sec</em>, <em>secd</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._import_object_subsection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import_object_subsection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for _import_object().</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><tt class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></tt></a>.</p>
 <p>Import the currently-examined subsection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._import_object_subsection_create">
 <tt class="descname">_import_object_subsection_create</tt><big>(</big><em>overwrite</em>, <em>add</em>, <em>sec</em>, <em>secd</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._import_object_subsection_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import_object_subsection_create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for _import_object_subsection().</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._import_object_subsection" title="configfile.Section._import_object_subsection"><tt class="xref py py-meth docutils literal"><span class="pre">_import_object_subsection()</span></tt></a>.</p>
 <p>Import the currently-examined subsection.</p>
 </dd></dl>
 
@@ -391,21 +533,29 @@ reset (bool): whether pre-existing data will be cleared.</p>
 <dt id="configfile.Section._interpolate">
 <tt class="descname">_interpolate</tt><big>(</big><em>root=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._interpolate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._interpolate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interpolate values among different options.</p>
-<p>root: the root section from which resolve interpolations.</p>
-<p>The &#8216;$&#8217; sign is a special character: a &#8216;$&#8217; not followed by &#8216;$&#8217;, &#8216;{&#8216;,
-&#8216;:&#8217; or &#8216;}&#8217; will be left &#8216;$&#8217;; &#8216;$$&#8217; will be translated as &#8216;$&#8217; both inside
-or outside an interpolation path; &#8216;${&#8216; will be considered as the
-beginning of an interpolation path, unless it&#8217;s found inside another
-interpolation path, and in the latter case it will be left &#8216;${&#8216;; &#8216;$:&#8217;
-will be considered as a separator between sections of an interpolation
-path, unless it&#8217;s found outside of an interpolation path, and in the
-latter case it will be left &#8216;$:&#8217;; &#8216;$}&#8217; will be considered as the end of
-an interpolation path, unless it&#8217;s found outside of an interpolation
-path, and in the latter case it will be left &#8216;$}&#8217;.
-Normally all paths will be resolved based on the root section of the
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>root</strong> &#8211; The root section from which resolve interpolations.</td>
+</tr>
+</tbody>
+</table>
+<p>The <tt class="docutils literal"><span class="pre">$</span></tt> sign is a special character: a <tt class="docutils literal"><span class="pre">$</span></tt> not followed by <tt class="docutils literal"><span class="pre">$</span></tt>,
+<tt class="docutils literal"><span class="pre">{</span></tt>, <tt class="docutils literal"><span class="pre">:</span></tt> or <tt class="docutils literal"><span class="pre">}</span></tt> will be left <tt class="docutils literal"><span class="pre">$</span></tt>; <tt class="docutils literal"><span class="pre">$$</span></tt> will be translated as
+<tt class="docutils literal"><span class="pre">$</span></tt> both inside or outside an interpolation path; <tt class="docutils literal"><span class="pre">${</span></tt> will be
+considered as the beginning of an interpolation path, unless it&#8217;s found
+inside another interpolation path, and in the latter case it will be
+left <tt class="docutils literal"><span class="pre">${</span></tt>; <tt class="docutils literal"><span class="pre">$:</span></tt> will be considered as a separator between sections
+of an interpolation path, unless it&#8217;s found outside of an interpolation
+path, and in the latter case it will be left <tt class="docutils literal"><span class="pre">$:</span></tt>; <tt class="docutils literal"><span class="pre">$}</span></tt> will be
+considered as the end of an interpolation path, unless it&#8217;s found
+outside of an interpolation path, and in the latter case it will be
+left <tt class="docutils literal"><span class="pre">$}</span></tt>.</p>
+<p>Normally all paths will be resolved based on the root section of the
 file; anyway, if the interpolation path has only one item, it will be
 resolved as an option relative to the current section; otherwise, if
-the path starts with &#8216;$:&#8217;, the first item will be considered as a
+the path starts with <tt class="docutils literal"><span class="pre">$:</span></tt>, the first item will be considered as a
 section (or an option, if last in the list) relative to the current
 section.</p>
 </dd></dl>
@@ -414,57 +564,97 @@ section.</p>
 <dt id="configfile.Section.get">
 <tt class="descname">get</tt><big>(</big><em>opt</em>, <em>fallback=None</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the value for the option specified.</p>
-<p>opt (string): the name of the option whose value must be returned
-fallback (string, None): if set to a string, and the option is not
-found, this method returns that string; if set to None (default) it
-returns KeyError
-inherit_options (boolean): if True, if the option is not found in the
-current section, it&#8217;s searched in the parent sections; note that this
-can be set as a default for the object, but this setting overwrites it
-only for this call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</li>
+<li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
+method returns that string; if set to None (default) it returns
+KeyError</li>
+<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
+current section, it&#8217;s searched in the parent sections; note that
+this can be set as a default for the object, but this setting
+overwrites it only for this call</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section.get_str">
 <tt class="descname">get_str</tt><big>(</big><em>opt</em>, <em>fallback=None</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is an alias for get().</p>
+<dd><p>This is an alias for <a class="reference internal" href="#configfile.Section.get" title="configfile.Section.get"><tt class="xref py py-meth docutils literal"><span class="pre">get()</span></tt></a>.</p>
 <p>This will always return a string.</p>
-<p>opt (string): the name of the option whose value must be returned
-fallback (string, None): if set to a string, and the option is not
-found, this method returns that string; if set to None (default) it
-returns KeyError
-inherit_options (boolean): if True, if the option is not found in the
-current section, it&#8217;s searched in the parent sections; note that this
-can be set as a default for the object, but this setting overwrites it
-only for this call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</li>
+<li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
+method returns that string; if set to None (default) it returns
+KeyError</li>
+<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
+current section, it&#8217;s searched in the parent sections; note that
+this can be set as a default for the object, but this setting
+overwrites it only for this call</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section.get_int">
 <tt class="descname">get_int</tt><big>(</big><em>opt</em>, <em>fallback=None</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_int" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method tries to return an integer from the value of an option.</p>
-<p>opt (string): the name of the option whose value must be returned
-fallback (string, None): if set to a string, and the option is not
-found, this method returns that string; if set to None (default) it
-returns KeyError
-inherit_options (boolean): if True, if the option is not found in the
-current section, it&#8217;s searched in the parent sections; note that this
-can be set as a default for the object, but this setting overwrites it
-only for this call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</li>
+<li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
+method returns that string; if set to None (default) it returns
+KeyError</li>
+<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
+current section, it&#8217;s searched in the parent sections; note that
+this can be set as a default for the object, but this setting
+overwrites it only for this call</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section.get_float">
 <tt class="descname">get_float</tt><big>(</big><em>opt</em>, <em>fallback=None</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_float" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method tries to return a float from the value of an option.</p>
-<p>opt (string): the name of the option whose value must be returned
-fallback (string, None): if set to a string, and the option is not
-found, this method returns that string; if set to None (default) it
-returns KeyError
-inherit_options (boolean): if True, if the option is not found in the
-current section, it&#8217;s searched in the parent sections; note that this
-can be set as a default for the object, but this setting overwrites it
-only for this call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</li>
+<li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
+method returns that string; if set to None (default) it returns
+KeyError</li>
+<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
+current section, it&#8217;s searched in the parent sections; note that
+this can be set as a default for the object, but this setting
+overwrites it only for this call</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -472,18 +662,29 @@ only for this call</p>
 <tt class="descname">get_bool</tt><big>(</big><em>opt</em>, <em>true=()</em>, <em>false=()</em>, <em>default=None</em>, <em>fallback=None</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_bool" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method tries to return a boolean status (True or False) from the
 value of an option.</p>
-<p>opt (string): the name of the option whose value must be returned
-true (tuple): a tuple with the strings to be recognized as True
-false (tuple): a tuple with the strings to be recognized as False
-default: if the value is neither in true nor in false tuples, return
-this boolean status; if set to None, it raises a ValueError exception
-fallback: if set to None (default), and the option is not found, it
-raises KeyError; otherwise this value is evaluated with the true and
-false tuples, or the default value
-inherit_options (boolean): if True, if the option is not found in the
-current section, it&#8217;s searched in the parent sections; note that this
-can be set as a default for the object, but this setting overwrites it
-only for this call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</li>
+<li><strong>true</strong> (<em>tuple</em>) &#8211; A tuple with the strings to be recognized as True</li>
+<li><strong>false</strong> (<em>tuple</em>) &#8211; A tuple with the strings to be recognized as False</li>
+<li><strong>default</strong> &#8211; If the value is neither in true nor in false tuples,
+return this boolean status; if set to None, it raises a ValueError
+exception</li>
+<li><strong>fallback</strong> &#8211; If set to None (default), and the option is not found,
+it raises KeyError; otherwise this value is evaluated with the true
+and false tuples, or the default value</li>
+<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
+current section, it&#8217;s searched in the parent sections; note that
+this can be set as a default for the object, but this setting
+overwrites it only for this call</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <p>Note that the characters in the strings are compared in lowercase, so
 there&#8217;s no need to specify all casing variations of a string</p>
 </dd></dl>
@@ -507,11 +708,21 @@ current section itself.</p>
 <tt class="descname">get_options</tt><big>(</big><em>ordered=True</em>, <em>inherit_options=None</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_options" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dictionary with a copy of option names as keys and their
 values as values.</p>
-<p>ordered (boolean): if True, return an ordered dictionary; otherwise
-return a normal dictionary
-inherit_options (boolean): if True, options are searched also in the
-parent sections; note that this can be set as a default for the object,
-but this setting overwrites it only for this call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ordered</strong> (<em>bool</em>) &#8211; If True, return an ordered dictionary; otherwise
+return a normal dictionary</li>
+<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, options are searched also in the
+parent sections; note that this can be set as a default for the
+object, but this setting overwrites it only for this call</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -524,29 +735,49 @@ but this setting overwrites it only for this call</p>
 <dt id="configfile.Section.get_tree">
 <tt class="descname">get_tree</tt><big>(</big><em>ordered=True</em>, <em>path=False</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.get_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a compatible object with options and subsections.</p>
-<p>ordered (boolean): if True, the object uses ordered dictionaries;
-otherwise it uses normal dictionaries
-path (boolean): if True, return the current section as a subsection
-of the parent sections.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ordered</strong> (<em>bool</em>) &#8211; If True, the object uses ordered dictionaries;
+otherwise it uses normal dictionaries</li>
+<li><strong>path</strong> (<em>bool</em>) &#8211; If True, return the current section as a subsection
+of the parent sections.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._recurse_tree">
 <tt class="descname">_recurse_tree</tt><big>(</big><em>ordered=True</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._recurse_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._recurse_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary recursor for get_tree().</p>
+<dd><p>Auxiliary recursor for <a class="reference internal" href="#configfile.Section.get_tree" title="configfile.Section.get_tree"><tt class="xref py py-meth docutils literal"><span class="pre">get_tree()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._export">
 <tt class="descname">_export</tt><big>(</big><em>targets</em>, <em>overwrite=True</em>, <em>add=True</em>, <em>reset=False</em>, <em>path=True</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the configuration to one or more files.</p>
-<p>targets: a sequence with the target file names
-overwrite (bool): this sets whether sections and options in the
-file are overwritten; see _import_object for more details.
-add (bool): this sets whether non-pre-existing sections and option
-are added; see _import_object for more details.
-path (boolean): if True, section names are exported with their full
-path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>targets</strong> &#8211; A sequence with the target file names</li>
+<li><strong>overwrite</strong> (<em>bool</em>) &#8211; This sets whether sections and options in the
+file are overwritten; see _import_object for more details.</li>
+<li><strong>add</strong> (<em>bool</em>) &#8211; This sets whether non-pre-existing sections and option
+are added; see _import_object for more details.</li>
+<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+path</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -554,12 +785,22 @@ path</p>
 <tt class="descname">export_upgrade</tt><big>(</big><em>*targets</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.export_upgrade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.export_upgrade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export sections and options to one or more files with upgrade mode.</p>
 <p>If an option already exists, change its value; if it doesn&#8217;t exist,
-create it and store its value:
-{A:d,D:e} upgrade {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c,D:e}</p>
-<p>See _export_file for object compatibility.</p>
-<p>targets: a sequence with the target file names
-path (boolean): if True, section names are exported with their full
-path</p>
+create it and store its value. For example:</p>
+<p><em>{A:d,D:e} upgrade {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c,D:e}</em></p>
+<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><tt class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></tt></a> for object compatibility.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>targets</strong> &#8211; A sequence with the target file names</li>
+<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+path</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -567,12 +808,22 @@ path</p>
 <tt class="descname">export_update</tt><big>(</big><em>*targets</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.export_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.export_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export sections and options to one or more files with update mode.</p>
 <p>If an option already exists, change its value; if it doesn&#8217;t exist,
-don&#8217;t do anything:
-{A:d,D:e} update {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c}</p>
-<p>See _export_file for object compatibility.</p>
-<p>targets: a sequence with the target file names
-path (boolean): if True, section names are exported with their full
-path</p>
+don&#8217;t do anything. For example:</p>
+<p><em>{A:d,D:e} update {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c}</em></p>
+<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><tt class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></tt></a> for object compatibility.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>targets</strong> &#8211; A sequence with the target file names</li>
+<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+path</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -580,12 +831,22 @@ path</p>
 <tt class="descname">export_reset</tt><big>(</big><em>*targets</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.export_reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.export_reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export sections and options to one or more files with reset mode.</p>
 <p>Delete all options and subsections and recreate everything from the
-importing object:
-{A:d,D:e} reset {A:a,B:b,C:c} =&gt; {A:d,D:e}</p>
-<p>See _export_file for object compatibility.</p>
-<p>targets: a sequence with the target file names
-path (boolean): if True, section names are exported with their full
-path</p>
+importing object. For example:</p>
+<p><em>{A:d,D:e} reset {A:a,B:b,C:c} =&gt; {A:d,D:e}</em></p>
+<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><tt class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></tt></a> for object compatibility.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>targets</strong> &#8211; A sequence with the target file names</li>
+<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+path</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -593,37 +854,57 @@ path</p>
 <tt class="descname">export_add</tt><big>(</big><em>*targets</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section.export_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.export_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export sections and options to one or more files with add mode.</p>
 <p>If an option already exists, don&#8217;t do anything; if it doesn&#8217;t exist,
-create it and store its value:
-{A:d,D:e} add {A:a,B:b,C:c} =&gt; {A:a,B:b,C:c,D:e}</p>
-<p>See _export_file for object compatibility.</p>
-<p>targets: a sequence with the target file names
-path (boolean): if True, section names are exported with their full
-path</p>
+create it and store its value. For example:</p>
+<p><em>{A:d,D:e} add {A:a,B:b,C:c} =&gt; {A:a,B:b,C:c,D:e}</em></p>
+<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><tt class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></tt></a> for object compatibility.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>targets</strong> &#8211; A sequence with the target file names</li>
+<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+path</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._export_file">
 <tt class="descname">_export_file</tt><big>(</big><em>cfile</em>, <em>overwrite=True</em>, <em>add=True</em>, <em>reset=False</em>, <em>path=True</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the sections tree to a file.</p>
-<p>efile (string): the target file name.
-overwrite (bool): whether sections and options already existing in the
-file are overwritten.
-add (bool): whether non-pre-existing data will be exported.
-path (boolean): if True, section names are exported with their full
-path, otherwise they are left</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>efile</strong> (<em>str</em>) &#8211; The target file name.</li>
+<li><strong>overwrite</strong> (<em>bool</em>) &#8211; Whether sections and options already existing in
+the file are overwritten.</li>
+<li><strong>add</strong> (<em>bool</em>) &#8211; Whether non-pre-existing data will be exported.</li>
+<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+path, otherwise they are left</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._export_file_existing_option">
 <tt class="descname">_export_file_existing_option</tt><big>(</big><em>stream</em>, <em>line</em>, <em>re_option</em>, <em>readonly_section</em>, <em>remaining_options</em>, <em>overwrite</em>, <em>reset</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_file_existing_option"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_existing_option" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for _export_file().</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><tt class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></tt></a>.</p>
 <p>Write the option currently examined from the destination file.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._export_file_remaining_options">
 <tt class="descname">_export_file_remaining_options</tt><big>(</big><em>stream</em>, <em>readonly_section</em>, <em>remaining_options</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_file_remaining_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_remaining_options" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for _export_file().</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><tt class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></tt></a>.</p>
 <p>Write the options from the origin object that were not found in the
 destination file.</p>
 </dd></dl>
@@ -631,14 +912,14 @@ destination file.</p>
 <dl class="method">
 <dt id="configfile.Section._export_file_existing_section">
 <tt class="descname">_export_file_existing_section</tt><big>(</big><em>stream</em>, <em>line</em>, <em>re_section</em>, <em>ROOT_SECTION</em>, <em>BASE_SECTION</em>, <em>remaining_descendants</em>, <em>path</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_file_existing_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_existing_section" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for _export_file().</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><tt class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></tt></a>.</p>
 <p>Write the section currently examined from the destination file.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._export_file_remaining_sections">
 <tt class="descname">_export_file_remaining_sections</tt><big>(</big><em>stream</em>, <em>BASE_SECTION</em>, <em>remaining_descendants</em>, <em>path</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_file_remaining_sections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_remaining_sections" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for _export_file().</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><tt class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></tt></a>.</p>
 <p>Write the sections and their options from the origin object that
 were not found in the destination file.</p>
 </dd></dl>
@@ -646,12 +927,14 @@ were not found in the destination file.</p>
 <dl class="method">
 <dt id="configfile.Section._export_other_lines">
 <tt class="descname">_export_other_lines</tt><big>(</big><em>stream</em>, <em>other_lines</em>, <em>readonly_section</em>, <em>reset</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_other_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_other_lines" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><tt class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._export_other_lines_before_existing_section">
 <tt class="descname">_export_other_lines_before_existing_section</tt><big>(</big><em>stream</em>, <em>other_lines</em>, <em>readonly_section</em>, <em>reset</em><big>)</big><a class="reference internal" href="_modules/configfile.html#Section._export_other_lines_before_existing_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_other_lines_before_existing_section" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><tt class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></tt></a>.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -659,37 +942,50 @@ were not found in the destination file.</p>
 <dt id="configfile.ConfigFile">
 <em class="property">class </em><tt class="descclassname">configfile.</tt><tt class="descname">ConfigFile</tt><big>(</big><em>*sources</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#ConfigFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.ConfigFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#configfile.Section" title="configfile.Section"><tt class="xref py py-class docutils literal"><span class="pre">configfile.Section</span></tt></a></p>
-<p>A configuration file object.</p>
+<p>A configuration object.</p>
 <p>One or more text files, dictionaries or compatible objects can be initially
-parsed with configfile.ConfigFile(file1, dict1, file2, ...).
-This will instantiate a ConfigFile object with sections, subsections,
-options and values.
-Even if you parse more files, dictionaries or special objects, this will
+parsed with <tt class="docutils literal"><span class="pre">ConfigFile(file1,</span> <span class="pre">dict1,</span> <span class="pre">file2,</span> <span class="pre">...)</span></tt>.</p>
+<p>This will instantiate a <a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><tt class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></tt></a> object with sections,
+subsections, options and values.</p>
+<p>Even if you parse more files, dictionaries or special objects, this will
 instantiate a unified object.</p>
 <p>A default set of values can be set by assigning a dictionary as the first
 argument.</p>
 <p>By default, sections are allowed to contain both options or other sections
-(subsections): this behaviour can be disabled by instantiating ConfigFile
-with sub=False.</p>
+(subsections): this behaviour can be disabled by instantiating
+<a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><tt class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></tt></a> with <tt class="docutils literal"><span class="pre">sub=False</span></tt>.</p>
 <dl class="method">
 <dt id="configfile.ConfigFile.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>*sources</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/configfile.html#ConfigFile.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.ConfigFile.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor: instantiate a ConfigFile object.</p>
-<p>sources (string, dict or special object (see _import_object)): a
-sequence of all the files, dictionaries and special objects to be
-parsed
-mode (string): this sets if and how the next source in the chain
-overwrites already imported sections and options; available choices are
-&#8216;upgrade&#8217;, &#8216;update&#8217;, &#8216;reset&#8217; and &#8216;add&#8217; (see the respective methods for
-more details)
-ignore_case (boolean): if True, section and option names will be
-compared ignoring case differences; regular expressions will use re.I
-flag
-subsections (boolean): if True (default) subsections are allowed
-interpolation (boolean): if True, option values will be interpolated
+<dd><p>Constructor: instantiate a <a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><tt class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></tt></a> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sources</strong> (str, dict or special object (see
+<a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><tt class="xref py py-meth docutils literal"><span class="pre">Section._import_object()</span></tt></a>)) &#8211; A sequence of all the files, dictionaries and special
+objects to be parsed</li>
+<li><strong>mode</strong> (<em>str</em>) &#8211; This sets if and how the next source in the chain
+overwrites already imported sections and options; available choices
+are <tt class="docutils literal"><span class="pre">'upgrade'</span></tt>, <tt class="docutils literal"><span class="pre">'update'</span></tt>, <tt class="docutils literal"><span class="pre">'reset'</span></tt> and <tt class="docutils literal"><span class="pre">'add'</span></tt> (see the
+respective methods for more details)</li>
+<li><strong>ignore_case</strong> (<em>bool</em>) &#8211; If True, section and option names will be
+compared ignoring case differences; regular expressions will use
+<tt class="docutils literal"><span class="pre">re.I</span></tt> flag</li>
+<li><strong>subsections</strong> (<em>bool</em>) &#8211; If True (default) subsections are allowed</li>
+<li><strong>interpolation</strong> (<em>bool</em>) &#8211; If True, option values will be interpolated
 using values from other options through the special syntax
-${section$:section$:option$}. Options will be interpolated only once at
-importing: all links among options will be lost after importing.</p>
+<tt class="docutils literal"><span class="pre">${section$:section$:option$}</span></tt>. Options will be interpolated only
+once at importing: all links among options will be lost after
+importing.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Possible options at the beginning of the file, before any section, are
+considered to be in the &#8220;root&#8221; section.</p>
 </dd></dl>
 
 </dd></dl>
@@ -741,12 +1037,7 @@ importing: all links among options will be lost after importing.</p>
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Welcome to ConfigFile&#8217;s documentation!</a><ul>
-<li><a class="reference internal" href="#examples">Examples</a><ul>
-<li><a class="reference internal" href="#initial-files">Initial files</a></li>
-<li><a class="reference internal" href="#code">Code</a></li>
-<li><a class="reference internal" href="#resulting-files">Resulting files</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#example">Example</a></li>
 <li><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>

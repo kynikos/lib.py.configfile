@@ -22,6 +22,6 @@ setup(name='configfile',
                                                     'support for subsections.',
       author='Dario Giovannetti',
       author_email='dev@dariogiovannetti.net',
-      url='https://github.com/kynikos/lib.py.configfile',
+      url='https://kynikos.github.io/lib.py.configfile',
       license='GPLv3',
       packages=['configfile', ])

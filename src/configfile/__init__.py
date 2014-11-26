@@ -15,8 +15,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-ConfigFile class - Dynamically parse and edit configuration files with support
-for subsections.
+This library provides the :py:class:`ConfigFile` class, whose goal is to
+provide an interface for parsing, modifying and writing configuration files.
+
+Main features:
+
+* Support for subsections. Support for sectionless options (root options).
+* Read from multiple sources (files, dictionaries or special compatible
+  objects) and compose them in a single :py:class:`ConfigFile` object.
+* When importing and exporting it is possible to choose what to do with
+  options only existing in the source, only existing in the destination, or
+  existing in both with different values.
+* Import a configuration source into a particular subsection of an existing
+  object. Export only a particular subsection of an existing object.
+* Preserve the order of sections and options when exporting. Try the best to
+  preserve any comments too.
+* Access sections and options with the
+  ``root('Section')('Subsection')['option']`` syntax.
+* save references to subsections with e.g.
+  ``subsection = section('Section')('Subsection')``.
+* Interpolation of option values between sections when importing.
 
 Author: Dario Giovannetti <dev@dariogiovannetti.net>
 
@@ -24,13 +42,22 @@ License: GPLv3
 
 GitHub: https://www.github.com/kynikos/lib.py.configfile
 
-Examples
+**Note:** as it is clear by reading this page, the documentation is still in a
+poor state. If you manage to understand how this library works and want to help
+documenting it, you are welcome to fork the GitHub repository and request to
+pull your improvements. Everything is written in docstrings in the only
+python module of the package.
+
+Also, if you have any questions, do not hesitate to write the author an email!
+
+Example
 ========
 
-Initial files
--------------
+Suppose you have these two files:
 
-``/path/to/file``::
+``/path/to/file``:
+
+.. code-block:: cfg
 
     root_option = demo
 
@@ -45,25 +72,28 @@ Initial files
     [Section3]
     bar = yay
 
-``/path/to/other_file``::
+``/path/to/other_file``:
+
+.. code-block:: cfg
 
     [Section2C]
     an_option = 2
 
-Code
-----
+Now run this script:
 
 ::
 
+    from configfile import ConfigFile
+
     conf = ConfigFile("/path/to/file")
 
-    conf("Section2).upgrade("path/to/other_file")
+    conf("Section2").upgrade("path/to/other_file")
 
     option = conf("Section2")("Section2C")["an_option"]
-    print(option)  # "2"
+    print(option, type(option))  # 2 <class 'str'>
 
     option = conf("Section2")("Section2C").get_int("an_option")
-    print(option)  # 2
+    print(option, type(option))  # 2 <class 'int'>
 
     conf.export_add("/path/to/file")
 
@@ -71,15 +101,19 @@ Code
 
     conf("Section3").export_reset("/path/to/another_file")
 
-Resulting files
----------------
+You will end up with these files (``/path/to/other_file`` is left
+untouched):
 
-``/path/to/file``::
+``/path/to/file``:
+
+.. code-block:: cfg
 
     root_option = demo
 
     [Section1]
     test = ok
+    retest = no
+    test3 = yes
 
     [Section2.Section2A]
     foo = fooo
@@ -87,7 +121,12 @@ Resulting files
     [Section2.Section2C]
     an_option = 2
 
-``/path/to/another_file``::
+    [Section3]
+    bar = yay
+
+``/path/to/another_file``:
+
+.. code-block:: cfg
 
     bar = yay
 
@@ -102,23 +141,23 @@ import collections
 
 class Section(object):
     """
-    The class for a section in the configuration file.
-
-    Possible options at the beginning of the file, before any section, are
-    considered to be in the "root" section.
+    The class for a section in the configuration file, including the root
+    section.
     """
     def __init__(self, name=None, parent=None, inherit_options=False,
                                         subsections=True, ignore_case=True):
         """
         Constructor.
 
-        name (string): the name of the section
-        parent (Section instance): a reference to the parent section object
-        ignore_case (boolean): if True, section and option names will be
-        compared ignoring case differences; regular expressions will use re.I
-        flag
-        subsections (boolean): if True, subsections are enabled; otherwise they
-        are disabled
+        :param str name: The name of the section
+        :param Section parent: A reference to the parent section object
+        :param bool inherit_options: Whether the section will inherit the
+            options from its ancestors
+        :param bool subsections: if True, subsections are enabled; otherwise
+            they are disabled
+        :param bool ignore_case: If True, section and option names will be
+            compared ignoring case differences; regular expressions will use
+            ``re.I`` flag
         """
         self._NAME = name
         self._PARENT = parent
@@ -165,7 +204,7 @@ class Section(object):
         Enables calling directly the object with a string, returning the
         corresponding subsection object, if existent.
 
-        key (string): the name of the subsection
+        :param str key: The name of the subsection
         """
         try:
             lkey = key.lower()
@@ -188,7 +227,7 @@ class Section(object):
         """
         Returns the value for the option specified.
 
-        opt (string): the name of the option whose value must be returned
+        :param str opt: The name of the option whose value must be returned
         """
         item = self.get(opt, fallback=None,
                                          inherit_options=self._INHERIT_OPTIONS)
@@ -204,10 +243,8 @@ class Section(object):
         """
         Stores the provided value in the specified option.
 
-        Both the option name and the value must be strings.
-
-        opt (string): the name of the option
-        val (string): the new value for the option
+        :param str opt: The name of the option
+        :param str val: The new value for the option
         """
         if isinstance(opt, str):
             if isinstance(val, str):
@@ -229,7 +266,7 @@ class Section(object):
         """
         Deletes the specified option.
 
-        opt (string): the name of the option that must be deleted
+        :param str opt: The name of the option that must be deleted
         """
         try:
             lopt = opt.lower()
@@ -258,11 +295,12 @@ class Section(object):
 
     def __contains__(self, item):
         """
-        If item is a Section object, this method returns True if item (the
-        object, not its name) is a subsection of self; otherwise this returns
-        True if item is the name of an option in self.
+        If item is a :py:class:`Section` object, this method returns True if
+        item (the object, not its name) is a subsection of self; otherwise this
+        returns True if item is the name of an option in self.
 
-        item: a Section object or the name of an option
+        :param item: A :py:class:`Section` object or the name of an option
+        :type item: Section or str
         """
         if isinstance(item, Section):
             return item in self._subsections.values()
@@ -279,7 +317,7 @@ class Section(object):
 
     def set(self, opt, val):
         """
-        This is an alias for __setitem__().
+        This is an alias for :py:meth:`__setitem__`.
         """
         self[opt] = val
 
@@ -288,7 +326,7 @@ class Section(object):
         Create an empty subsection under the current section if it doesn't
         exist.
 
-        name (string): the name of the new subsection
+        :param str name: The name of the new subsection
         """
         sub = self._EMPTY_SECTION()
         sub[1][name] = self._EMPTY_SECTION()
@@ -306,13 +344,15 @@ class Section(object):
         with upgrade mode.
 
         If an option already exists, change its value; if it doesn't exist,
-        create it and store its value:
-        {A:a,B:b,C:c} upgrade {A:d,D:e} => {A:d,B:b,C:c,D:e}
+        create it and store its value. For example:
 
-        See _import_object for object compatibility.
+        *{A:a,B:b,C:c} upgrade {A:d,D:e} => {A:d,B:b,C:c,D:e}*
 
-        sources: a sequence of files, dictionaries and/or special objects.
-        interpolation (boolean): enable/disable value interpolation.
+        See :py:meth:`_import_object` for object compatibility.
+
+        :param sources: A sequence of files, dictionaries and/or special
+            objects.
+        :param bool interpolation: Enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -327,13 +367,15 @@ class Section(object):
         with update mode.
 
         If an option already exists, change its value; if it doesn't exist,
-        don't do anything:
-        {A:a,B:b,C:c} update {A:d,D:e} => {A:d,B:b,C:c}
+        don't do anything. For example:
 
-        See _import_object for object compatibility.
+        *{A:a,B:b,C:c} update {A:d,D:e} => {A:d,B:b,C:c}*
 
-        sources: a sequence of files, dictionaries and/or special objects.
-        interpolation (boolean): enable/disable value interpolation.
+        See :py:meth:`_import_object` for object compatibility.
+
+        :param sources: A sequence of files, dictionaries and/or special
+            objects.
+        :param bool interpolation: Enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -348,13 +390,15 @@ class Section(object):
         with reset mode.
 
         Delete all options and subsections and recreate everything from the
-        importing object:
-        {A:a,B:b,C:c} reset {A:d,D:e} => {A:d,D:e}
+        importing object. For example:
 
-        See _import_object for object compatibility.
+        *{A:a,B:b,C:c} reset {A:d,D:e} => {A:d,D:e}*
 
-        sources: a sequence of files, dictionaries and/or special objects.
-        interpolation (boolean): enable/disable value interpolation.
+        See :py:meth:`_import_object` for object compatibility.
+
+        :param sources: A sequence of files, dictionaries and/or special
+            objects.
+        :param bool interpolation: Enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -369,13 +413,15 @@ class Section(object):
         with add mode.
 
         If an option already exists, don't do anything; if it doesn't exist,
-        create it and store its value:
-        {A:a,B:b,C:c} add {A:d,D:e} => {A:a,B:b,C:c,D:e}
+        create it and store its value. For example:
 
-        See _import_object for object compatibility.
+        *{A:a,B:b,C:c} add {A:d,D:e} => {A:a,B:b,C:c,D:e}*
 
-        sources: a sequence of files, dictionaries and/or special objects.
-        interpolation (boolean): enable/disable value interpolation.
+        See :py:meth:`_import_object` for object compatibility.
+
+        :param sources: A sequence of files, dictionaries and/or special
+            objects.
+        :param bool interpolation: Enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -392,21 +438,22 @@ class Section(object):
 
         Distinction between the various source types is done automatically.
 
-        sources: a sequence of all the files, dictionaries or special object to
-        be parsed; a value of None will be ignored (useful for creating empty
-        objects that will be populated programmatically).
-        overwrite (bool): this sets whether the next source in the chain
-        overwrites already imported sections and options; see _import_object
-        for more details.
-        add (bool): this sets whether the next source in the chain
-        adds non-pre-existing sections and options; see _import_object for more
-        details.
-        reset (bool): this sets whether the next source in the chain removes
-        all the data added by the previous sources.
-        interpolation (boolean): if True, option values will be interpolated
-        using values from other options through the special syntax
-        ${section$:section$:option$}. Options will be interpolated only once at
-        importing: all links among options will be lost after importing.
+        :param sources: A sequence of all the files, dictionaries or special
+            object to be parsed; a value of None will be ignored (useful for
+            creating empty objects that will be populated programmatically).
+        :param bool overwrite: This sets whether the next source in the chain
+            overwrites already imported sections and options; see
+            :py:meth:`_import_object` for more details.
+        :param bool add: This sets whether the next source in the chain adds
+            non-pre-existing sections and options; see _import_object for more
+            details.
+        :param bool reset: This sets whether the next source in the chain
+            removes all the data added by the previous sources.
+        :param bool interpolation: If True, option values will be interpolated
+            using values from other options through the special syntax
+            ``${section$:section$:option$}``. Options will be interpolated only
+            once at importing: all links among options will be lost after
+            importing.
         """
         for source in sources:
             if source is None:
@@ -428,7 +475,7 @@ class Section(object):
         Parse a text file and translate it into a compatible object, thus
         making it possible to import it.
 
-        cfile (string): the name of the file to be parsed
+        :param str cfile: The name of the file to be parsed
         """
         try:
             stream = open(cfile, 'r')
@@ -487,7 +534,7 @@ class Section(object):
         Parse the sections hierarchy in a section line of a text file and
         return them in a list.
 
-        re: regexp object
+        :param re: regular expression object
         """
         if self._ENABLE_SUBSECTIONS:
             return re.group(1).split(self._SECTION_SEP)
@@ -498,47 +545,48 @@ class Section(object):
         """
         Import sections and options from a compatible object.
 
-        cobj (special nested object): a special object composed of
-        dictionaries (or compatible mapping object) and tuples to be imported;
-        a section is represented by a 2-tuple: its first value is a mapping
-        object that associates the names of options to their values; its second
-        value is a mapping object that associates the names of subsections to
-        their 2-tuples. For example:
-        cobj = (
-            {
-                'option1': 'value',
-                'option2': 'value'
-            },
-            {
-                'sectionA': (
+        :param cobj: A special object composed of dictionaries (or compatible
+            mapping object) and tuples to be imported; a section is represented
+            by a 2-tuple: its first value is a mapping object that associates
+            the names of options to their values; its second value is a mapping
+            object that associates the names of subsections to their 2-tuples.
+            For example::
+
+                cobj = (
                     {
-                        'optionA1': 'value',
-                        'optionA2': 'value',
+                        'option1': 'value',
+                        'option2': 'value'
                     },
                     {
-                        'sectionC': (
+                        'sectionA': (
                             {
-                                'optionC1': 'value',
-                                'optionC2': 'value',
+                                'optionA1': 'value',
+                                'optionA2': 'value',
+                            },
+                            {
+                                'sectionC': (
+                                    {
+                                        'optionC1': 'value',
+                                        'optionC2': 'value',
+                                    },
+                                    {},
+                                ),
+                            },
+                        ),
+                        'sectionB': (
+                            {
+                                'optionB1': 'value',
+                                'optionB2': 'value'
                             },
                             {},
                         ),
                     },
-                ),
-                'sectionB': (
-                    {
-                        'optionB1': 'value',
-                        'optionB2': 'value'
-                    },
-                    {},
-                ),
-            },
-        )
+                )
 
-        overwrite (bool): whether imported data will overwrite pre-existing
-        data.
-        add (bool): whether non-pre-existing data will be imported.
-        reset (bool): whether pre-existing data will be cleared.
+        :param bool overwrite: Whether imported data will overwrite
+            pre-existing data.
+        :param bool add: Whether non-pre-existing data will be imported.
+        :param bool reset: Whether pre-existing data will be cleared.
         """
         if reset:
             self._options = self._DICT_CLASS()
@@ -563,7 +611,7 @@ class Section(object):
 
     def _import_object_option(self, overwrite, add, reset, opt, val):
         """
-        Auxiliary method for _import_object().
+        Auxiliary method for :py:meth:`_import_object`.
 
         Import the currently-examined option.
         """
@@ -602,7 +650,7 @@ class Section(object):
 
     def _import_object_subsection(self, overwrite, add, reset, sec, secd):
         """
-        Auxiliary method for _import_object().
+        Auxiliary method for :py:meth:`_import_object`.
 
         Import the currently-examined subsection.
         """
@@ -640,7 +688,7 @@ class Section(object):
 
     def _import_object_subsection_create(self, overwrite, add, sec, secd):
         """
-        Auxiliary method for _import_object_subsection().
+        Auxiliary method for :py:meth:`_import_object_subsection`.
 
         Import the currently-examined subsection.
         """
@@ -655,22 +703,24 @@ class Section(object):
         """
         Interpolate values among different options.
 
-        root: the root section from which resolve interpolations.
+        :param root: The root section from which resolve interpolations.
 
-        The '$' sign is a special character: a '$' not followed by '$', '{',
-        ':' or '}' will be left '$'; '$$' will be translated as '$' both inside
-        or outside an interpolation path; '${' will be considered as the
-        beginning of an interpolation path, unless it's found inside another
-        interpolation path, and in the latter case it will be left '${'; '$:'
-        will be considered as a separator between sections of an interpolation
-        path, unless it's found outside of an interpolation path, and in the
-        latter case it will be left '$:'; '$}' will be considered as the end of
-        an interpolation path, unless it's found outside of an interpolation
-        path, and in the latter case it will be left '$}'.
+        The ``$`` sign is a special character: a ``$`` not followed by ``$``,
+        ``{``, ``:`` or ``}`` will be left ``$``; ``$$`` will be translated as
+        ``$`` both inside or outside an interpolation path; ``${`` will be
+        considered as the beginning of an interpolation path, unless it's found
+        inside another interpolation path, and in the latter case it will be
+        left ``${``; ``$:`` will be considered as a separator between sections
+        of an interpolation path, unless it's found outside of an interpolation
+        path, and in the latter case it will be left ``$:``; ``$}`` will be
+        considered as the end of an interpolation path, unless it's found
+        outside of an interpolation path, and in the latter case it will be
+        left ``$}``.
+
         Normally all paths will be resolved based on the root section of the
         file; anyway, if the interpolation path has only one item, it will be
         resolved as an option relative to the current section; otherwise, if
-        the path starts with '$:', the first item will be considered as a
+        the path starts with ``$:``, the first item will be considered as a
         section (or an option, if last in the list) relative to the current
         section.
         """
@@ -719,14 +769,15 @@ class Section(object):
         """
         Returns the value for the option specified.
 
-        opt (string): the name of the option whose value must be returned
-        fallback (string, None): if set to a string, and the option is not
-        found, this method returns that string; if set to None (default) it
-        returns KeyError
-        inherit_options (boolean): if True, if the option is not found in the
-        current section, it's searched in the parent sections; note that this
-        can be set as a default for the object, but this setting overwrites it
-        only for this call
+        :param str opt: The name of the option whose value must be returned
+        :param fallback: If set to a string, and the option is not found, this
+            method returns that string; if set to None (default) it returns
+            KeyError
+        :type fallback: str or None
+        :param bool inherit_options: If True, if the option is not found in the
+            current section, it's searched in the parent sections; note that
+            this can be set as a default for the object, but this setting
+            overwrites it only for this call
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
@@ -753,18 +804,19 @@ class Section(object):
 
     def get_str(self, opt, fallback=None, inherit_options=None):
         """
-        This is an alias for get().
+        This is an alias for :py:meth:`get`.
 
         This will always return a string.
 
-        opt (string): the name of the option whose value must be returned
-        fallback (string, None): if set to a string, and the option is not
-        found, this method returns that string; if set to None (default) it
-        returns KeyError
-        inherit_options (boolean): if True, if the option is not found in the
-        current section, it's searched in the parent sections; note that this
-        can be set as a default for the object, but this setting overwrites it
-        only for this call
+        :param str opt: The name of the option whose value must be returned
+        :param fallback: If set to a string, and the option is not found, this
+            method returns that string; if set to None (default) it returns
+            KeyError
+        :type fallback: str or None
+        :param bool inherit_options: If True, if the option is not found in the
+            current section, it's searched in the parent sections; note that
+            this can be set as a default for the object, but this setting
+            overwrites it only for this call
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
@@ -776,14 +828,15 @@ class Section(object):
         """
         This method tries to return an integer from the value of an option.
 
-        opt (string): the name of the option whose value must be returned
-        fallback (string, None): if set to a string, and the option is not
-        found, this method returns that string; if set to None (default) it
-        returns KeyError
-        inherit_options (boolean): if True, if the option is not found in the
-        current section, it's searched in the parent sections; note that this
-        can be set as a default for the object, but this setting overwrites it
-        only for this call
+        :param str opt: The name of the option whose value must be returned
+        :param fallback: If set to a string, and the option is not found, this
+            method returns that string; if set to None (default) it returns
+            KeyError
+        :type fallback: str or None
+        :param bool inherit_options: If True, if the option is not found in the
+            current section, it's searched in the parent sections; note that
+            this can be set as a default for the object, but this setting
+            overwrites it only for this call
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
@@ -795,14 +848,15 @@ class Section(object):
         """
         This method tries to return a float from the value of an option.
 
-        opt (string): the name of the option whose value must be returned
-        fallback (string, None): if set to a string, and the option is not
-        found, this method returns that string; if set to None (default) it
-        returns KeyError
-        inherit_options (boolean): if True, if the option is not found in the
-        current section, it's searched in the parent sections; note that this
-        can be set as a default for the object, but this setting overwrites it
-        only for this call
+        :param str opt: The name of the option whose value must be returned
+        :param fallback: If set to a string, and the option is not found, this
+            method returns that string; if set to None (default) it returns
+            KeyError
+        :type fallback: str or None
+        :param bool inherit_options: If True, if the option is not found in the
+            current section, it's searched in the parent sections; note that
+            this can be set as a default for the object, but this setting
+            overwrites it only for this call
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
@@ -816,18 +870,19 @@ class Section(object):
         This method tries to return a boolean status (True or False) from the
         value of an option.
 
-        opt (string): the name of the option whose value must be returned
-        true (tuple): a tuple with the strings to be recognized as True
-        false (tuple): a tuple with the strings to be recognized as False
-        default: if the value is neither in true nor in false tuples, return
-        this boolean status; if set to None, it raises a ValueError exception
-        fallback: if set to None (default), and the option is not found, it
-        raises KeyError; otherwise this value is evaluated with the true and
-        false tuples, or the default value
-        inherit_options (boolean): if True, if the option is not found in the
-        current section, it's searched in the parent sections; note that this
-        can be set as a default for the object, but this setting overwrites it
-        only for this call
+        :param str opt: The name of the option whose value must be returned
+        :param tuple true: A tuple with the strings to be recognized as True
+        :param tuple false: A tuple with the strings to be recognized as False
+        :param default: If the value is neither in true nor in false tuples,
+            return this boolean status; if set to None, it raises a ValueError
+            exception
+        :param fallback: If set to None (default), and the option is not found,
+            it raises KeyError; otherwise this value is evaluated with the true
+            and false tuples, or the default value
+        :param bool inherit_options: If True, if the option is not found in the
+            current section, it's searched in the parent sections; note that
+            this can be set as a default for the object, but this setting
+            overwrites it only for this call
 
         Note that the characters in the strings are compared in lowercase, so
         there's no need to specify all casing variations of a string
@@ -888,11 +943,11 @@ class Section(object):
         Return a dictionary with a copy of option names as keys and their
         values as values.
 
-        ordered (boolean): if True, return an ordered dictionary; otherwise
-        return a normal dictionary
-        inherit_options (boolean): if True, options are searched also in the
-        parent sections; note that this can be set as a default for the object,
-        but this setting overwrites it only for this call
+        :param bool ordered: If True, return an ordered dictionary; otherwise
+            return a normal dictionary
+        :param bool inherit_options: If True, options are searched also in the
+            parent sections; note that this can be set as a default for the
+            object, but this setting overwrites it only for this call
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
@@ -925,10 +980,10 @@ class Section(object):
         """
         Return a compatible object with options and subsections.
 
-        ordered (boolean): if True, the object uses ordered dictionaries;
-        otherwise it uses normal dictionaries
-        path (boolean): if True, return the current section as a subsection
-        of the parent sections.
+        :param bool ordered: If True, the object uses ordered dictionaries;
+            otherwise it uses normal dictionaries
+        :param bool path: If True, return the current section as a subsection
+            of the parent sections.
         """
         d = self._recurse_tree(ordered=ordered)
 
@@ -951,7 +1006,7 @@ class Section(object):
 
     def _recurse_tree(self, ordered=True):
         """
-        Auxiliary recursor for get_tree().
+        Auxiliary recursor for :py:meth:`get_tree`.
         """
         options = self.get_options(ordered=ordered, inherit_options=False)
 
@@ -970,13 +1025,13 @@ class Section(object):
         """
         Export the configuration to one or more files.
 
-        targets: a sequence with the target file names
-        overwrite (bool): this sets whether sections and options in the
-        file are overwritten; see _import_object for more details.
-        add (bool): this sets whether non-pre-existing sections and option
-        are added; see _import_object for more details.
-        path (boolean): if True, section names are exported with their full
-        path
+        :param targets: A sequence with the target file names
+        :param bool overwrite: This sets whether sections and options in the
+            file are overwritten; see _import_object for more details.
+        :param bool add: This sets whether non-pre-existing sections and option
+            are added; see _import_object for more details.
+        :param  bool path: If True, section names are exported with their full
+            path
         """
         for f in targets:
             self._export_file(f, overwrite=overwrite, add=add, reset=reset,
@@ -987,14 +1042,15 @@ class Section(object):
         Export sections and options to one or more files with upgrade mode.
 
         If an option already exists, change its value; if it doesn't exist,
-        create it and store its value:
-        {A:d,D:e} upgrade {A:a,B:b,C:c} => {A:d,B:b,C:c,D:e}
+        create it and store its value. For example:
 
-        See _export_file for object compatibility.
+        *{A:d,D:e} upgrade {A:a,B:b,C:c} => {A:d,B:b,C:c,D:e}*
 
-        targets: a sequence with the target file names
-        path (boolean): if True, section names are exported with their full
-        path
+        See :py:meth:`_export_file` for object compatibility.
+
+        :param targets: A sequence with the target file names
+        :param bool path: If True, section names are exported with their full
+            path
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -1008,14 +1064,15 @@ class Section(object):
         Export sections and options to one or more files with update mode.
 
         If an option already exists, change its value; if it doesn't exist,
-        don't do anything:
-        {A:d,D:e} update {A:a,B:b,C:c} => {A:d,B:b,C:c}
+        don't do anything. For example:
 
-        See _export_file for object compatibility.
+        *{A:d,D:e} update {A:a,B:b,C:c} => {A:d,B:b,C:c}*
 
-        targets: a sequence with the target file names
-        path (boolean): if True, section names are exported with their full
-        path
+        See :py:meth:`_export_file` for object compatibility.
+
+        :param targets: A sequence with the target file names
+        :param bool path: If True, section names are exported with their full
+            path
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -1029,14 +1086,15 @@ class Section(object):
         Export sections and options to one or more files with reset mode.
 
         Delete all options and subsections and recreate everything from the
-        importing object:
-        {A:d,D:e} reset {A:a,B:b,C:c} => {A:d,D:e}
+        importing object. For example:
 
-        See _export_file for object compatibility.
+        *{A:d,D:e} reset {A:a,B:b,C:c} => {A:d,D:e}*
 
-        targets: a sequence with the target file names
-        path (boolean): if True, section names are exported with their full
-        path
+        See :py:meth:`_export_file` for object compatibility.
+
+        :param targets: A sequence with the target file names
+        :param bool path: If True, section names are exported with their full
+            path
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -1050,14 +1108,15 @@ class Section(object):
         Export sections and options to one or more files with add mode.
 
         If an option already exists, don't do anything; if it doesn't exist,
-        create it and store its value:
-        {A:d,D:e} add {A:a,B:b,C:c} => {A:a,B:b,C:c,D:e}
+        create it and store its value. For example:
 
-        See _export_file for object compatibility.
+        *{A:d,D:e} add {A:a,B:b,C:c} => {A:a,B:b,C:c,D:e}*
 
-        targets: a sequence with the target file names
-        path (boolean): if True, section names are exported with their full
-        path
+        See :py:meth:`_export_file` for object compatibility.
+
+        :param targets: A sequence with the target file names
+        :param bool path: If True, section names are exported with their full
+            path
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -1071,12 +1130,12 @@ class Section(object):
         """
         Export the sections tree to a file.
 
-        efile (string): the target file name.
-        overwrite (bool): whether sections and options already existing in the
-        file are overwritten.
-        add (bool): whether non-pre-existing data will be exported.
-        path (boolean): if True, section names are exported with their full
-        path, otherwise they are left
+        :param str efile: The target file name.
+        :param bool overwrite: Whether sections and options already existing in
+            the file are overwritten.
+        :param bool add: Whether non-pre-existing data will be exported.
+        :param bool path: If True, section names are exported with their full
+            path, otherwise they are left
         """
         try:
             with open(cfile, 'r') as stream:
@@ -1172,7 +1231,7 @@ class Section(object):
     def _export_file_existing_option(self, stream, line, re_option,
                         readonly_section, remaining_options, overwrite, reset):
         """
-        Auxiliary method for _export_file().
+        Auxiliary method for :py:meth:`_export_file`.
 
         Write the option currently examined from the destination file.
         """
@@ -1222,7 +1281,7 @@ class Section(object):
     def _export_file_remaining_options(self, stream, readonly_section,
                                                             remaining_options):
         """
-        Auxiliary method for _export_file().
+        Auxiliary method for :py:meth:`_export_file`.
 
         Write the options from the origin object that were not found in the
         destination file.
@@ -1235,7 +1294,7 @@ class Section(object):
     def _export_file_existing_section(self, stream, line, re_section,
                     ROOT_SECTION, BASE_SECTION, remaining_descendants, path):
         """
-        Auxiliary method for _export_file().
+        Auxiliary method for :py:meth:`_export_file`.
 
         Write the section currently examined from the destination file.
         """
@@ -1275,7 +1334,7 @@ class Section(object):
     def _export_file_remaining_sections(self, stream, BASE_SECTION,
                                                 remaining_descendants, path):
         """
-        Auxiliary method for _export_file().
+        Auxiliary method for :py:meth:`_export_file`.
 
         Write the sections and their options from the origin object that
         were not found in the destination file.
@@ -1310,6 +1369,9 @@ class Section(object):
 
     def _export_other_lines(self, stream, other_lines, readonly_section,
                                                                         reset):
+        """
+        Auxiliary method for :py:meth:`_export_file`.
+        """
         if readonly_section or not reset:
             stream.writelines(other_lines)
 
@@ -1317,6 +1379,9 @@ class Section(object):
 
     def _export_other_lines_before_existing_section(self, stream, other_lines,
                                                     readonly_section, reset):
+        """
+        Auxiliary method for :py:meth:`_export_file`.
+        """
         if readonly_section or not reset:
             stream.writelines(other_lines)
         elif stream.tell() > 0:
@@ -1327,12 +1392,14 @@ class Section(object):
 
 class ConfigFile(Section):
     """
-    A configuration file object.
+    A configuration object.
 
     One or more text files, dictionaries or compatible objects can be initially
-    parsed with configfile.ConfigFile(file1, dict1, file2, ...).
-    This will instantiate a ConfigFile object with sections, subsections,
-    options and values.
+    parsed with ``ConfigFile(file1, dict1, file2, ...)``.
+
+    This will instantiate a :py:class:`ConfigFile` object with sections,
+    subsections, options and values.
+
     Even if you parse more files, dictionaries or special objects, this will
     instantiate a unified object.
 
@@ -1340,28 +1407,33 @@ class ConfigFile(Section):
     argument.
 
     By default, sections are allowed to contain both options or other sections
-    (subsections): this behaviour can be disabled by instantiating ConfigFile
-    with sub=False.
+    (subsections): this behaviour can be disabled by instantiating
+    :py:class:`ConfigFile` with ``sub=False``.
     """
     def __init__(self, *sources, **kwargs):
         """
-        Constructor: instantiate a ConfigFile object.
+        Constructor: instantiate a :py:class:`ConfigFile` object.
 
-        sources (string, dict or special object (see _import_object)): a
-        sequence of all the files, dictionaries and special objects to be
-        parsed
-        mode (string): this sets if and how the next source in the chain
-        overwrites already imported sections and options; available choices are
-        'upgrade', 'update', 'reset' and 'add' (see the respective methods for
-        more details)
-        ignore_case (boolean): if True, section and option names will be
-        compared ignoring case differences; regular expressions will use re.I
-        flag
-        subsections (boolean): if True (default) subsections are allowed
-        interpolation (boolean): if True, option values will be interpolated
-        using values from other options through the special syntax
-        ${section$:section$:option$}. Options will be interpolated only once at
-        importing: all links among options will be lost after importing.
+        :param sources: A sequence of all the files, dictionaries and special
+            objects to be parsed
+        :type sources: str, dict or special object (see
+            :py:meth:`Section._import_object`)
+        :param str mode: This sets if and how the next source in the chain
+            overwrites already imported sections and options; available choices
+            are ``'upgrade'``, ``'update'``, ``'reset'`` and ``'add'`` (see the
+            respective methods for more details)
+        :param bool ignore_case: If True, section and option names will be
+            compared ignoring case differences; regular expressions will use
+            ``re.I`` flag
+        :param bool subsections: If True (default) subsections are allowed
+        :param bool interpolation: If True, option values will be interpolated
+            using values from other options through the special syntax
+            ``${section$:section$:option$}``. Options will be interpolated only
+            once at importing: all links among options will be lost after
+            importing.
+
+        Possible options at the beginning of the file, before any section, are
+        considered to be in the "root" section.
         """
         # The Python 3 definition was:
         #def __init__(self,

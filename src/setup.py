@@ -17,7 +17,7 @@
 from distutils.core import setup
 
 setup(name='configfile',
-      version='1.1.0',
+      version='1.1.1',
       description='Dynamically parse and edit configuration files with '
                                                     'support for subsections.',
       author='Dario Giovannetti',

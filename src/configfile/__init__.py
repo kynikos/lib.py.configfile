@@ -137,6 +137,7 @@ Module contents
 import errno
 import re as re_
 import collections
+import io
 
 
 class Section(object):
@@ -438,9 +439,10 @@ class Section(object):
 
         Distinction between the various source types is done automatically.
 
-        :param sources: A sequence of all the files, dictionaries or special
-            object to be parsed; a value of None will be ignored (useful for
-            creating empty objects that will be populated programmatically).
+        :param sources: A sequence of all the file names, file-like objects,
+            dictionaries or special object to be parsed; a value of None will
+            be ignored (useful for creating empty objects that will be
+            populated programmatically).
         :param bool overwrite: This sets whether the next source in the chain
             overwrites already imported sections and options; see
             :py:meth:`_import_object` for more details.
@@ -459,6 +461,8 @@ class Section(object):
             if source is None:
                 continue
             elif isinstance(source, str):
+                obj = self._parse_file(self._open_file(source))
+            elif isinstance(source, io.IOBase):
                 obj = self._parse_file(source)
             elif isinstance(source, dict):
                 obj = (source, {})
@@ -470,16 +474,14 @@ class Section(object):
             if interpolation:
                 self._interpolate(root=self)
 
-    def _parse_file(self, cfile):
+    def _open_file(self, cfile):
         """
-        Parse a text file and translate it into a compatible object, thus
-        making it possible to import it.
+        Open config file for reading.
 
         :param str cfile: The name of the file to be parsed
         """
         try:
-            stream = open(cfile, 'r')
-
+            return open(cfile, 'r')
         except EnvironmentError as e:
             if e.errno == errno.ENOENT:
                 raise NonExistentFileError('Cannot find {} ({})'.format(
@@ -488,46 +490,52 @@ class Section(object):
                 raise InvalidFileError('Cannot import configuration from {} '
                                         '({})'.format(e.filename, e.strerror))
 
-        else:
-            with stream:
-                cdict = self._EMPTY_SECTION()
-                lastsect = cdict
+    def _parse_file(self, stream):
+        """
+        Parse a text file and translate it into a compatible object, thus
+        making it possible to import it.
 
-                for lno, line in enumerate(stream):
-                    # Note that the order the various types are evaluated
-                    # matters!
+        :param stream: a file-like object to be read from
+        """
+        with stream:
+            cdict = self._EMPTY_SECTION()
+            lastsect = cdict
 
-                    if re_.match(self._PARSE_IGNORE, line, self._RE_I):
-                        continue
+            for lno, line in enumerate(stream):
+                # Note that the order the various types are evaluated
+                # matters!
 
-                    if re_.match(self._PARSE_COMMENT, line, self._RE_I):
-                        continue
+                if re_.match(self._PARSE_IGNORE, line, self._RE_I):
+                    continue
 
-                    re_option = re_.match(self._PARSE_OPTION, line, self._RE_I)
+                if re_.match(self._PARSE_COMMENT, line, self._RE_I):
+                    continue
 
-                    if re_option:
-                        lastsect[0][re_option.group(1)] = re_option.group(2)
-                        continue
+                re_option = re_.match(self._PARSE_OPTION, line, self._RE_I)
 
-                    re_section = re_.match(self._PARSE_SECTION, line,
-                                                                    self._RE_I)
-                    if re_section:
-                        subs = self._parse_subsections(re_section)
-                        d = cdict
+                if re_option:
+                    lastsect[0][re_option.group(1)] = re_option.group(2)
+                    continue
 
-                        for s in subs:
-                            if s not in d[1]:
-                                d[1][s] = self._EMPTY_SECTION()
+                re_section = re_.match(self._PARSE_SECTION, line,
+                                                                self._RE_I)
+                if re_section:
+                    subs = self._parse_subsections(re_section)
+                    d = cdict
 
-                            d = d[1][s]
+                    for s in subs:
+                        if s not in d[1]:
+                            d[1][s] = self._EMPTY_SECTION()
 
-                        lastsect = d
-                        continue
+                        d = d[1][s]
 
-                    raise ParsingError('Invalid line in {}: {} (line {})'
-                                            ''.format(cfile, line, lno + 1))
+                    lastsect = d
+                    continue
 
-            return cdict
+                raise ParsingError('Invalid line in {}: {} (line {})'
+                                        ''.format(cfile, line, lno + 1))
+
+        return cdict
 
     def _parse_subsections(self, re):
         """

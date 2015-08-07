@@ -1448,6 +1448,8 @@ class ConfigFile(Section):
             overwrites already imported sections and options; available choices
             are ``'upgrade'``, ``'update'``, ``'reset'`` and ``'add'`` (see the
             respective methods for more details)
+        :param bool inherit_options: If True, if an option is not found in a
+            section, it is searched in the parent sections
         :param bool ignore_case: If True, section and option names will be
             compared ignoring case differences; regular expressions will use
             ``re.I`` flag

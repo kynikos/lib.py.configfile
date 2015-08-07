@@ -42,6 +42,7 @@ Author: Dario Giovannetti <dev@dariogiovannetti.net>
 License: GPLv3
 
 GitHub: https://www.github.com/kynikos/lib.py.configfile
+Issue tracker: https://www.github.com/kynikos/lib.py.configfile/issues
 
 **Note:** as it is clear by reading this page, the documentation is still in a
 poor state. If you manage to understand how this library works and want to help
@@ -49,7 +50,8 @@ documenting it, you are welcome to fork the GitHub repository and request to
 pull your improvements. Everything is written in docstrings in the only
 python module of the package.
 
-Also, if you have any questions, do not hesitate to write the author an email!
+Also, if you have any questions, do not hesitate to ask in the issue tracker,
+or write the author an email!
 
 Example
 ========
@@ -163,11 +165,13 @@ class Section(object):
         """
         self._NAME = name
         self._PARENT = parent
+        # TODO: Move constant settings to a Settings class (bug #19)
         self._INHERIT_OPTIONS = inherit_options
         self._ENABLE_SUBSECTIONS = subsections
         self._IGNORE_CASE = ignore_case
         self._RE_I = re_.I if self._IGNORE_CASE else 0
 
+        # TODO: Compile only once (bug #20)
         self._PARSE_SECTION = '^\s*\[(.+)\]\s*$'
         self._PARSE_OPTION = '^\s*([^\=]+?)\s*\=\s*(.*?)\s*$'
         self._PARSE_COMMENT = '^\s*[#;]{1}\s*(.*?)\s*$'
@@ -330,6 +334,8 @@ class Section(object):
 
         :param str name: The name of the new subsection
         """
+        # TODO: Use this method, where possible, when creating new sections in
+        #       the other methods
         sub = self._EMPTY_SECTION()
         sub[1][name] = self._EMPTY_SECTION()
         self._import_object(sub, overwrite=False)
@@ -505,6 +511,8 @@ class Section(object):
             for lno, line in enumerate(stream):
                 # Note that the order the various types are evaluated
                 # matters!
+                # TODO: Really? What about sorting the tests according
+                #       to their likelihood to pass?
 
                 if re_.match(self._PARSE_IGNORE, line, self._RE_I):
                     continue
@@ -597,6 +605,8 @@ class Section(object):
         :param bool add: Whether non-pre-existing data will be imported.
         :param bool reset: Whether pre-existing data will be cleared.
         """
+        # TODO: Change "reset" mode to "remove" (complementing "overwrite" and
+        #       "add") (bug #25)
         if reset:
             self._options = self._DICT_CLASS()
             self._subsections = self._DICT_CLASS()
@@ -896,6 +906,7 @@ class Section(object):
         Note that the characters in the strings are compared in lowercase, so
         there's no need to specify all casing variations of a string
         """
+        # TODO: Use default values in definition with Settings class (bug #19)
         if true == ():
             true = self._GET_BOOLEAN_TRUE
         if false == ():
@@ -1042,6 +1053,8 @@ class Section(object):
         :param  bool path: If True, section names are exported with their full
             path
         """
+        # TODO: Change "reset" mode to "remove" (complementing "overwrite" and
+        #       "add") (bug #25)
         for f in targets:
             self._export_file(f, overwrite=overwrite, add=add, reset=reset,
                                                                     path=path)
@@ -1336,6 +1349,10 @@ class Section(object):
                 readonly_section = True
                 remaining_options = self._DICT_CLASS()
 
+        # TODO: If reset (which for all the other modes by default is "deep",
+        #       i.e. it must affect the subsections too) this section and all
+        #       the other "old" subsections must be removed from the file
+        #       (bug #22)
         stream.write(line)
 
         return (readonly_section, remaining_options)

@@ -21,8 +21,9 @@ provide an interface for parsing, modifying and writing configuration files.
 Main features:
 
 * Support for subsections. Support for sectionless options (root options).
-* Read from multiple sources (files, dictionaries or special compatible
-  objects) and compose them in a single :py:class:`ConfigFile` object.
+* Read from multiple sources (files, file-like objects, dictionaries or special
+  compatible objects) and compose them in a single :py:class:`ConfigFile`
+  object.
 * When importing and exporting it is possible to choose what to do with
   options only existing in the source, only existing in the destination, or
   existing in both with different values.
@@ -341,8 +342,8 @@ class Section(object):
 
     def upgrade(self, *sources, **kwargs):
         """
-        Import sections and options from a file, dictionary or special object
-        with upgrade mode.
+        Import sections and options from a file, file-like object, dictionary
+        or special object with upgrade mode.
 
         If an option already exists, change its value; if it doesn't exist,
         create it and store its value. For example:
@@ -351,8 +352,8 @@ class Section(object):
 
         See :py:meth:`_import_object` for object compatibility.
 
-        :param sources: A sequence of files, dictionaries and/or special
-            objects.
+        :param sources: A sequence of files, file-like objects, dictionaries
+            and/or special objects.
         :param bool interpolation: Enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
@@ -364,8 +365,8 @@ class Section(object):
 
     def update(self, *sources, **kwargs):
         """
-        Import sections and options from a file, dictionary or special object
-        with update mode.
+        Import sections and options from a file, file-like object, dictionary
+        or special object with update mode.
 
         If an option already exists, change its value; if it doesn't exist,
         don't do anything. For example:
@@ -374,8 +375,8 @@ class Section(object):
 
         See :py:meth:`_import_object` for object compatibility.
 
-        :param sources: A sequence of files, dictionaries and/or special
-            objects.
+        :param sources: A sequence of files, file-like objects, dictionaries
+            and/or special objects.
         :param bool interpolation: Enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
@@ -387,8 +388,8 @@ class Section(object):
 
     def reset(self, *sources, **kwargs):
         """
-        Import sections and options from a file, dictionary or special object
-        with reset mode.
+        Import sections and options from a file, file-like object, dictionary
+        or special object with reset mode.
 
         Delete all options and subsections and recreate everything from the
         importing object. For example:
@@ -397,8 +398,8 @@ class Section(object):
 
         See :py:meth:`_import_object` for object compatibility.
 
-        :param sources: A sequence of files, dictionaries and/or special
-            objects.
+        :param sources: A sequence of files, file-like objects, dictionaries
+            and/or special objects.
         :param bool interpolation: Enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
@@ -410,8 +411,8 @@ class Section(object):
 
     def add(self, *sources, **kwargs):
         """
-        Import sections and options from a file, dictionary or special object
-        with add mode.
+        Import sections and options from a file, file-like object, dictionary
+        or special object with add mode.
 
         If an option already exists, don't do anything; if it doesn't exist,
         create it and store its value. For example:
@@ -420,8 +421,8 @@ class Section(object):
 
         See :py:meth:`_import_object` for object compatibility.
 
-        :param sources: A sequence of files, dictionaries and/or special
-            objects.
+        :param sources: A sequence of files, file-like objects, dictionaries
+            and/or special objects.
         :param bool interpolation: Enable/disable value interpolation.
         """
         # Necessary for Python 2 compatibility
@@ -434,13 +435,13 @@ class Section(object):
     def _import(self, sources, overwrite=True, add=True, reset=False,
                                                         interpolation=False):
         """
-        Parse some files, dictionaries or special objects and add their
-        configuration to the existing one.
+        Parse some files, file-like objects, dictionaries or special objects
+        and add their configuration to the existing one.
 
         Distinction between the various source types is done automatically.
 
         :param sources: A sequence of all the file names, file-like objects,
-            dictionaries or special object to be parsed; a value of None will
+            dictionaries or special objects to be parsed; a value of None will
             be ignored (useful for creating empty objects that will be
             populated programmatically).
         :param bool overwrite: This sets whether the next source in the chain
@@ -1408,8 +1409,8 @@ class ConfigFile(Section):
     This will instantiate a :py:class:`ConfigFile` object with sections,
     subsections, options and values.
 
-    Even if you parse more files, dictionaries or special objects, this will
-    instantiate a unified object.
+    Even if you parse more files, file-like objects, dictionaries or special
+    objects, this will instantiate a unified object.
 
     A default set of values can be set by assigning a dictionary as the first
     argument.
@@ -1422,8 +1423,8 @@ class ConfigFile(Section):
         """
         Constructor: instantiate a :py:class:`ConfigFile` object.
 
-        :param sources: A sequence of all the files, dictionaries and special
-            objects to be parsed
+        :param sources: A sequence of all the files, file-like objects,
+            dictionaries and special objects to be parsed
         :type sources: str, dict or special object (see
             :py:meth:`Section._import_object`)
         :param str mode: This sets if and how the next source in the chain

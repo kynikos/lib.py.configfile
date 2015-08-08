@@ -32,9 +32,10 @@ Main features:
 * Preserve the order of sections and options when exporting. Try the best to
   preserve any comments too.
 * Access sections and options with the
+  ``root('Section', 'Subsection')['option']`` syntax or the
   ``root('Section')('Subsection')['option']`` syntax.
 * save references to subsections with e.g.
-  ``subsection = section('Section')('Subsection')``.
+  ``subsection = section('Section', 'Subsection')``.
 * Interpolation of option values between sections when importing.
 
 Author: Dario Giovannetti <dev@dariogiovannetti.net>
@@ -92,7 +93,7 @@ Now run this script:
 
     conf("Section2").upgrade("path/to/other_file")
 
-    option = conf("Section2")("Section2C")["an_option"]
+    option = conf("Section2", "Section2C")["an_option"]
     print(option, type(option))  # 2 <class 'str'>
 
     option = conf("Section2")("Section2C").get_int("an_option")
@@ -160,9 +161,9 @@ Now run this script:
     conf = ConfigFile("/path/to/file", interpolation=True)
 
     print(conf('Section1')['option'])  # foo some value
-    print(conf('Section1')('Section2')['optionA'])  # some value
-    print(conf('Section1')('Section2')['optionB'])  # some value test
-    print(conf('Section1')('Section2')['optionC'])  # test some value
+    print(conf('Section1', 'Section2')['optionA'])  # some value
+    print(conf('Section1', 'Section2')['optionB'])  # some value test
+    print(conf('Section1', 'Section2')['optionC'])  # test some value
     print(conf('Section3')['option'])  # some value bar
 
 Module contents

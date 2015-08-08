@@ -180,15 +180,15 @@ class Section(object):
     The class for a section in the configuration file, including the root
     section.
     """
-    def __init__(self, name=None, parent=None, section_fallback=False,
+    def __init__(self, name=None, parent=None, safe_calls=False,
                  inherit_options=False, subsections=True, ignore_case=True):
         """
         Constructor.
 
         :param str name: The name of the section
         :param Section parent: A reference to the parent section object
-        :param bool section_fallback: If True, when calling a non-existent
-            subsection, the current section is returned
+        :param bool safe_calls: If True, when calling a non-existent
+            subsection, its closest existing ancestor is returned
         :param bool inherit_options: Whether the section will inherit the
             options from its ancestors
         :param bool subsections: If True, subsections are enabled; otherwise
@@ -200,7 +200,7 @@ class Section(object):
         self._NAME = name
         self._PARENT = parent
         # TODO: Move constant settings to a Settings class (bug #19)
-        self._SECTION_FALLBACK = section_fallback
+        self._SAFE_CALLS = safe_calls
         self._INHERIT_OPTIONS = inherit_options
         self._ENABLE_SUBSECTIONS = subsections
         self._IGNORE_CASE = ignore_case
@@ -240,38 +240,56 @@ class Section(object):
 
     ### DATA MODEL ###
 
-    def __call__(self, key, section_fallback=None):
+    def __call__(self, *path, safe=None):
         """
-        Enables calling directly the object with a string, returning the
-        corresponding subsection object, if existent.
+        Enables calling directly the object with a string or sequence of
+        strings, returning the corresponding subsection object, if existent.
 
-        :param str key: The name of the subsection
-        :param bool section_fallback: If True, when calling a non-existent
-            subsection, the current section is returned
+        :param path: A sequence of strings, representing a relative path of
+            section names to the target descendant subsection, whose name is
+            the last item
+        :type path: str
+        :param bool safe: If True, when calling a non-existent subsection, its
+            closest existing ancestor is returned
         """
-        try:
-            lkey = key.lower()
-        except AttributeError:
-            raise TypeError('Section name must be a string: {}'.format(key))
+        section = self
 
-        if self._IGNORE_CASE:
-            for k in self._subsections:
-                if lkey == k.lower():
-                    return self._subsections[k]
-        else:
+        for sname in path:
             try:
-                return self._subsections[key]
-            except KeyError:
-                pass
+                lsname = sname.lower()
+            except AttributeError:
+                raise TypeError('Section name must be a string: {}'.format(
+                                                                        sname))
 
-        # TODO: this can cause unexpected behavior, see bug #2
-        if section_fallback not in (True, False):
-            if self._SECTION_FALLBACK:
-                return self
-        elif section_fallback:
-            return self
+            if self._IGNORE_CASE:
+                for subname in section._subsections:
+                    if lsname == subname.lower():
+                        section = section._subsections[subname]
+                        break
+                else:
+                    self._finalize_call(safe, sname)
+                    break
+            else:
+                try:
+                    section = section._subsections[sname]
+                except KeyError:
+                    self._finalize_call(safe, sname)
+                    break
 
-        raise KeyError('Section not found: {}'.format(key))
+        return section
+
+    def _finalize_call(self, safe, sname):
+        """
+        Auxiliary method for :py:meth:`__call__`.
+
+        Process a not-found section name.
+        """
+        if safe not in (True, False):
+            if self._SAFE_CALLS:
+                return
+        elif safe:
+            return
+        raise KeyError('Section not found: {}'.format(sname))
 
     def __getitem__(self, opt):
         """
@@ -756,7 +774,7 @@ class Section(object):
         Import the currently-examined subsection.
         """
         subsection = Section(name=sec, parent=self,
-                             section_fallback=self._SECTION_FALLBACK,
+                             safe_calls=self._SAFE_CALLS,
                              inherit_options=self._INHERIT_OPTIONS,
                              subsections=self._ENABLE_SUBSECTIONS,
                              ignore_case=self._IGNORE_CASE)
@@ -1506,8 +1524,8 @@ class ConfigFile(Section):
             overwrites already imported sections and options; available choices
             are ``'upgrade'``, ``'update'``, ``'reset'`` and ``'add'`` (see the
             respective methods for more details)
-        :param bool section_fallback: If True, when calling a non-existent
-            subsection, the current section is returned
+        :param bool safe_calls: If True, when calling a non-existent
+            subsection, its closest existing ancestor is returned
         :param bool inherit_options: If True, if an option is not found in a
             section, it is searched in the parent sections
         :param bool ignore_case: If True, section and option names will be
@@ -1527,7 +1545,7 @@ class ConfigFile(Section):
         #def __init__(self,
         #             *sources,
         #             mode='upgrade',
-        #             section_fallback=False,
+        #             safe_calls=False,
         #             inherit_options=False,
         #             subsections=True,
         #             ignore_case=True,
@@ -1535,7 +1553,7 @@ class ConfigFile(Section):
         # But to keep compatibility with Python 2 it has been changed to the
         # current
         mode = kwargs.get('mode', 'upgrade')
-        section_fallback = kwargs.get('section_fallback', False)
+        safe_calls = kwargs.get('safe_calls', False)
         inherit_options = kwargs.get('inherit_options', False)
         subsections = kwargs.get('subsections', True)
         ignore_case = kwargs.get('ignore_case', True)
@@ -1543,7 +1561,7 @@ class ConfigFile(Section):
 
         # Root section
         Section.__init__(self, name=None, parent=None,
-                                            section_fallback=section_fallback,
+                                            safe_calls=safe_calls,
                                             inherit_options=inherit_options,
                                             subsections=subsections,
                                             ignore_case=ignore_case)

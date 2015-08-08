@@ -54,8 +54,11 @@ python module of the package.
 Also, if you have any questions, do not hesitate to ask in the issue tracker,
 or write the author an email!
 
-Example
-=======
+Examples
+========
+
+Basic usage
+-----------
 
 Suppose you have these two files:
 
@@ -134,8 +137,8 @@ untouched):
 
     bar = yay
 
-Interpolation example
-=====================
+Interpolation
+-------------
 
 Suppose you have this file:
 

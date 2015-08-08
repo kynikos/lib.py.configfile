@@ -172,24 +172,24 @@ class Section(object):
         self._RE_I = re_.I if self._IGNORE_CASE else 0
 
         # TODO: Compile only once (bug #20)
-        self._PARSE_SECTION = '^\s*\[(.+)\]\s*$'
-        self._PARSE_OPTION = '^\s*([^\=]+?)\s*\=\s*(.*?)\s*$'
-        self._PARSE_COMMENT = '^\s*[#;]{1}\s*(.*?)\s*$'
-        self._PARSE_IGNORE = '^\s*$'
+        self._PARSE_SECTION = r'^\s*\[(.+)\]\s*$'
+        self._PARSE_OPTION = r'^\s*([^\=]+?)\s*\=\s*(.*?)\s*$'
+        self._PARSE_COMMENT = r'^\s*[#;]{1}\s*(.*?)\s*$'
+        self._PARSE_IGNORE = r'^\s*$'
 
         if self._ENABLE_SUBSECTIONS:
-            self._SECTION = '^[a-zA-Z_]+(?:\.?[a-zA-Z0-9_]+)*$'
+            self._SECTION = r'^[a-zA-Z_]+(?:\.?[a-zA-Z0-9_]+)*$'
         else:
-            self._SECTION = '^[a-zA-Z_]+[a-zA-Z0-9_]*$'
+            self._SECTION = r'^[a-zA-Z_]+[a-zA-Z0-9_]*$'
 
-        self._OPTION = '^[a-zA-Z_]+[a-zA-Z0-9_]*$'
-        self._VALUE = '^.*$'
+        self._OPTION = r'^[a-zA-Z_]+[a-zA-Z0-9_]*$'
+        self._VALUE = r'^.*$'
 
-        self._SECTION_SEP = '.'
-        self._OPTION_SEP = ' = '
+        self._SECTION_SEP = r'.'
+        self._OPTION_SEP = r' = '
         # "{}" will be replaced with the section name by str.format
-        self._SECTION_MARKERS = '[{}]'
-        self._COMMENT_MARKER = '# '
+        self._SECTION_MARKERS = r'[{}]'
+        self._COMMENT_MARKER = r'# '
 
         self._GET_BOOLEAN_TRUE = ('true', '1', 'yes', 'on', 'enabled')
         self._GET_BOOLEAN_FALSE = ('false', '0', 'no', 'off', 'disabled')

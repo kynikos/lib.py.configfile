@@ -265,7 +265,7 @@ class Section(object):
                 pass
 
         # TODO: this can cause unexpected behavior, see bug #2
-        if section_fallback is None:
+        if section_fallback not in (True, False):
             if self._SECTION_FALLBACK:
                 return self
         elif section_fallback:

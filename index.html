@@ -157,16 +157,18 @@ untouched):</p>
 <h3>Interpolation<a class="headerlink" href="#interpolation" title="Permalink to this headline">¶</a></h3>
 <p>Suppose you have this file:</p>
 <p><code class="docutils literal"><span class="pre">/path/to/file</span></code>:</p>
-<blockquote>
-<div><p>[Section1]
-option = foo ${$:Section2$:optionA$}</p>
-<p>[Section1.Section2]
-optionA = some value
-optionB = ${optionA$} test
-optionC = test ${$:optionA$}</p>
-<p>[Section3]
-option = ${Section1$:Section2$:optionA$} bar</p>
-</div></blockquote>
+<div class="highlight-cfg"><div class="highlight"><pre><span class="k">[Section1]</span>
+<span class="na">option</span> <span class="o">=</span> <span class="s">foo ${$:Section2$:optionA$}</span>
+
+<span class="k">[Section1.Section2]</span>
+<span class="na">optionA</span> <span class="o">=</span> <span class="s">some value</span>
+<span class="na">optionB</span> <span class="o">=</span> <span class="s">${optionA$} test</span>
+<span class="na">optionC</span> <span class="o">=</span> <span class="s">test ${$:optionA$}</span>
+
+<span class="k">[Section3]</span>
+<span class="na">option</span> <span class="o">=</span> <span class="s">${Section1$:Section2$:optionA$} bar</span>
+</pre></div>
+</div>
 <p>Now run this script:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">configfile</span> <span class="kn">import</span> <span class="n">ConfigFile</span>
 

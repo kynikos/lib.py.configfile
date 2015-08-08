@@ -1050,7 +1050,7 @@ class Section(object):
 
     def get_sections(self):
         """
-        Return a list with a copy of the names of the child sections.
+        Return a view of the names of the child sections.
         """
         return self._subsections.keys()
 

@@ -43,6 +43,7 @@ Author: Dario Giovannetti <dev@dariogiovannetti.net>
 License: GPLv3
 
 GitHub: https://www.github.com/kynikos/lib.py.configfile
+
 Issue tracker: https://www.github.com/kynikos/lib.py.configfile/issues
 
 **Note:** as it is clear by reading this page, the documentation is still in a

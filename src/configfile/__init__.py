@@ -144,6 +144,8 @@ Suppose you have this file:
 
 ``/path/to/file``:
 
+.. code-block:: cfg
+
     [Section1]
     option = foo ${$:Section2$:optionA$}
 

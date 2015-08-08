@@ -54,7 +54,7 @@ Also, if you have any questions, do not hesitate to ask in the issue tracker,
 or write the author an email!
 
 Example
-========
+=======
 
 Suppose you have these two files:
 
@@ -132,6 +132,38 @@ untouched):
 .. code-block:: cfg
 
     bar = yay
+
+Interpolation example
+=====================
+
+Suppose you have this file:
+
+``/path/to/file``:
+
+    [Section1]
+    option = foo ${$:Section2$:optionA$}
+
+    [Section1.Section2]
+    optionA = some value
+    optionB = ${optionA$} test
+    optionC = test ${$:optionA$}
+
+    [Section3]
+    option = ${Section1$:Section2$:optionA$} bar
+
+Now run this script:
+
+::
+
+    from configfile import ConfigFile
+
+    conf = ConfigFile("/path/to/file", interpolation=True)
+
+    print(conf('Section1')['option'])  # foo some value
+    print(conf('Section1')('Section2')['optionA'])  # some value
+    print(conf('Section1')('Section2')['optionB'])  # some value test
+    print(conf('Section1')('Section2')['optionC'])  # test some value
+    print(conf('Section3')['option'])  # some value bar
 
 Module contents
 ===============
@@ -479,7 +511,7 @@ class Section(object):
             self._import_object(obj, overwrite=overwrite, add=add, reset=reset)
 
             if interpolation:
-                self._interpolate(root=self)
+                self._interpolate()
 
     def _open_file(self, cfile):
         """
@@ -718,11 +750,9 @@ class Section(object):
         subsection._import_object(secd, overwrite=overwrite, add=add)
         self._subsections[sec] = subsection
 
-    def _interpolate(self, root=None):
+    def _interpolate(self):
         """
         Interpolate values among different options.
-
-        :param root: The root section from which resolve interpolations.
 
         The ``$`` sign is a special character: a ``$`` not followed by ``$``,
         ``{``, ``:`` or ``}`` will be left ``$``; ``$$`` will be translated as
@@ -743,44 +773,59 @@ class Section(object):
         section (or an option, if last in the list) relative to the current
         section.
         """
-        for o, v in self._options:
-            L = re_.split('(\$\$|\$\{|\$\:|\$\})', v)
-            resolve = []
+        try:
+            root = self._get_ancestors()[-1]
+        except IndexError:
+            root = self
 
-            for i in L:
-                if i == '$$':
-                    i = '$'
+        for optname in self._options:
+            split = re_.split(r'(\$\$|\$\{|\$\:|\$\})', self._options[optname])
+            value = ''
+            resolve = None
 
-                if i == '${' and not resolve:
-                    resolve.append('')
-                    continue
-
-                elif i == '$:' and resolve:
-                    resolve.append('')
-                    continue
-
-                elif i == '$}' and resolve:
-                    option = resolve.pop(-1)
-
-                    if len(resolve) == 0 or resolve[0] == '':
-                        section = self
+            for chunk in split:
+                if resolve is None:
+                    if chunk == '$$':
+                        value += '$'
+                    elif chunk == '${':
+                        resolve = ['']
                     else:
-                        section = root._subsections[resolve[0]]
+                        value += chunk
+                else:
+                    if chunk == '$$':
+                        resolve[-1] += '$'
+                    elif chunk == '$:':
+                        resolve.append('')
+                    elif chunk == '$}':
+                        intoptname = resolve.pop()
 
-                    for r in resolve[1:]:
-                        section = section._subsections[r]
+                        if len(resolve) == 0:
+                            # TODO: It's currently not possible to write a
+                            #       reference to a root option?!?
+                            intsection = self
+                        else:
+                            if resolve[0] == '':
+                                intsection = self
+                                resolve.pop(0)
+                            else:
+                                intsection = root
+                            for s in resolve:
+                                intsection = intsection._subsections[s]
 
-                    i = section._options[option]
-                    resolve = []
-                    continue
+                        value += intsection._options[intoptname]
+                        resolve = None
+                    else:
+                        resolve[-1] += chunk
 
-                elif resolve:
-                    resolve[-1][-1:] = i
+            if resolve is not None:
+                # The last interpolation wasn't closed, so interpret it as a
+                # normal string
+                value += ''.join(resolve)
 
-            v = ''.join(L)
+            self._options[optname] = value
 
-        for s, ss in self._subsections:
-            ss._interpolate(root=root)
+        for secname in self._subsections:
+            self._subsections[secname]._interpolate()
 
     ### EXPORTING DATA ###
 

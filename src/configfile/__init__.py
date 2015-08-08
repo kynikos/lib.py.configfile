@@ -820,7 +820,7 @@ class Section(object):
             if resolve is not None:
                 # The last interpolation wasn't closed, so interpret it as a
                 # normal string
-                value += ''.join(resolve)
+                value += '${' + '$:'.join(resolve)
 
             self._options[optname] = value
 

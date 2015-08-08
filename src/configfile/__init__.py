@@ -1042,7 +1042,7 @@ class Section(object):
 
         for s in slist:
             for o in s._options:
-                d[o] = s._options[o][:]
+                d.setdefault(o, s._options[o][:])
                 # There should be no need to check _IGNORE_CASE, in fact it has
                 # already been done at importing time
 

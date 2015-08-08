@@ -264,6 +264,7 @@ class Section(object):
             except KeyError:
                 pass
 
+        # TODO: this can cause unexpected behavior, see bug #2
         if section_fallback is None:
             if self._SECTION_FALLBACK:
                 return self

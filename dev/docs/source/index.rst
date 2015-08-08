@@ -1,8 +1,8 @@
 Welcome to ConfigFile's documentation!
 ======================================
 
-TODO: See what happens if new modules or packages are added
-TODO: Use sphinx-apidoc? (bug #23)
+.. TODO: See what happens if new modules or packages are added
+.. TODO: Use sphinx-apidoc? (bug #23)
 
 .. The `toctree` directive is required
 .. toctree::

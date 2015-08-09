@@ -398,7 +398,7 @@ class Section(object):
 
     def make_subsection(self, name):
         """
-        Create an empty subsection under the current section if it doesn't
+        Create an empty subsection under the current section if it does not
         exist.
 
         :param str name: The name of the new subsection
@@ -420,7 +420,7 @@ class Section(object):
         Import sections and options from a file, file-like object, dictionary
         or special object with upgrade mode.
 
-        If an option already exists, change its value; if it doesn't exist,
+        If an option already exists, change its value; if it does not exist,
         create it and store its value. For example:
 
         *{A:a,B:b,C:c} upgrade {A:d,D:e} => {A:d,B:b,C:c,D:e}*
@@ -443,8 +443,8 @@ class Section(object):
         Import sections and options from a file, file-like object, dictionary
         or special object with update mode.
 
-        If an option already exists, change its value; if it doesn't exist,
-        don't do anything. For example:
+        If an option already exists, change its value; if it does not exist,
+        do not do anything. For example:
 
         *{A:a,B:b,C:c} update {A:d,D:e} => {A:d,B:b,C:c}*
 
@@ -489,7 +489,7 @@ class Section(object):
         Import sections and options from a file, file-like object, dictionary
         or special object with add mode.
 
-        If an option already exists, don't do anything; if it doesn't exist,
+        If an option already exists, do not do anything; if it does not exist,
         create it and store its value. For example:
 
         *{A:a,B:b,C:c} add {A:d,D:e} => {A:a,B:b,C:c,D:e}*
@@ -795,14 +795,14 @@ class Section(object):
         The ``$`` sign is a special character: a ``$`` not followed by ``$``,
         ``{``, ``:`` or ``}`` will be left ``$``; ``$$`` will be translated as
         ``$`` both inside or outside an interpolation path; ``${`` will be
-        considered as the beginning of an interpolation path, unless it's found
-        inside another interpolation path, and in the latter case it will be
-        left ``${``; ``$:`` will be considered as a separator between sections
-        of an interpolation path, unless it's found outside of an interpolation
-        path, and in the latter case it will be left ``$:``; ``$}`` will be
-        considered as the end of an interpolation path, unless it's found
-        outside of an interpolation path, and in the latter case it will be
-        left ``$}``.
+        considered as the beginning of an interpolation path, unless it is
+        found inside another interpolation path, and in the latter case it will
+        be left ``${``; ``$:`` will be considered as a separator between
+        sections of an interpolation path, unless it is found outside of an
+        interpolation path, and in the latter case it will be left
+        ``$:``; ``$}`` will be considered as the end of an interpolation path,
+        unless it is found outside of an interpolation path, and in the latter
+        case it will be left ``$}``.
 
         Normally all paths will be resolved based on the root section of the
         file; anyway, if the interpolation path has only one item, it will be
@@ -877,7 +877,7 @@ class Section(object):
             KeyError
         :type fallback: str or None
         :param bool inherit_options: If True, if the option is not found in the
-            current section, it's searched in the parent sections; note that
+            current section, it is searched in the parent sections; note that
             this can be set as a default for the object, but this setting
             overwrites it only for this call
         """
@@ -916,7 +916,7 @@ class Section(object):
             KeyError
         :type fallback: str or None
         :param bool inherit_options: If True, if the option is not found in the
-            current section, it's searched in the parent sections; note that
+            current section, it is searched in the parent sections; note that
             this can be set as a default for the object, but this setting
             overwrites it only for this call
         """
@@ -936,7 +936,7 @@ class Section(object):
             KeyError
         :type fallback: str or None
         :param bool inherit_options: If True, if the option is not found in the
-            current section, it's searched in the parent sections; note that
+            current section, it is searched in the parent sections; note that
             this can be set as a default for the object, but this setting
             overwrites it only for this call
         """
@@ -956,7 +956,7 @@ class Section(object):
             KeyError
         :type fallback: str or None
         :param bool inherit_options: If True, if the option is not found in the
-            current section, it's searched in the parent sections; note that
+            current section, it is searched in the parent sections; note that
             this can be set as a default for the object, but this setting
             overwrites it only for this call
         """
@@ -982,12 +982,12 @@ class Section(object):
             it raises KeyError; otherwise this value is evaluated with the true
             and false tuples, or the default value
         :param bool inherit_options: If True, if the option is not found in the
-            current section, it's searched in the parent sections; note that
+            current section, it is searched in the parent sections; note that
             this can be set as a default for the object, but this setting
             overwrites it only for this call
 
         Note that the characters in the strings are compared in lowercase, so
-        there's no need to specify all casing variations of a string
+        there is no need to specify all casing variations of a string
         """
         # TODO: Use default values in definition with Settings class (bug #19)
         if true == ():
@@ -1146,7 +1146,7 @@ class Section(object):
         """
         Export sections and options to one or more files with upgrade mode.
 
-        If an option already exists, change its value; if it doesn't exist,
+        If an option already exists, change its value; if it does not exist,
         create it and store its value. For example:
 
         *{A:d,D:e} upgrade {A:a,B:b,C:c} => {A:d,B:b,C:c,D:e}*
@@ -1168,8 +1168,8 @@ class Section(object):
         """
         Export sections and options to one or more files with update mode.
 
-        If an option already exists, change its value; if it doesn't exist,
-        don't do anything. For example:
+        If an option already exists, change its value; if it does not exist,
+        do not do anything. For example:
 
         *{A:d,D:e} update {A:a,B:b,C:c} => {A:d,B:b,C:c}*
 
@@ -1212,7 +1212,7 @@ class Section(object):
         """
         Export sections and options to one or more files with add mode.
 
-        If an option already exists, don't do anything; if it doesn't exist,
+        If an option already exists, do not do anything; if it does not exist,
         create it and store its value. For example:
 
         *{A:d,D:e} add {A:a,B:b,C:c} => {A:a,B:b,C:c,D:e}*

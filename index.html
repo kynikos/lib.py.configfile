@@ -188,7 +188,124 @@ untouched):</p>
 <em class="property">class </em><code class="descclassname">configfile.</code><code class="descname">Section</code><span class="sig-paren">(</span><em>name=None</em>, <em>parent=None</em>, <em>safe_calls=False</em>, <em>inherit_options=False</em>, <em>subsections=True</em>, <em>ignore_case=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>The class for a section in the configuration file, including the root
-section.</p>
+section. You should never need to instantiate this class directly, use
+<a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><code class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></code></a> instead.</p>
+<dl class="attribute">
+<dt id="configfile.Section._PARSE_SECTION">
+<code class="descname">_PARSE_SECTION</code><em class="property"> = '^\\s*\\[(.+)\\]\\s*$'</em><a class="headerlink" href="#configfile.Section._PARSE_SECTION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._PARSE_OPTION">
+<code class="descname">_PARSE_OPTION</code><em class="property"> = '^\\s*([^\\=]+?)\\s*\\=\\s*(.*?)\\s*$'</em><a class="headerlink" href="#configfile.Section._PARSE_OPTION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._PARSE_COMMENT">
+<code class="descname">_PARSE_COMMENT</code><em class="property"> = '^\\s*[#;]{1}\\s*(.*?)\\s*$'</em><a class="headerlink" href="#configfile.Section._PARSE_COMMENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._PARSE_IGNORE">
+<code class="descname">_PARSE_IGNORE</code><em class="property"> = '^\\s*$'</em><a class="headerlink" href="#configfile.Section._PARSE_IGNORE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._SECTION_SUB">
+<code class="descname">_SECTION_SUB</code><em class="property"> = '^[a-zA-Z_]+(?:\\.?[a-zA-Z0-9_]+)*$'</em><a class="headerlink" href="#configfile.Section._SECTION_SUB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._SECTION_PLAIN">
+<code class="descname">_SECTION_PLAIN</code><em class="property"> = '^[a-zA-Z_]+[a-zA-Z0-9_]*$'</em><a class="headerlink" href="#configfile.Section._SECTION_PLAIN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._OPTION">
+<code class="descname">_OPTION</code><em class="property"> = '^[a-zA-Z_]+[a-zA-Z0-9_]*$'</em><a class="headerlink" href="#configfile.Section._OPTION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._VALUE">
+<code class="descname">_VALUE</code><em class="property"> = '^.*$'</em><a class="headerlink" href="#configfile.Section._VALUE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._SECTION_SEP">
+<code class="descname">_SECTION_SEP</code><em class="property"> = '.'</em><a class="headerlink" href="#configfile.Section._SECTION_SEP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._OPTION_SEP">
+<code class="descname">_OPTION_SEP</code><em class="property"> = ' = '</em><a class="headerlink" href="#configfile.Section._OPTION_SEP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._SECTION_MARKERS">
+<code class="descname">_SECTION_MARKERS</code><em class="property"> = '[{}]'</em><a class="headerlink" href="#configfile.Section._SECTION_MARKERS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._COMMENT_MARKER">
+<code class="descname">_COMMENT_MARKER</code><em class="property"> = '# '</em><a class="headerlink" href="#configfile.Section._COMMENT_MARKER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._INTERPOLATION_SPECIAL">
+<code class="descname">_INTERPOLATION_SPECIAL</code><em class="property"> = '$'</em><a class="headerlink" href="#configfile.Section._INTERPOLATION_SPECIAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._INTERPOLATION_SPECIAL_ESC">
+<code class="descname">_INTERPOLATION_SPECIAL_ESC</code><em class="property"> = '$$'</em><a class="headerlink" href="#configfile.Section._INTERPOLATION_SPECIAL_ESC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._INTERPOLATION_START">
+<code class="descname">_INTERPOLATION_START</code><em class="property"> = '${'</em><a class="headerlink" href="#configfile.Section._INTERPOLATION_START" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._INTERPOLATION_SEP">
+<code class="descname">_INTERPOLATION_SEP</code><em class="property"> = '$:'</em><a class="headerlink" href="#configfile.Section._INTERPOLATION_SEP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._INTERPOLATION_END">
+<code class="descname">_INTERPOLATION_END</code><em class="property"> = '$}'</em><a class="headerlink" href="#configfile.Section._INTERPOLATION_END" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._INTERPOLATION_SPLIT">
+<code class="descname">_INTERPOLATION_SPLIT</code><em class="property"> = '(\\$\\$|\\$\\{|\\$\\:|\\$\\})'</em><a class="headerlink" href="#configfile.Section._INTERPOLATION_SPLIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._GET_BOOLEAN_TRUE">
+<code class="descname">_GET_BOOLEAN_TRUE</code><em class="property"> = ('true', '1', 'yes', 'on', 'enabled')</em><a class="headerlink" href="#configfile.Section._GET_BOOLEAN_TRUE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._GET_BOOLEAN_FALSE">
+<code class="descname">_GET_BOOLEAN_FALSE</code><em class="property"> = ('false', '0', 'no', 'off', 'disabled')</em><a class="headerlink" href="#configfile.Section._GET_BOOLEAN_FALSE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._GET_BOOLEAN_DEFAULT">
+<code class="descname">_GET_BOOLEAN_DEFAULT</code><em class="property"> = None</em><a class="headerlink" href="#configfile.Section._GET_BOOLEAN_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="configfile.Section._DICT_CLASS">
+<code class="descname">_DICT_CLASS</code><a class="headerlink" href="#configfile.Section._DICT_CLASS" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">OrderedDict</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="configfile.Section._EMPTY_SECTION">
+<code class="descname">_EMPTY_SECTION</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#configfile.Section._EMPTY_SECTION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="configfile.Section.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>name=None</em>, <em>parent=None</em>, <em>safe_calls=False</em>, <em>inherit_options=False</em>, <em>subsections=True</em>, <em>ignore_case=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__init__" title="Permalink to this definition">¶</a></dt>
@@ -198,17 +315,17 @@ section.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the section</li>
-<li><strong>parent</strong> (<a class="reference internal" href="#configfile.Section" title="configfile.Section"><em>Section</em></a>) &#8211; A reference to the parent section object</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the section.</li>
+<li><strong>parent</strong> (<a class="reference internal" href="#configfile.Section" title="configfile.Section"><em>Section</em></a>) &#8211; A reference to the parent section object.</li>
 <li><strong>safe_calls</strong> (<em>bool</em>) &#8211; If True, when calling a non-existent
-subsection, its closest existing ancestor is returned</li>
+subsection, its closest existing ancestor is returned.</li>
 <li><strong>inherit_options</strong> (<em>bool</em>) &#8211; Whether the section will inherit the
-options from its ancestors</li>
+options from its ancestors.</li>
 <li><strong>subsections</strong> (<em>bool</em>) &#8211; If True, subsections are enabled; otherwise
-they are disabled</li>
+they are disabled.</li>
 <li><strong>ignore_case</strong> (<em>bool</em>) &#8211; If True, section and option names will be
 compared ignoring case differences; regular expressions will use
-<code class="docutils literal"><span class="pre">re.I</span></code> flag</li>
+<code class="docutils literal"><span class="pre">re.I</span></code> flag.</li>
 </ul>
 </td>
 </tr>
@@ -228,9 +345,9 @@ strings, returning the corresponding subsection object, if existent.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>path</strong> (<em>str</em>) &#8211; A sequence of strings, representing a relative path of
 section names to the target descendant subsection, whose name is
-the last item</li>
+the last item.</li>
 <li><strong>safe</strong> (<em>bool</em>) &#8211; If True, when calling a non-existent subsection, its
-closest existing ancestor is returned</li>
+closest existing ancestor is returned.</li>
 </ul>
 </td>
 </tr>
@@ -253,7 +370,7 @@ closest existing ancestor is returned</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</td>
 </tr>
 </tbody>
 </table>
@@ -268,8 +385,8 @@ closest existing ancestor is returned</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option</li>
-<li><strong>val</strong> (<em>str</em>) &#8211; The new value for the option</li>
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option.</li>
+<li><strong>val</strong> (<em>str</em>) &#8211; The new value for the option.</li>
 </ul>
 </td>
 </tr>
@@ -285,7 +402,7 @@ closest existing ancestor is returned</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>opt</strong> (<em>str</em>) &#8211; The name of the option that must be deleted</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>opt</strong> (<em>str</em>) &#8211; The name of the option that must be deleted.</td>
 </tr>
 </tbody>
 </table>
@@ -308,7 +425,7 @@ returns True if item is the name of an option in self.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>item</strong> (<em>Section or str</em>) &#8211; A <a class="reference internal" href="#configfile.Section" title="configfile.Section"><code class="xref py py-class docutils literal"><span class="pre">Section</span></code></a> object or the name of an option</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>item</strong> (<em>Section or str</em>) &#8211; A <a class="reference internal" href="#configfile.Section" title="configfile.Section"><code class="xref py py-class docutils literal"><span class="pre">Section</span></code></a> object or the name of an option.</td>
 </tr>
 </tbody>
 </table>
@@ -323,13 +440,13 @@ returns True if item is the name of an option in self.</p>
 <dl class="method">
 <dt id="configfile.Section.make_subsection">
 <code class="descname">make_subsection</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section.make_subsection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.make_subsection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an empty subsection under the current section if it doesn&#8217;t
+<dd><p>Create an empty subsection under the current section if it does not
 exist.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; The name of the new subsection</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; The name of the new subsection.</td>
 </tr>
 </tbody>
 </table>
@@ -346,7 +463,7 @@ exist.</p>
 <code class="descname">upgrade</code><span class="sig-paren">(</span><em>*sources</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section.upgrade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.upgrade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import sections and options from a file, file-like object, dictionary
 or special object with upgrade mode.</p>
-<p>If an option already exists, change its value; if it doesn&#8217;t exist,
+<p>If an option already exists, change its value; if it does not exist,
 create it and store its value. For example:</p>
 <p><em>{A:a,B:b,C:c} upgrade {A:d,D:e} =&gt; {A:d,B:b,C:c,D:e}</em></p>
 <p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></code></a> for object compatibility.</p>
@@ -370,8 +487,8 @@ and/or special objects.</li>
 <code class="descname">update</code><span class="sig-paren">(</span><em>*sources</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import sections and options from a file, file-like object, dictionary
 or special object with update mode.</p>
-<p>If an option already exists, change its value; if it doesn&#8217;t exist,
-don&#8217;t do anything. For example:</p>
+<p>If an option already exists, change its value; if it does not exist,
+do not do anything. For example:</p>
 <p><em>{A:a,B:b,C:c} update {A:d,D:e} =&gt; {A:d,B:b,C:c}</em></p>
 <p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></code></a> for object compatibility.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -418,7 +535,7 @@ and/or special objects.</li>
 <code class="descname">add</code><span class="sig-paren">(</span><em>*sources</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import sections and options from a file, file-like object, dictionary
 or special object with add mode.</p>
-<p>If an option already exists, don&#8217;t do anything; if it doesn&#8217;t exist,
+<p>If an option already exists, do not do anything; if it does not exist,
 create it and store its value. For example:</p>
 <p><em>{A:a,B:b,C:c} add {A:d,D:e} =&gt; {A:a,B:b,C:c,D:e}</em></p>
 <p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></code></a> for object compatibility.</p>
@@ -480,7 +597,7 @@ importing.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cfile</strong> (<em>str</em>) &#8211; The name of the file to be parsed</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cfile</strong> (<em>str</em>) &#8211; The name of the file to be parsed.</td>
 </tr>
 </tbody>
 </table>
@@ -495,7 +612,7 @@ making it possible to import it.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stream</strong> &#8211; a file-like object to be read from</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stream</strong> &#8211; a file-like object to be read from.</td>
 </tr>
 </tbody>
 </table>
@@ -510,7 +627,7 @@ return them in a list.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>re</strong> &#8211; regular expression object</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>re</strong> &#8211; regular expression object.</td>
 </tr>
 </tbody>
 </table>
@@ -603,14 +720,14 @@ pre-existing data.</li>
 <p>The <code class="docutils literal"><span class="pre">$</span></code> sign is a special character: a <code class="docutils literal"><span class="pre">$</span></code> not followed by <code class="docutils literal"><span class="pre">$</span></code>,
 <code class="docutils literal"><span class="pre">{</span></code>, <code class="docutils literal"><span class="pre">:</span></code> or <code class="docutils literal"><span class="pre">}</span></code> will be left <code class="docutils literal"><span class="pre">$</span></code>; <code class="docutils literal"><span class="pre">$$</span></code> will be translated as
 <code class="docutils literal"><span class="pre">$</span></code> both inside or outside an interpolation path; <code class="docutils literal"><span class="pre">${</span></code> will be
-considered as the beginning of an interpolation path, unless it&#8217;s found
-inside another interpolation path, and in the latter case it will be
-left <code class="docutils literal"><span class="pre">${</span></code>; <code class="docutils literal"><span class="pre">$:</span></code> will be considered as a separator between sections
-of an interpolation path, unless it&#8217;s found outside of an interpolation
-path, and in the latter case it will be left <code class="docutils literal"><span class="pre">$:</span></code>; <code class="docutils literal"><span class="pre">$}</span></code> will be
-considered as the end of an interpolation path, unless it&#8217;s found
-outside of an interpolation path, and in the latter case it will be
-left <code class="docutils literal"><span class="pre">$}</span></code>.</p>
+considered as the beginning of an interpolation path, unless it is
+found inside another interpolation path, and in the latter case it will
+be left <code class="docutils literal"><span class="pre">${</span></code>; <code class="docutils literal"><span class="pre">$:</span></code> will be considered as a separator between
+sections of an interpolation path, unless it is found outside of an
+interpolation path, and in the latter case it will be left
+<code class="docutils literal"><span class="pre">$:</span></code>; <code class="docutils literal"><span class="pre">$}</span></code> will be considered as the end of an interpolation path,
+unless it is found outside of an interpolation path, and in the latter
+case it will be left <code class="docutils literal"><span class="pre">$}</span></code>.</p>
 <p>Normally all paths will be resolved based on the root section of the
 file; anyway, if the interpolation path has only one item, it will be
 resolved as an option relative to the current section; otherwise, if
@@ -628,14 +745,14 @@ section.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</li>
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</li>
 <li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
 method returns that string; if set to None (default) it returns
-KeyError</li>
+KeyError.</li>
 <li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
-current section, it&#8217;s searched in the parent sections; note that
+current section, it is searched in the parent sections; note that
 this can be set as a default for the object, but this setting
-overwrites it only for this call</li>
+overwrites it only for this call.</li>
 </ul>
 </td>
 </tr>
@@ -653,14 +770,14 @@ overwrites it only for this call</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</li>
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</li>
 <li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
 method returns that string; if set to None (default) it returns
-KeyError</li>
+KeyError.</li>
 <li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
-current section, it&#8217;s searched in the parent sections; note that
+current section, it is searched in the parent sections; note that
 this can be set as a default for the object, but this setting
-overwrites it only for this call</li>
+overwrites it only for this call.</li>
 </ul>
 </td>
 </tr>
@@ -677,14 +794,14 @@ overwrites it only for this call</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</li>
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</li>
 <li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
 method returns that string; if set to None (default) it returns
-KeyError</li>
+KeyError.</li>
 <li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
-current section, it&#8217;s searched in the parent sections; note that
+current section, it is searched in the parent sections; note that
 this can be set as a default for the object, but this setting
-overwrites it only for this call</li>
+overwrites it only for this call.</li>
 </ul>
 </td>
 </tr>
@@ -701,14 +818,14 @@ overwrites it only for this call</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</li>
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</li>
 <li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
 method returns that string; if set to None (default) it returns
-KeyError</li>
+KeyError.</li>
 <li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
-current section, it&#8217;s searched in the parent sections; note that
+current section, it is searched in the parent sections; note that
 this can be set as a default for the object, but this setting
-overwrites it only for this call</li>
+overwrites it only for this call.</li>
 </ul>
 </td>
 </tr>
@@ -726,26 +843,26 @@ value of an option.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned</li>
-<li><strong>true</strong> (<em>tuple</em>) &#8211; A tuple with the strings to be recognized as True</li>
-<li><strong>false</strong> (<em>tuple</em>) &#8211; A tuple with the strings to be recognized as False</li>
+<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</li>
+<li><strong>true</strong> (<em>tuple</em>) &#8211; A tuple with the strings to be recognized as True.</li>
+<li><strong>false</strong> (<em>tuple</em>) &#8211; A tuple with the strings to be recognized as False.</li>
 <li><strong>default</strong> &#8211; If the value is neither in true nor in false tuples,
 return this boolean status; if set to None, it raises a ValueError
-exception</li>
+exception.</li>
 <li><strong>fallback</strong> &#8211; If set to None (default), and the option is not found,
 it raises KeyError; otherwise this value is evaluated with the true
-and false tuples, or the default value</li>
+and false tuples, or the default value.</li>
 <li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
-current section, it&#8217;s searched in the parent sections; note that
+current section, it is searched in the parent sections; note that
 this can be set as a default for the object, but this setting
-overwrites it only for this call</li>
+overwrites it only for this call.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
 <p>Note that the characters in the strings are compared in lowercase, so
-there&#8217;s no need to specify all casing variations of a string</p>
+there is no need to specify all casing variations of a string.</p>
 </dd></dl>
 
 <dl class="method">
@@ -773,10 +890,10 @@ values as values.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>ordered</strong> (<em>bool</em>) &#8211; If True, return an ordered dictionary; otherwise
-return a normal dictionary</li>
+return a normal dictionary.</li>
 <li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, options are searched also in the
 parent sections; note that this can be set as a default for the
-object, but this setting overwrites it only for this call</li>
+object, but this setting overwrites it only for this call.</li>
 </ul>
 </td>
 </tr>
@@ -800,7 +917,7 @@ object, but this setting overwrites it only for this call</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>ordered</strong> (<em>bool</em>) &#8211; If True, the object uses ordered dictionaries;
-otherwise it uses normal dictionaries</li>
+otherwise it uses normal dictionaries.</li>
 <li><strong>path</strong> (<em>bool</em>) &#8211; If True, return the current section as a subsection
 of the parent sections.</li>
 </ul>
@@ -825,13 +942,13 @@ of the parent sections.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>targets</strong> &#8211; A sequence with the target file names</li>
+<li><strong>targets</strong> &#8211; A sequence with the target file names.</li>
 <li><strong>overwrite</strong> (<em>bool</em>) &#8211; This sets whether sections and options in the
 file are overwritten; see _import_object for more details.</li>
 <li><strong>add</strong> (<em>bool</em>) &#8211; This sets whether non-pre-existing sections and option
 are added; see _import_object for more details.</li>
 <li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
-path</li>
+path.</li>
 </ul>
 </td>
 </tr>
@@ -843,7 +960,7 @@ path</li>
 <dt id="configfile.Section.export_upgrade">
 <code class="descname">export_upgrade</code><span class="sig-paren">(</span><em>*targets</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section.export_upgrade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.export_upgrade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export sections and options to one or more files with upgrade mode.</p>
-<p>If an option already exists, change its value; if it doesn&#8217;t exist,
+<p>If an option already exists, change its value; if it does not exist,
 create it and store its value. For example:</p>
 <p><em>{A:d,D:e} upgrade {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c,D:e}</em></p>
 <p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a> for object compatibility.</p>
@@ -852,9 +969,9 @@ create it and store its value. For example:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>targets</strong> &#8211; A sequence with the target file names</li>
+<li><strong>targets</strong> &#8211; A sequence with the target file names.</li>
 <li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
-path</li>
+path.</li>
 </ul>
 </td>
 </tr>
@@ -866,8 +983,8 @@ path</li>
 <dt id="configfile.Section.export_update">
 <code class="descname">export_update</code><span class="sig-paren">(</span><em>*targets</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section.export_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.export_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export sections and options to one or more files with update mode.</p>
-<p>If an option already exists, change its value; if it doesn&#8217;t exist,
-don&#8217;t do anything. For example:</p>
+<p>If an option already exists, change its value; if it does not exist,
+do not do anything. For example:</p>
 <p><em>{A:d,D:e} update {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c}</em></p>
 <p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a> for object compatibility.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -875,9 +992,9 @@ don&#8217;t do anything. For example:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>targets</strong> &#8211; A sequence with the target file names</li>
+<li><strong>targets</strong> &#8211; A sequence with the target file names.</li>
 <li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
-path</li>
+path.</li>
 </ul>
 </td>
 </tr>
@@ -898,9 +1015,9 @@ importing object. For example:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>targets</strong> &#8211; A sequence with the target file names</li>
+<li><strong>targets</strong> &#8211; A sequence with the target file names.</li>
 <li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
-path</li>
+path.</li>
 </ul>
 </td>
 </tr>
@@ -912,7 +1029,7 @@ path</li>
 <dt id="configfile.Section.export_add">
 <code class="descname">export_add</code><span class="sig-paren">(</span><em>*targets</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section.export_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.export_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export sections and options to one or more files with add mode.</p>
-<p>If an option already exists, don&#8217;t do anything; if it doesn&#8217;t exist,
+<p>If an option already exists, do not do anything; if it does not exist,
 create it and store its value. For example:</p>
 <p><em>{A:d,D:e} add {A:a,B:b,C:c} =&gt; {A:a,B:b,C:c,D:e}</em></p>
 <p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a> for object compatibility.</p>
@@ -921,9 +1038,9 @@ create it and store its value. For example:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>targets</strong> &#8211; A sequence with the target file names</li>
+<li><strong>targets</strong> &#8211; A sequence with the target file names.</li>
 <li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
-path</li>
+path.</li>
 </ul>
 </td>
 </tr>
@@ -945,7 +1062,7 @@ path</li>
 the file are overwritten.</li>
 <li><strong>add</strong> (<em>bool</em>) &#8211; Whether non-pre-existing data will be exported.</li>
 <li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
-path, otherwise they are left</li>
+path.</li>
 </ul>
 </td>
 </tr>
@@ -1001,22 +1118,11 @@ were not found in the destination file.</p>
 <dt id="configfile.ConfigFile">
 <em class="property">class </em><code class="descclassname">configfile.</code><code class="descname">ConfigFile</code><span class="sig-paren">(</span><em>*sources</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#ConfigFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.ConfigFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#configfile.Section" title="configfile.Section"><code class="xref py py-class docutils literal"><span class="pre">configfile.Section</span></code></a></p>
-<p>A configuration object.</p>
-<p>One or more text files, dictionaries or compatible objects can be initially
-parsed with <code class="docutils literal"><span class="pre">ConfigFile(file1,</span> <span class="pre">dict1,</span> <span class="pre">file2,</span> <span class="pre">...)</span></code>.</p>
-<p>This will instantiate a <a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><code class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></code></a> object with sections,
-subsections, options and values.</p>
-<p>Even if you parse more files, file-like objects, dictionaries or special
-objects, this will instantiate a unified object.</p>
-<p>A default set of values can be set by assigning a dictionary as the first
-argument.</p>
-<p>By default, sections are allowed to contain both options or other sections
-(subsections): this behaviour can be disabled by instantiating
-<a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><code class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></code></a> with <code class="docutils literal"><span class="pre">sub=False</span></code>.</p>
+<p>The main configuration object.</p>
 <dl class="method">
 <dt id="configfile.ConfigFile.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>*sources</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#ConfigFile.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.ConfigFile.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor: instantiate a <a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><code class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></code></a> object.</p>
+<dd><p>Constructor.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1024,19 +1130,19 @@ argument.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>sources</strong> (str, dict or special object (see
 <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">Section._import_object()</span></code></a>)) &#8211; A sequence of all the files, file-like objects,
-dictionaries and special objects to be parsed</li>
+dictionaries and special objects to be parsed.</li>
 <li><strong>mode</strong> (<em>str</em>) &#8211; This sets if and how the next source in the chain
 overwrites already imported sections and options; available choices
 are <code class="docutils literal"><span class="pre">'upgrade'</span></code>, <code class="docutils literal"><span class="pre">'update'</span></code>, <code class="docutils literal"><span class="pre">'reset'</span></code> and <code class="docutils literal"><span class="pre">'add'</span></code> (see the
-respective methods for more details)</li>
+respective methods for more details).</li>
 <li><strong>safe_calls</strong> (<em>bool</em>) &#8211; If True, when calling a non-existent
-subsection, its closest existing ancestor is returned</li>
+subsection, its closest existing ancestor is returned.</li>
 <li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if an option is not found in a
-section, it is searched in the parent sections</li>
+section, it is searched in the parent sections.</li>
 <li><strong>ignore_case</strong> (<em>bool</em>) &#8211; If True, section and option names will be
 compared ignoring case differences; regular expressions will use
-<code class="docutils literal"><span class="pre">re.I</span></code> flag</li>
-<li><strong>subsections</strong> (<em>bool</em>) &#8211; If True (default) subsections are allowed</li>
+<code class="docutils literal"><span class="pre">re.I</span></code> flag.</li>
+<li><strong>subsections</strong> (<em>bool</em>) &#8211; If True (default) subsections are allowed.</li>
 <li><strong>interpolation</strong> (<em>bool</em>) &#8211; If True, option values will be interpolated
 using values from other options through the special syntax
 <code class="docutils literal"><span class="pre">${section$:section$:option$}</span></code>. Options will be interpolated only
@@ -1047,8 +1153,6 @@ importing.</li>
 </tr>
 </tbody>
 </table>
-<p>Possible options at the beginning of the file, before any section, are
-considered to be in the &#8220;root&#8221; section.</p>
 </dd></dl>
 
 </dd></dl>

@@ -234,24 +234,61 @@
 <div class="viewcode-block" id="Section"><a class="viewcode-back" href="../index.html#configfile.Section">[docs]</a><span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The class for a section in the configuration file, including the root</span>
-<span class="sd">    section.</span>
+<span class="sd">    section. You should never need to instantiate this class directly, use</span>
+<span class="sd">    :py:class:`ConfigFile` instead.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># TODO: Compile only once (bug #20)</span>
+    <span class="n">_PARSE_SECTION</span> <span class="o">=</span> <span class="s">r&#39;^\s*\[(.+)\]\s*$&#39;</span>
+    <span class="n">_PARSE_OPTION</span> <span class="o">=</span> <span class="s">r&#39;^\s*([^\=]+?)\s*\=\s*(.*?)\s*$&#39;</span>
+    <span class="n">_PARSE_COMMENT</span> <span class="o">=</span> <span class="s">r&#39;^\s*[#;]{1}\s*(.*?)\s*$&#39;</span>
+    <span class="n">_PARSE_IGNORE</span> <span class="o">=</span> <span class="s">r&#39;^\s*$&#39;</span>
+
+    <span class="n">_SECTION_SUB</span> <span class="o">=</span> <span class="s">r&#39;^[a-zA-Z_]+(?:\.?[a-zA-Z0-9_]+)*$&#39;</span>
+    <span class="n">_SECTION_PLAIN</span> <span class="o">=</span> <span class="s">r&#39;^[a-zA-Z_]+[a-zA-Z0-9_]*$&#39;</span>
+
+    <span class="n">_OPTION</span> <span class="o">=</span> <span class="s">r&#39;^[a-zA-Z_]+[a-zA-Z0-9_]*$&#39;</span>
+    <span class="n">_VALUE</span> <span class="o">=</span> <span class="s">r&#39;^.*$&#39;</span>
+
+    <span class="n">_SECTION_SEP</span> <span class="o">=</span> <span class="s">r&#39;.&#39;</span>
+    <span class="n">_OPTION_SEP</span> <span class="o">=</span> <span class="s">r&#39; = &#39;</span>
+    <span class="c"># &quot;{}&quot; will be replaced with the section name by str.format</span>
+    <span class="n">_SECTION_MARKERS</span> <span class="o">=</span> <span class="s">r&#39;[{}]&#39;</span>
+    <span class="n">_COMMENT_MARKER</span> <span class="o">=</span> <span class="s">r&#39;# &#39;</span>
+
+    <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">=</span> <span class="s">&#39;$&#39;</span>
+    <span class="n">_INTERPOLATION_SPECIAL_ESC</span> <span class="o">=</span> <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">_INTERPOLATION_START</span> <span class="o">=</span> <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">+</span> <span class="s">&#39;{&#39;</span>
+    <span class="n">_INTERPOLATION_SEP</span> <span class="o">=</span> <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">+</span> <span class="s">&#39;:&#39;</span>
+    <span class="n">_INTERPOLATION_END</span> <span class="o">=</span> <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">+</span> <span class="s">&#39;}&#39;</span>
+    <span class="n">_INTERPOLATION_SPLIT</span> <span class="o">=</span> <span class="p">(</span><span class="s">r&#39;(&#39;</span> <span class="o">+</span> <span class="s">r&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re_</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">mark</span><span class="p">)</span> <span class="k">for</span> <span class="n">mark</span> <span class="ow">in</span> <span class="p">(</span>
+                            <span class="n">_INTERPOLATION_SPECIAL_ESC</span><span class="p">,</span> <span class="n">_INTERPOLATION_START</span><span class="p">,</span>
+                            <span class="n">_INTERPOLATION_SEP</span><span class="p">,</span> <span class="n">_INTERPOLATION_END</span><span class="p">))</span> <span class="o">+</span> <span class="s">r&#39;)&#39;</span><span class="p">)</span>
+
+    <span class="n">_GET_BOOLEAN_TRUE</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;true&#39;</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="s">&#39;yes&#39;</span><span class="p">,</span> <span class="s">&#39;on&#39;</span><span class="p">,</span> <span class="s">&#39;enabled&#39;</span><span class="p">)</span>
+    <span class="n">_GET_BOOLEAN_FALSE</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;false&#39;</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="s">&#39;off&#39;</span><span class="p">,</span> <span class="s">&#39;disabled&#39;</span><span class="p">)</span>
+    <span class="n">_GET_BOOLEAN_DEFAULT</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="n">_DICT_CLASS</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span>
+
+    <span class="c"># Use lambda to create a new object every time</span>
+    <span class="n">_EMPTY_SECTION</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">())</span>
+
 <div class="viewcode-block" id="Section.__init__"><a class="viewcode-back" href="../index.html#configfile.Section.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">safe_calls</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                  <span class="n">inherit_options</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">subsections</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor.</span>
 
-<span class="sd">        :param str name: The name of the section</span>
-<span class="sd">        :param Section parent: A reference to the parent section object</span>
+<span class="sd">        :param str name: The name of the section.</span>
+<span class="sd">        :param Section parent: A reference to the parent section object.</span>
 <span class="sd">        :param bool safe_calls: If True, when calling a non-existent</span>
-<span class="sd">            subsection, its closest existing ancestor is returned</span>
+<span class="sd">            subsection, its closest existing ancestor is returned.</span>
 <span class="sd">        :param bool inherit_options: Whether the section will inherit the</span>
-<span class="sd">            options from its ancestors</span>
+<span class="sd">            options from its ancestors.</span>
 <span class="sd">        :param bool subsections: If True, subsections are enabled; otherwise</span>
-<span class="sd">            they are disabled</span>
+<span class="sd">            they are disabled.</span>
 <span class="sd">        :param bool ignore_case: If True, section and option names will be</span>
 <span class="sd">            compared ignoring case differences; regular expressions will use</span>
-<span class="sd">            ``re.I`` flag</span>
+<span class="sd">            ``re.I`` flag.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_NAME</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_PARENT</span> <span class="o">=</span> <span class="n">parent</span>
@@ -262,34 +299,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_IGNORE_CASE</span> <span class="o">=</span> <span class="n">ignore_case</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_RE_I</span> <span class="o">=</span> <span class="n">re_</span><span class="o">.</span><span class="n">I</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_IGNORE_CASE</span> <span class="k">else</span> <span class="mi">0</span>
 
-        <span class="c"># TODO: Compile only once (bug #20)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_PARSE_SECTION</span> <span class="o">=</span> <span class="s">r&#39;^\s*\[(.+)\]\s*$&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_PARSE_OPTION</span> <span class="o">=</span> <span class="s">r&#39;^\s*([^\=]+?)\s*\=\s*(.*?)\s*$&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_PARSE_COMMENT</span> <span class="o">=</span> <span class="s">r&#39;^\s*[#;]{1}\s*(.*?)\s*$&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_PARSE_IGNORE</span> <span class="o">=</span> <span class="s">r&#39;^\s*$&#39;</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ENABLE_SUBSECTIONS</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_SECTION</span> <span class="o">=</span> <span class="s">r&#39;^[a-zA-Z_]+(?:\.?[a-zA-Z0-9_]+)*$&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_SECTION</span> <span class="o">=</span> <span class="s">r&#39;^[a-zA-Z_]+[a-zA-Z0-9_]*$&#39;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_OPTION</span> <span class="o">=</span> <span class="s">r&#39;^[a-zA-Z_]+[a-zA-Z0-9_]*$&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_VALUE</span> <span class="o">=</span> <span class="s">r&#39;^.*$&#39;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_SECTION_SEP</span> <span class="o">=</span> <span class="s">r&#39;.&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_OPTION_SEP</span> <span class="o">=</span> <span class="s">r&#39; = &#39;</span>
-        <span class="c"># &quot;{}&quot; will be replaced with the section name by str.format</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_SECTION_MARKERS</span> <span class="o">=</span> <span class="s">r&#39;[{}]&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_COMMENT_MARKER</span> <span class="o">=</span> <span class="s">r&#39;# &#39;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_GET_BOOLEAN_TRUE</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;true&#39;</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="s">&#39;yes&#39;</span><span class="p">,</span> <span class="s">&#39;on&#39;</span><span class="p">,</span> <span class="s">&#39;enabled&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_GET_BOOLEAN_FALSE</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;false&#39;</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="s">&#39;off&#39;</span><span class="p">,</span> <span class="s">&#39;disabled&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_GET_BOOLEAN_DEFAULT</span> <span class="o">=</span> <span class="bp">None</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span>
-
-        <span class="c"># Use lambda to create a new object every time</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_EMPTY_SECTION</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_SECTION</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SECTION_SUB</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ENABLE_SUBSECTIONS</span> <span class="k">else</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_SECTION_PLAIN</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">()</span>
@@ -303,10 +314,10 @@
 
 <span class="sd">        :param path: A sequence of strings, representing a relative path of</span>
 <span class="sd">            section names to the target descendant subsection, whose name is</span>
-<span class="sd">            the last item</span>
+<span class="sd">            the last item.</span>
 <span class="sd">        :type path: str</span>
 <span class="sd">        :param bool safe: If True, when calling a non-existent subsection, its</span>
-<span class="sd">            closest existing ancestor is returned</span>
+<span class="sd">            closest existing ancestor is returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span>
 
@@ -351,7 +362,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the value for the option specified.</span>
 
-<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                                          <span class="n">inherit_options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span><span class="p">)</span>
@@ -367,8 +378,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stores the provided value in the specified option.</span>
 
-<span class="sd">        :param str opt: The name of the option</span>
-<span class="sd">        :param str val: The new value for the option</span>
+<span class="sd">        :param str opt: The name of the option.</span>
+<span class="sd">        :param str val: The new value for the option.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -390,7 +401,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes the specified option.</span>
 
-<span class="sd">        :param str opt: The name of the option that must be deleted</span>
+<span class="sd">        :param str opt: The name of the option that must be deleted.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">lopt</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -423,7 +434,7 @@
 <span class="sd">        item (the object, not its name) is a subsection of self; otherwise this</span>
 <span class="sd">        returns True if item is the name of an option in self.</span>
 
-<span class="sd">        :param item: A :py:class:`Section` object or the name of an option</span>
+<span class="sd">        :param item: A :py:class:`Section` object or the name of an option.</span>
 <span class="sd">        :type item: Section or str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Section</span><span class="p">):</span>
@@ -447,10 +458,10 @@
 </div>
 <div class="viewcode-block" id="Section.make_subsection"><a class="viewcode-back" href="../index.html#configfile.Section.make_subsection">[docs]</a>    <span class="k">def</span> <span class="nf">make_subsection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create an empty subsection under the current section if it doesn&#39;t</span>
+<span class="sd">        Create an empty subsection under the current section if it does not</span>
 <span class="sd">        exist.</span>
 
-<span class="sd">        :param str name: The name of the new subsection</span>
+<span class="sd">        :param str name: The name of the new subsection.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># TODO: Use this method, where possible, when creating new sections in</span>
         <span class="c">#       the other methods</span>
@@ -469,7 +480,7 @@
 <span class="sd">        Import sections and options from a file, file-like object, dictionary</span>
 <span class="sd">        or special object with upgrade mode.</span>
 
-<span class="sd">        If an option already exists, change its value; if it doesn&#39;t exist,</span>
+<span class="sd">        If an option already exists, change its value; if it does not exist,</span>
 <span class="sd">        create it and store its value. For example:</span>
 
 <span class="sd">        *{A:a,B:b,C:c} upgrade {A:d,D:e} =&gt; {A:d,B:b,C:c,D:e}*</span>
@@ -492,8 +503,8 @@
 <span class="sd">        Import sections and options from a file, file-like object, dictionary</span>
 <span class="sd">        or special object with update mode.</span>
 
-<span class="sd">        If an option already exists, change its value; if it doesn&#39;t exist,</span>
-<span class="sd">        don&#39;t do anything. For example:</span>
+<span class="sd">        If an option already exists, change its value; if it does not exist,</span>
+<span class="sd">        do not do anything. For example:</span>
 
 <span class="sd">        *{A:a,B:b,C:c} update {A:d,D:e} =&gt; {A:d,B:b,C:c}*</span>
 
@@ -538,7 +549,7 @@
 <span class="sd">        Import sections and options from a file, file-like object, dictionary</span>
 <span class="sd">        or special object with add mode.</span>
 
-<span class="sd">        If an option already exists, don&#39;t do anything; if it doesn&#39;t exist,</span>
+<span class="sd">        If an option already exists, do not do anything; if it does not exist,</span>
 <span class="sd">        create it and store its value. For example:</span>
 
 <span class="sd">        *{A:a,B:b,C:c} add {A:d,D:e} =&gt; {A:a,B:b,C:c,D:e}*</span>
@@ -603,7 +614,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open config file for reading.</span>
 
-<span class="sd">        :param str cfile: The name of the file to be parsed</span>
+<span class="sd">        :param str cfile: The name of the file to be parsed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
@@ -620,7 +631,7 @@
 <span class="sd">        Parse a text file and translate it into a compatible object, thus</span>
 <span class="sd">        making it possible to import it.</span>
 
-<span class="sd">        :param stream: a file-like object to be read from</span>
+<span class="sd">        :param stream: a file-like object to be read from.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="n">stream</span><span class="p">:</span>
             <span class="n">cdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EMPTY_SECTION</span><span class="p">()</span>
@@ -669,7 +680,7 @@
 <span class="sd">        Parse the sections hierarchy in a section line of a text file and</span>
 <span class="sd">        return them in a list.</span>
 
-<span class="sd">        :param re: regular expression object</span>
+<span class="sd">        :param re: regular expression object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ENABLE_SUBSECTIONS</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_SECTION_SEP</span><span class="p">)</span>
@@ -844,14 +855,14 @@
 <span class="sd">        The ``$`` sign is a special character: a ``$`` not followed by ``$``,</span>
 <span class="sd">        ``{``, ``:`` or ``}`` will be left ``$``; ``$$`` will be translated as</span>
 <span class="sd">        ``$`` both inside or outside an interpolation path; ``${`` will be</span>
-<span class="sd">        considered as the beginning of an interpolation path, unless it&#39;s found</span>
-<span class="sd">        inside another interpolation path, and in the latter case it will be</span>
-<span class="sd">        left ``${``; ``$:`` will be considered as a separator between sections</span>
-<span class="sd">        of an interpolation path, unless it&#39;s found outside of an interpolation</span>
-<span class="sd">        path, and in the latter case it will be left ``$:``; ``$}`` will be</span>
-<span class="sd">        considered as the end of an interpolation path, unless it&#39;s found</span>
-<span class="sd">        outside of an interpolation path, and in the latter case it will be</span>
-<span class="sd">        left ``$}``.</span>
+<span class="sd">        considered as the beginning of an interpolation path, unless it is</span>
+<span class="sd">        found inside another interpolation path, and in the latter case it will</span>
+<span class="sd">        be left ``${``; ``$:`` will be considered as a separator between</span>
+<span class="sd">        sections of an interpolation path, unless it is found outside of an</span>
+<span class="sd">        interpolation path, and in the latter case it will be left</span>
+<span class="sd">        ``$:``; ``$}`` will be considered as the end of an interpolation path,</span>
+<span class="sd">        unless it is found outside of an interpolation path, and in the latter</span>
+<span class="sd">        case it will be left ``$}``.</span>
 
 <span class="sd">        Normally all paths will be resolved based on the root section of the</span>
 <span class="sd">        file; anyway, if the interpolation path has only one item, it will be</span>
@@ -866,24 +877,25 @@
             <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span>
 
         <span class="k">for</span> <span class="n">optname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">:</span>
-            <span class="n">split</span> <span class="o">=</span> <span class="n">re_</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">r&#39;(\$\$|\$\{|\$\:|\$\})&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">optname</span><span class="p">])</span>
+            <span class="n">split</span> <span class="o">=</span> <span class="n">re_</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SPLIT</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">optname</span><span class="p">])</span>
             <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
             <span class="n">resolve</span> <span class="o">=</span> <span class="bp">None</span>
 
             <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">split</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">resolve</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="s">&#39;$$&#39;</span><span class="p">:</span>
-                        <span class="n">value</span> <span class="o">+=</span> <span class="s">&#39;$&#39;</span>
-                    <span class="k">elif</span> <span class="n">chunk</span> <span class="o">==</span> <span class="s">&#39;${&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SPECIAL_ESC</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SPECIAL</span>
+                    <span class="k">elif</span> <span class="n">chunk</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_START</span><span class="p">:</span>
                         <span class="n">resolve</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">]</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">value</span> <span class="o">+=</span> <span class="n">chunk</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="s">&#39;$$&#39;</span><span class="p">:</span>
-                        <span class="n">resolve</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="s">&#39;$&#39;</span>
-                    <span class="k">elif</span> <span class="n">chunk</span> <span class="o">==</span> <span class="s">&#39;$:&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SPECIAL_ESC</span><span class="p">:</span>
+                        <span class="n">resolve</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SPECIAL</span>
+                    <span class="k">elif</span> <span class="n">chunk</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SEP</span><span class="p">:</span>
                         <span class="n">resolve</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
-                    <span class="k">elif</span> <span class="n">chunk</span> <span class="o">==</span> <span class="s">&#39;$}&#39;</span><span class="p">:</span>
+                    <span class="k">elif</span> <span class="n">chunk</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_END</span><span class="p">:</span>
                         <span class="n">intoptname</span> <span class="o">=</span> <span class="n">resolve</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">resolve</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -899,7 +911,10 @@
                             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">resolve</span><span class="p">:</span>
                                 <span class="n">intsection</span> <span class="o">=</span> <span class="n">intsection</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
 
-                        <span class="n">value</span> <span class="o">+=</span> <span class="n">intsection</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">intoptname</span><span class="p">]</span>
+                        <span class="c"># Use get(intoptname) instead of _options[intoptname]</span>
+                        <span class="c"># so that options are properly inherited if the object</span>
+                        <span class="c"># is configured to do so</span>
+                        <span class="n">value</span> <span class="o">+=</span> <span class="n">intsection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">intoptname</span><span class="p">)</span>
                         <span class="n">resolve</span> <span class="o">=</span> <span class="bp">None</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">resolve</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">chunk</span>
@@ -907,7 +922,8 @@
             <span class="k">if</span> <span class="n">resolve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="c"># The last interpolation wasn&#39;t closed, so interpret it as a</span>
                 <span class="c"># normal string</span>
-                <span class="n">value</span> <span class="o">+=</span> <span class="s">&#39;${&#39;</span> <span class="o">+</span> <span class="s">&#39;$:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">resolve</span><span class="p">)</span>
+                <span class="n">value</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_START</span> <span class="o">+</span> \
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SEP</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">resolve</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">optname</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -920,15 +936,15 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the value for the option specified.</span>
 
-<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned.</span>
 <span class="sd">        :param fallback: If set to a string, and the option is not found, this</span>
 <span class="sd">            method returns that string; if set to None (default) it returns</span>
-<span class="sd">            KeyError</span>
+<span class="sd">            KeyError.</span>
 <span class="sd">        :type fallback: str or None</span>
 <span class="sd">        :param bool inherit_options: If True, if the option is not found in the</span>
-<span class="sd">            current section, it&#39;s searched in the parent sections; note that</span>
+<span class="sd">            current section, it is searched in the parent sections; note that</span>
 <span class="sd">            this can be set as a default for the object, but this setting</span>
-<span class="sd">            overwrites it only for this call</span>
+<span class="sd">            overwrites it only for this call.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
@@ -959,15 +975,15 @@
 
 <span class="sd">        This will always return a string.</span>
 
-<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned.</span>
 <span class="sd">        :param fallback: If set to a string, and the option is not found, this</span>
 <span class="sd">            method returns that string; if set to None (default) it returns</span>
-<span class="sd">            KeyError</span>
+<span class="sd">            KeyError.</span>
 <span class="sd">        :type fallback: str or None</span>
 <span class="sd">        :param bool inherit_options: If True, if the option is not found in the</span>
-<span class="sd">            current section, it&#39;s searched in the parent sections; note that</span>
+<span class="sd">            current section, it is searched in the parent sections; note that</span>
 <span class="sd">            this can be set as a default for the object, but this setting</span>
-<span class="sd">            overwrites it only for this call</span>
+<span class="sd">            overwrites it only for this call.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
@@ -979,15 +995,15 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method tries to return an integer from the value of an option.</span>
 
-<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned.</span>
 <span class="sd">        :param fallback: If set to a string, and the option is not found, this</span>
 <span class="sd">            method returns that string; if set to None (default) it returns</span>
-<span class="sd">            KeyError</span>
+<span class="sd">            KeyError.</span>
 <span class="sd">        :type fallback: str or None</span>
 <span class="sd">        :param bool inherit_options: If True, if the option is not found in the</span>
-<span class="sd">            current section, it&#39;s searched in the parent sections; note that</span>
+<span class="sd">            current section, it is searched in the parent sections; note that</span>
 <span class="sd">            this can be set as a default for the object, but this setting</span>
-<span class="sd">            overwrites it only for this call</span>
+<span class="sd">            overwrites it only for this call.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
@@ -999,15 +1015,15 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method tries to return a float from the value of an option.</span>
 
-<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned.</span>
 <span class="sd">        :param fallback: If set to a string, and the option is not found, this</span>
 <span class="sd">            method returns that string; if set to None (default) it returns</span>
-<span class="sd">            KeyError</span>
+<span class="sd">            KeyError.</span>
 <span class="sd">        :type fallback: str or None</span>
 <span class="sd">        :param bool inherit_options: If True, if the option is not found in the</span>
-<span class="sd">            current section, it&#39;s searched in the parent sections; note that</span>
+<span class="sd">            current section, it is searched in the parent sections; note that</span>
 <span class="sd">            this can be set as a default for the object, but this setting</span>
-<span class="sd">            overwrites it only for this call</span>
+<span class="sd">            overwrites it only for this call.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
@@ -1021,22 +1037,22 @@
 <span class="sd">        This method tries to return a boolean status (True or False) from the</span>
 <span class="sd">        value of an option.</span>
 
-<span class="sd">        :param str opt: The name of the option whose value must be returned</span>
-<span class="sd">        :param tuple true: A tuple with the strings to be recognized as True</span>
-<span class="sd">        :param tuple false: A tuple with the strings to be recognized as False</span>
+<span class="sd">        :param str opt: The name of the option whose value must be returned.</span>
+<span class="sd">        :param tuple true: A tuple with the strings to be recognized as True.</span>
+<span class="sd">        :param tuple false: A tuple with the strings to be recognized as False.</span>
 <span class="sd">        :param default: If the value is neither in true nor in false tuples,</span>
 <span class="sd">            return this boolean status; if set to None, it raises a ValueError</span>
-<span class="sd">            exception</span>
+<span class="sd">            exception.</span>
 <span class="sd">        :param fallback: If set to None (default), and the option is not found,</span>
 <span class="sd">            it raises KeyError; otherwise this value is evaluated with the true</span>
-<span class="sd">            and false tuples, or the default value</span>
+<span class="sd">            and false tuples, or the default value.</span>
 <span class="sd">        :param bool inherit_options: If True, if the option is not found in the</span>
-<span class="sd">            current section, it&#39;s searched in the parent sections; note that</span>
+<span class="sd">            current section, it is searched in the parent sections; note that</span>
 <span class="sd">            this can be set as a default for the object, but this setting</span>
-<span class="sd">            overwrites it only for this call</span>
+<span class="sd">            overwrites it only for this call.</span>
 
 <span class="sd">        Note that the characters in the strings are compared in lowercase, so</span>
-<span class="sd">        there&#39;s no need to specify all casing variations of a string</span>
+<span class="sd">        there is no need to specify all casing variations of a string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># TODO: Use default values in definition with Settings class (bug #19)</span>
         <span class="k">if</span> <span class="n">true</span> <span class="o">==</span> <span class="p">():</span>
@@ -1096,10 +1112,10 @@
 <span class="sd">        values as values.</span>
 
 <span class="sd">        :param bool ordered: If True, return an ordered dictionary; otherwise</span>
-<span class="sd">            return a normal dictionary</span>
+<span class="sd">            return a normal dictionary.</span>
 <span class="sd">        :param bool inherit_options: If True, options are searched also in the</span>
 <span class="sd">            parent sections; note that this can be set as a default for the</span>
-<span class="sd">            object, but this setting overwrites it only for this call</span>
+<span class="sd">            object, but this setting overwrites it only for this call.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
@@ -1133,7 +1149,7 @@
 <span class="sd">        Return a compatible object with options and subsections.</span>
 
 <span class="sd">        :param bool ordered: If True, the object uses ordered dictionaries;</span>
-<span class="sd">            otherwise it uses normal dictionaries</span>
+<span class="sd">            otherwise it uses normal dictionaries.</span>
 <span class="sd">        :param bool path: If True, return the current section as a subsection</span>
 <span class="sd">            of the parent sections.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1177,13 +1193,13 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export the configuration to one or more files.</span>
 
-<span class="sd">        :param targets: A sequence with the target file names</span>
+<span class="sd">        :param targets: A sequence with the target file names.</span>
 <span class="sd">        :param bool overwrite: This sets whether sections and options in the</span>
 <span class="sd">            file are overwritten; see _import_object for more details.</span>
 <span class="sd">        :param bool add: This sets whether non-pre-existing sections and option</span>
 <span class="sd">            are added; see _import_object for more details.</span>
 <span class="sd">        :param  bool path: If True, section names are exported with their full</span>
-<span class="sd">            path</span>
+<span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># TODO: Change &quot;reset&quot; mode to &quot;remove&quot; (complementing &quot;overwrite&quot; and</span>
         <span class="c">#       &quot;add&quot;) (bug #25)</span>
@@ -1195,16 +1211,16 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export sections and options to one or more files with upgrade mode.</span>
 
-<span class="sd">        If an option already exists, change its value; if it doesn&#39;t exist,</span>
+<span class="sd">        If an option already exists, change its value; if it does not exist,</span>
 <span class="sd">        create it and store its value. For example:</span>
 
 <span class="sd">        *{A:d,D:e} upgrade {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c,D:e}*</span>
 
 <span class="sd">        See :py:meth:`_export_file` for object compatibility.</span>
 
-<span class="sd">        :param targets: A sequence with the target file names</span>
+<span class="sd">        :param targets: A sequence with the target file names.</span>
 <span class="sd">        :param bool path: If True, section names are exported with their full</span>
-<span class="sd">            path</span>
+<span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -1217,16 +1233,16 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export sections and options to one or more files with update mode.</span>
 
-<span class="sd">        If an option already exists, change its value; if it doesn&#39;t exist,</span>
-<span class="sd">        don&#39;t do anything. For example:</span>
+<span class="sd">        If an option already exists, change its value; if it does not exist,</span>
+<span class="sd">        do not do anything. For example:</span>
 
 <span class="sd">        *{A:d,D:e} update {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c}*</span>
 
 <span class="sd">        See :py:meth:`_export_file` for object compatibility.</span>
 
-<span class="sd">        :param targets: A sequence with the target file names</span>
+<span class="sd">        :param targets: A sequence with the target file names.</span>
 <span class="sd">        :param bool path: If True, section names are exported with their full</span>
-<span class="sd">            path</span>
+<span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -1246,9 +1262,9 @@
 
 <span class="sd">        See :py:meth:`_export_file` for object compatibility.</span>
 
-<span class="sd">        :param targets: A sequence with the target file names</span>
+<span class="sd">        :param targets: A sequence with the target file names.</span>
 <span class="sd">        :param bool path: If True, section names are exported with their full</span>
-<span class="sd">            path</span>
+<span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -1261,16 +1277,16 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export sections and options to one or more files with add mode.</span>
 
-<span class="sd">        If an option already exists, don&#39;t do anything; if it doesn&#39;t exist,</span>
+<span class="sd">        If an option already exists, do not do anything; if it does not exist,</span>
 <span class="sd">        create it and store its value. For example:</span>
 
 <span class="sd">        *{A:d,D:e} add {A:a,B:b,C:c} =&gt; {A:a,B:b,C:c,D:e}*</span>
 
 <span class="sd">        See :py:meth:`_export_file` for object compatibility.</span>
 
-<span class="sd">        :param targets: A sequence with the target file names</span>
+<span class="sd">        :param targets: A sequence with the target file names.</span>
 <span class="sd">        :param bool path: If True, section names are exported with their full</span>
-<span class="sd">            path</span>
+<span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Necessary for Python 2 compatibility</span>
         <span class="c"># The Python 3 definition was:</span>
@@ -1289,7 +1305,7 @@
 <span class="sd">            the file are overwritten.</span>
 <span class="sd">        :param bool add: Whether non-pre-existing data will be exported.</span>
 <span class="sd">        :param bool path: If True, section names are exported with their full</span>
-<span class="sd">            path, otherwise they are left</span>
+<span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
@@ -1550,52 +1566,33 @@
 </div></div>
 <div class="viewcode-block" id="ConfigFile"><a class="viewcode-back" href="../index.html#configfile.ConfigFile">[docs]</a><span class="k">class</span> <span class="nc">ConfigFile</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A configuration object.</span>
-
-<span class="sd">    One or more text files, dictionaries or compatible objects can be initially</span>
-<span class="sd">    parsed with ``ConfigFile(file1, dict1, file2, ...)``.</span>
-
-<span class="sd">    This will instantiate a :py:class:`ConfigFile` object with sections,</span>
-<span class="sd">    subsections, options and values.</span>
-
-<span class="sd">    Even if you parse more files, file-like objects, dictionaries or special</span>
-<span class="sd">    objects, this will instantiate a unified object.</span>
-
-<span class="sd">    A default set of values can be set by assigning a dictionary as the first</span>
-<span class="sd">    argument.</span>
-
-<span class="sd">    By default, sections are allowed to contain both options or other sections</span>
-<span class="sd">    (subsections): this behaviour can be disabled by instantiating</span>
-<span class="sd">    :py:class:`ConfigFile` with ``sub=False``.</span>
+<span class="sd">    The main configuration object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ConfigFile.__init__"><a class="viewcode-back" href="../index.html#configfile.ConfigFile.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Constructor: instantiate a :py:class:`ConfigFile` object.</span>
+<span class="sd">        Constructor.</span>
 
 <span class="sd">        :param sources: A sequence of all the files, file-like objects,</span>
-<span class="sd">            dictionaries and special objects to be parsed</span>
+<span class="sd">            dictionaries and special objects to be parsed.</span>
 <span class="sd">        :type sources: str, dict or special object (see</span>
 <span class="sd">            :py:meth:`Section._import_object`)</span>
 <span class="sd">        :param str mode: This sets if and how the next source in the chain</span>
 <span class="sd">            overwrites already imported sections and options; available choices</span>
 <span class="sd">            are ``&#39;upgrade&#39;``, ``&#39;update&#39;``, ``&#39;reset&#39;`` and ``&#39;add&#39;`` (see the</span>
-<span class="sd">            respective methods for more details)</span>
+<span class="sd">            respective methods for more details).</span>
 <span class="sd">        :param bool safe_calls: If True, when calling a non-existent</span>
-<span class="sd">            subsection, its closest existing ancestor is returned</span>
+<span class="sd">            subsection, its closest existing ancestor is returned.</span>
 <span class="sd">        :param bool inherit_options: If True, if an option is not found in a</span>
-<span class="sd">            section, it is searched in the parent sections</span>
+<span class="sd">            section, it is searched in the parent sections.</span>
 <span class="sd">        :param bool ignore_case: If True, section and option names will be</span>
 <span class="sd">            compared ignoring case differences; regular expressions will use</span>
-<span class="sd">            ``re.I`` flag</span>
-<span class="sd">        :param bool subsections: If True (default) subsections are allowed</span>
+<span class="sd">            ``re.I`` flag.</span>
+<span class="sd">        :param bool subsections: If True (default) subsections are allowed.</span>
 <span class="sd">        :param bool interpolation: If True, option values will be interpolated</span>
 <span class="sd">            using values from other options through the special syntax</span>
 <span class="sd">            ``${section$:section$:option$}``. Options will be interpolated only</span>
 <span class="sd">            once at importing: all links among options will be lost after</span>
 <span class="sd">            importing.</span>
-
-<span class="sd">        Possible options at the beginning of the file, before any section, are</span>
-<span class="sd">        considered to be in the &quot;root&quot; section.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># The Python 3 definition was:</span>
         <span class="c">#def __init__(self,</span>

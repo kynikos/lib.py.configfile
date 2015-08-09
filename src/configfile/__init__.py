@@ -192,17 +192,17 @@ class Section(object):
         """
         Constructor.
 
-        :param str name: The name of the section
-        :param Section parent: A reference to the parent section object
+        :param str name: The name of the section.
+        :param Section parent: A reference to the parent section object.
         :param bool safe_calls: If True, when calling a non-existent
-            subsection, its closest existing ancestor is returned
+            subsection, its closest existing ancestor is returned.
         :param bool inherit_options: Whether the section will inherit the
-            options from its ancestors
+            options from its ancestors.
         :param bool subsections: If True, subsections are enabled; otherwise
-            they are disabled
+            they are disabled.
         :param bool ignore_case: If True, section and option names will be
             compared ignoring case differences; regular expressions will use
-            ``re.I`` flag
+            ``re.I`` flag.
         """
         self._NAME = name
         self._PARENT = parent
@@ -254,10 +254,10 @@ class Section(object):
 
         :param path: A sequence of strings, representing a relative path of
             section names to the target descendant subsection, whose name is
-            the last item
+            the last item.
         :type path: str
         :param bool safe: If True, when calling a non-existent subsection, its
-            closest existing ancestor is returned
+            closest existing ancestor is returned.
         """
         section = self
 
@@ -302,7 +302,7 @@ class Section(object):
         """
         Returns the value for the option specified.
 
-        :param str opt: The name of the option whose value must be returned
+        :param str opt: The name of the option whose value must be returned.
         """
         item = self.get(opt, fallback=None,
                                          inherit_options=self._INHERIT_OPTIONS)
@@ -318,8 +318,8 @@ class Section(object):
         """
         Stores the provided value in the specified option.
 
-        :param str opt: The name of the option
-        :param str val: The new value for the option
+        :param str opt: The name of the option.
+        :param str val: The new value for the option.
         """
         if isinstance(opt, str):
             if isinstance(val, str):
@@ -341,7 +341,7 @@ class Section(object):
         """
         Deletes the specified option.
 
-        :param str opt: The name of the option that must be deleted
+        :param str opt: The name of the option that must be deleted.
         """
         try:
             lopt = opt.lower()
@@ -374,7 +374,7 @@ class Section(object):
         item (the object, not its name) is a subsection of self; otherwise this
         returns True if item is the name of an option in self.
 
-        :param item: A :py:class:`Section` object or the name of an option
+        :param item: A :py:class:`Section` object or the name of an option.
         :type item: Section or str
         """
         if isinstance(item, Section):
@@ -401,7 +401,7 @@ class Section(object):
         Create an empty subsection under the current section if it does not
         exist.
 
-        :param str name: The name of the new subsection
+        :param str name: The name of the new subsection.
         """
         # TODO: Use this method, where possible, when creating new sections in
         #       the other methods
@@ -554,7 +554,7 @@ class Section(object):
         """
         Open config file for reading.
 
-        :param str cfile: The name of the file to be parsed
+        :param str cfile: The name of the file to be parsed.
         """
         try:
             return open(cfile, 'r')
@@ -571,7 +571,7 @@ class Section(object):
         Parse a text file and translate it into a compatible object, thus
         making it possible to import it.
 
-        :param stream: a file-like object to be read from
+        :param stream: a file-like object to be read from.
         """
         with stream:
             cdict = self._EMPTY_SECTION()
@@ -620,7 +620,7 @@ class Section(object):
         Parse the sections hierarchy in a section line of a text file and
         return them in a list.
 
-        :param re: regular expression object
+        :param re: regular expression object.
         """
         if self._ENABLE_SUBSECTIONS:
             return re.group(1).split(self._SECTION_SEP)
@@ -871,15 +871,15 @@ class Section(object):
         """
         Returns the value for the option specified.
 
-        :param str opt: The name of the option whose value must be returned
+        :param str opt: The name of the option whose value must be returned.
         :param fallback: If set to a string, and the option is not found, this
             method returns that string; if set to None (default) it returns
-            KeyError
+            KeyError.
         :type fallback: str or None
         :param bool inherit_options: If True, if the option is not found in the
             current section, it is searched in the parent sections; note that
             this can be set as a default for the object, but this setting
-            overwrites it only for this call
+            overwrites it only for this call.
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
@@ -910,15 +910,15 @@ class Section(object):
 
         This will always return a string.
 
-        :param str opt: The name of the option whose value must be returned
+        :param str opt: The name of the option whose value must be returned.
         :param fallback: If set to a string, and the option is not found, this
             method returns that string; if set to None (default) it returns
-            KeyError
+            KeyError.
         :type fallback: str or None
         :param bool inherit_options: If True, if the option is not found in the
             current section, it is searched in the parent sections; note that
             this can be set as a default for the object, but this setting
-            overwrites it only for this call
+            overwrites it only for this call.
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
@@ -930,15 +930,15 @@ class Section(object):
         """
         This method tries to return an integer from the value of an option.
 
-        :param str opt: The name of the option whose value must be returned
+        :param str opt: The name of the option whose value must be returned.
         :param fallback: If set to a string, and the option is not found, this
             method returns that string; if set to None (default) it returns
-            KeyError
+            KeyError.
         :type fallback: str or None
         :param bool inherit_options: If True, if the option is not found in the
             current section, it is searched in the parent sections; note that
             this can be set as a default for the object, but this setting
-            overwrites it only for this call
+            overwrites it only for this call.
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
@@ -950,15 +950,15 @@ class Section(object):
         """
         This method tries to return a float from the value of an option.
 
-        :param str opt: The name of the option whose value must be returned
+        :param str opt: The name of the option whose value must be returned.
         :param fallback: If set to a string, and the option is not found, this
             method returns that string; if set to None (default) it returns
-            KeyError
+            KeyError.
         :type fallback: str or None
         :param bool inherit_options: If True, if the option is not found in the
             current section, it is searched in the parent sections; note that
             this can be set as a default for the object, but this setting
-            overwrites it only for this call
+            overwrites it only for this call.
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
@@ -972,22 +972,22 @@ class Section(object):
         This method tries to return a boolean status (True or False) from the
         value of an option.
 
-        :param str opt: The name of the option whose value must be returned
-        :param tuple true: A tuple with the strings to be recognized as True
-        :param tuple false: A tuple with the strings to be recognized as False
+        :param str opt: The name of the option whose value must be returned.
+        :param tuple true: A tuple with the strings to be recognized as True.
+        :param tuple false: A tuple with the strings to be recognized as False.
         :param default: If the value is neither in true nor in false tuples,
             return this boolean status; if set to None, it raises a ValueError
-            exception
+            exception.
         :param fallback: If set to None (default), and the option is not found,
             it raises KeyError; otherwise this value is evaluated with the true
-            and false tuples, or the default value
+            and false tuples, or the default value.
         :param bool inherit_options: If True, if the option is not found in the
             current section, it is searched in the parent sections; note that
             this can be set as a default for the object, but this setting
-            overwrites it only for this call
+            overwrites it only for this call.
 
         Note that the characters in the strings are compared in lowercase, so
-        there is no need to specify all casing variations of a string
+        there is no need to specify all casing variations of a string.
         """
         # TODO: Use default values in definition with Settings class (bug #19)
         if true == ():
@@ -1047,10 +1047,10 @@ class Section(object):
         values as values.
 
         :param bool ordered: If True, return an ordered dictionary; otherwise
-            return a normal dictionary
+            return a normal dictionary.
         :param bool inherit_options: If True, options are searched also in the
             parent sections; note that this can be set as a default for the
-            object, but this setting overwrites it only for this call
+            object, but this setting overwrites it only for this call.
         """
         if inherit_options not in (True, False):
             inherit_options = self._INHERIT_OPTIONS
@@ -1084,7 +1084,7 @@ class Section(object):
         Return a compatible object with options and subsections.
 
         :param bool ordered: If True, the object uses ordered dictionaries;
-            otherwise it uses normal dictionaries
+            otherwise it uses normal dictionaries.
         :param bool path: If True, return the current section as a subsection
             of the parent sections.
         """
@@ -1128,13 +1128,13 @@ class Section(object):
         """
         Export the configuration to one or more files.
 
-        :param targets: A sequence with the target file names
+        :param targets: A sequence with the target file names.
         :param bool overwrite: This sets whether sections and options in the
             file are overwritten; see _import_object for more details.
         :param bool add: This sets whether non-pre-existing sections and option
             are added; see _import_object for more details.
         :param  bool path: If True, section names are exported with their full
-            path
+            path.
         """
         # TODO: Change "reset" mode to "remove" (complementing "overwrite" and
         #       "add") (bug #25)
@@ -1153,9 +1153,9 @@ class Section(object):
 
         See :py:meth:`_export_file` for object compatibility.
 
-        :param targets: A sequence with the target file names
+        :param targets: A sequence with the target file names.
         :param bool path: If True, section names are exported with their full
-            path
+            path.
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -1175,9 +1175,9 @@ class Section(object):
 
         See :py:meth:`_export_file` for object compatibility.
 
-        :param targets: A sequence with the target file names
+        :param targets: A sequence with the target file names.
         :param bool path: If True, section names are exported with their full
-            path
+            path.
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -1197,9 +1197,9 @@ class Section(object):
 
         See :py:meth:`_export_file` for object compatibility.
 
-        :param targets: A sequence with the target file names
+        :param targets: A sequence with the target file names.
         :param bool path: If True, section names are exported with their full
-            path
+            path.
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -1219,9 +1219,9 @@ class Section(object):
 
         See :py:meth:`_export_file` for object compatibility.
 
-        :param targets: A sequence with the target file names
+        :param targets: A sequence with the target file names.
         :param bool path: If True, section names are exported with their full
-            path
+            path.
         """
         # Necessary for Python 2 compatibility
         # The Python 3 definition was:
@@ -1524,21 +1524,21 @@ class ConfigFile(Section):
         Constructor: instantiate a :py:class:`ConfigFile` object.
 
         :param sources: A sequence of all the files, file-like objects,
-            dictionaries and special objects to be parsed
+            dictionaries and special objects to be parsed.
         :type sources: str, dict or special object (see
             :py:meth:`Section._import_object`)
         :param str mode: This sets if and how the next source in the chain
             overwrites already imported sections and options; available choices
             are ``'upgrade'``, ``'update'``, ``'reset'`` and ``'add'`` (see the
-            respective methods for more details)
+            respective methods for more details).
         :param bool safe_calls: If True, when calling a non-existent
-            subsection, its closest existing ancestor is returned
+            subsection, its closest existing ancestor is returned.
         :param bool inherit_options: If True, if an option is not found in a
-            section, it is searched in the parent sections
+            section, it is searched in the parent sections.
         :param bool ignore_case: If True, section and option names will be
             compared ignoring case differences; regular expressions will use
-            ``re.I`` flag
-        :param bool subsections: If True (default) subsections are allowed
+            ``re.I`` flag.
+        :param bool subsections: If True (default) subsections are allowed.
         :param bool interpolation: If True, option values will be interpolated
             using values from other options through the special syntax
             ``${section$:section$:option$}``. Options will be interpolated only

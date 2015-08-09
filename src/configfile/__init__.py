@@ -185,7 +185,8 @@ import io
 class Section(object):
     """
     The class for a section in the configuration file, including the root
-    section.
+    section. You should never need to instantiate this class directly, use
+    :py:class:`ConfigFile` instead.
     """
     def __init__(self, name=None, parent=None, safe_calls=False,
                  inherit_options=False, subsections=True, ignore_case=True):
@@ -1240,7 +1241,7 @@ class Section(object):
             the file are overwritten.
         :param bool add: Whether non-pre-existing data will be exported.
         :param bool path: If True, section names are exported with their full
-            path, otherwise they are left
+            path.
         """
         try:
             with open(cfile, 'r') as stream:
@@ -1501,27 +1502,11 @@ class Section(object):
 
 class ConfigFile(Section):
     """
-    A configuration object.
-
-    One or more text files, dictionaries or compatible objects can be initially
-    parsed with ``ConfigFile(file1, dict1, file2, ...)``.
-
-    This will instantiate a :py:class:`ConfigFile` object with sections,
-    subsections, options and values.
-
-    Even if you parse more files, file-like objects, dictionaries or special
-    objects, this will instantiate a unified object.
-
-    A default set of values can be set by assigning a dictionary as the first
-    argument.
-
-    By default, sections are allowed to contain both options or other sections
-    (subsections): this behaviour can be disabled by instantiating
-    :py:class:`ConfigFile` with ``sub=False``.
+    The main configuration object.
     """
     def __init__(self, *sources, **kwargs):
         """
-        Constructor: instantiate a :py:class:`ConfigFile` object.
+        Constructor.
 
         :param sources: A sequence of all the files, file-like objects,
             dictionaries and special objects to be parsed.
@@ -1544,9 +1529,6 @@ class ConfigFile(Section):
             ``${section$:section$:option$}``. Options will be interpolated only
             once at importing: all links among options will be lost after
             importing.
-
-        Possible options at the beginning of the file, before any section, are
-        considered to be in the "root" section.
         """
         # The Python 3 definition was:
         #def __init__(self,

@@ -234,6 +234,18 @@ class Section(object):
         self._SECTION_MARKERS = r'[{}]'
         self._COMMENT_MARKER = r'# '
 
+        self._INTERPOLATION_SPECIAL = '$'
+        self._INTERPOLATION_SPECIAL_ESC = self._INTERPOLATION_SPECIAL * 2
+        self._INTERPOLATION_START = self._INTERPOLATION_SPECIAL + '{'
+        self._INTERPOLATION_SEP = self._INTERPOLATION_SPECIAL + ':'
+        self._INTERPOLATION_END = self._INTERPOLATION_SPECIAL + '}'
+        self._INTERPOLATION_SPLIT = (r'(' + r'|'.join(re_.escape(mark)
+                                     for mark in (
+                                     self._INTERPOLATION_SPECIAL_ESC,
+                                     self._INTERPOLATION_START,
+                                     self._INTERPOLATION_SEP,
+                                     self._INTERPOLATION_END)) + r')')
+
         self._GET_BOOLEAN_TRUE = ('true', '1', 'yes', 'on', 'enabled')
         self._GET_BOOLEAN_FALSE = ('false', '0', 'no', 'off', 'disabled')
         self._GET_BOOLEAN_DEFAULT = None
@@ -818,24 +830,25 @@ class Section(object):
             root = self
 
         for optname in self._options:
-            split = re_.split(r'(\$\$|\$\{|\$\:|\$\})', self._options[optname])
+            split = re_.split(self._INTERPOLATION_SPLIT,
+                              self._options[optname])
             value = ''
             resolve = None
 
             for chunk in split:
                 if resolve is None:
-                    if chunk == '$$':
-                        value += '$'
-                    elif chunk == '${':
+                    if chunk == self._INTERPOLATION_SPECIAL_ESC:
+                        value += self._INTERPOLATION_SPECIAL
+                    elif chunk == self._INTERPOLATION_START:
                         resolve = ['']
                     else:
                         value += chunk
                 else:
-                    if chunk == '$$':
-                        resolve[-1] += '$'
-                    elif chunk == '$:':
+                    if chunk == self._INTERPOLATION_SPECIAL_ESC:
+                        resolve[-1] += self._INTERPOLATION_SPECIAL
+                    elif chunk == self._INTERPOLATION_SEP:
                         resolve.append('')
-                    elif chunk == '$}':
+                    elif chunk == self._INTERPOLATION_END:
                         intoptname = resolve.pop()
 
                         if len(resolve) == 0:
@@ -859,7 +872,8 @@ class Section(object):
             if resolve is not None:
                 # The last interpolation wasn't closed, so interpret it as a
                 # normal string
-                value += '${' + '$:'.join(resolve)
+                value += self._INTERPOLATION_START + \
+                         self._INTERPOLATION_SEP.join(resolve)
 
             self._options[optname] = value
 

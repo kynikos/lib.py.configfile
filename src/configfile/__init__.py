@@ -864,7 +864,10 @@ class Section(object):
                             for s in resolve:
                                 intsection = intsection._subsections[s]
 
-                        value += intsection._options[intoptname]
+                        # Use get(intoptname) instead of _options[intoptname]
+                        # so that options are properly inherited if the object
+                        # is configured to do so
+                        value += intsection.get(intoptname)
                         resolve = None
                     else:
                         resolve[-1] += chunk

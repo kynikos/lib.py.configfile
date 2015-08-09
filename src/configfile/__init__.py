@@ -188,6 +188,42 @@ class Section(object):
     section. You should never need to instantiate this class directly, use
     :py:class:`ConfigFile` instead.
     """
+    # TODO: Compile only once (bug #20)
+    _PARSE_SECTION = r'^\s*\[(.+)\]\s*$'
+    _PARSE_OPTION = r'^\s*([^\=]+?)\s*\=\s*(.*?)\s*$'
+    _PARSE_COMMENT = r'^\s*[#;]{1}\s*(.*?)\s*$'
+    _PARSE_IGNORE = r'^\s*$'
+
+    _SECTION_SUB = r'^[a-zA-Z_]+(?:\.?[a-zA-Z0-9_]+)*$'
+    _SECTION_PLAIN = r'^[a-zA-Z_]+[a-zA-Z0-9_]*$'
+
+    _OPTION = r'^[a-zA-Z_]+[a-zA-Z0-9_]*$'
+    _VALUE = r'^.*$'
+
+    _SECTION_SEP = r'.'
+    _OPTION_SEP = r' = '
+    # "{}" will be replaced with the section name by str.format
+    _SECTION_MARKERS = r'[{}]'
+    _COMMENT_MARKER = r'# '
+
+    _INTERPOLATION_SPECIAL = '$'
+    _INTERPOLATION_SPECIAL_ESC = _INTERPOLATION_SPECIAL * 2
+    _INTERPOLATION_START = _INTERPOLATION_SPECIAL + '{'
+    _INTERPOLATION_SEP = _INTERPOLATION_SPECIAL + ':'
+    _INTERPOLATION_END = _INTERPOLATION_SPECIAL + '}'
+    _INTERPOLATION_SPLIT = (r'(' + r'|'.join(re_.escape(mark) for mark in (
+                            _INTERPOLATION_SPECIAL_ESC, _INTERPOLATION_START,
+                            _INTERPOLATION_SEP, _INTERPOLATION_END)) + r')')
+
+    _GET_BOOLEAN_TRUE = ('true', '1', 'yes', 'on', 'enabled')
+    _GET_BOOLEAN_FALSE = ('false', '0', 'no', 'off', 'disabled')
+    _GET_BOOLEAN_DEFAULT = None
+
+    _DICT_CLASS = collections.OrderedDict
+
+    # Use lambda to create a new object every time
+    _EMPTY_SECTION = lambda self: (self._DICT_CLASS(), self._DICT_CLASS())
+
     def __init__(self, name=None, parent=None, safe_calls=False,
                  inherit_options=False, subsections=True, ignore_case=True):
         """
@@ -214,46 +250,8 @@ class Section(object):
         self._IGNORE_CASE = ignore_case
         self._RE_I = re_.I if self._IGNORE_CASE else 0
 
-        # TODO: Compile only once (bug #20)
-        self._PARSE_SECTION = r'^\s*\[(.+)\]\s*$'
-        self._PARSE_OPTION = r'^\s*([^\=]+?)\s*\=\s*(.*?)\s*$'
-        self._PARSE_COMMENT = r'^\s*[#;]{1}\s*(.*?)\s*$'
-        self._PARSE_IGNORE = r'^\s*$'
-
-        if self._ENABLE_SUBSECTIONS:
-            self._SECTION = r'^[a-zA-Z_]+(?:\.?[a-zA-Z0-9_]+)*$'
-        else:
-            self._SECTION = r'^[a-zA-Z_]+[a-zA-Z0-9_]*$'
-
-        self._OPTION = r'^[a-zA-Z_]+[a-zA-Z0-9_]*$'
-        self._VALUE = r'^.*$'
-
-        self._SECTION_SEP = r'.'
-        self._OPTION_SEP = r' = '
-        # "{}" will be replaced with the section name by str.format
-        self._SECTION_MARKERS = r'[{}]'
-        self._COMMENT_MARKER = r'# '
-
-        self._INTERPOLATION_SPECIAL = '$'
-        self._INTERPOLATION_SPECIAL_ESC = self._INTERPOLATION_SPECIAL * 2
-        self._INTERPOLATION_START = self._INTERPOLATION_SPECIAL + '{'
-        self._INTERPOLATION_SEP = self._INTERPOLATION_SPECIAL + ':'
-        self._INTERPOLATION_END = self._INTERPOLATION_SPECIAL + '}'
-        self._INTERPOLATION_SPLIT = (r'(' + r'|'.join(re_.escape(mark)
-                                     for mark in (
-                                     self._INTERPOLATION_SPECIAL_ESC,
-                                     self._INTERPOLATION_START,
-                                     self._INTERPOLATION_SEP,
-                                     self._INTERPOLATION_END)) + r')')
-
-        self._GET_BOOLEAN_TRUE = ('true', '1', 'yes', 'on', 'enabled')
-        self._GET_BOOLEAN_FALSE = ('false', '0', 'no', 'off', 'disabled')
-        self._GET_BOOLEAN_DEFAULT = None
-
-        self._DICT_CLASS = collections.OrderedDict
-
-        # Use lambda to create a new object every time
-        self._EMPTY_SECTION = lambda: (self._DICT_CLASS(), self._DICT_CLASS())
+        self._SECTION = self._SECTION_SUB if self._ENABLE_SUBSECTIONS else \
+                        self._SECTION_PLAIN
 
         self._options = self._DICT_CLASS()
         self._subsections = self._DICT_CLASS()

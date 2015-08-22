@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>configfile &mdash; ConfigFile 1.2.1 documentation</title>
+    <title>configfile &mdash; ConfigFile 1.2.2 documentation</title>
     
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.2.1',
+        VERSION:     '1.2.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="ConfigFile 1.2.1 documentation" href="../index.html" />
+    <link rel="top" title="ConfigFile 1.2.2 documentation" href="../index.html" />
     <link rel="up" title="Module code" href="index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">ConfigFile 1.2.1 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">ConfigFile 1.2.2 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -307,7 +307,7 @@
 
     <span class="c">### DATA MODEL ###</span>
 </div>
-<div class="viewcode-block" id="Section.__call__"><a class="viewcode-back" href="../index.html#configfile.Section.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Section.__call__"><a class="viewcode-back" href="../index.html#configfile.Section.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Enables calling directly the object with a string or sequence of</span>
 <span class="sd">        strings, returning the corresponding subsection object, if existent.</span>
@@ -319,6 +319,12 @@
 <span class="sd">        :param bool safe: If True, when calling a non-existent subsection, its</span>
 <span class="sd">            closest existing ancestor is returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># The Python 3 definition was:</span>
+        <span class="c">#def __call__(self, *path, safe=None):</span>
+        <span class="c"># But to keep compatibility with Python 2 it has been changed to the</span>
+        <span class="c"># current</span>
+        <span class="n">safe</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;safe&#39;</span><span class="p">)</span>
+
         <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span>
 
         <span class="k">for</span> <span class="n">sname</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
@@ -1701,7 +1707,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">ConfigFile 1.2.1 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">ConfigFile 1.2.2 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>

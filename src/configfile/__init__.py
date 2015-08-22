@@ -258,7 +258,7 @@ class Section(object):
 
     ### DATA MODEL ###
 
-    def __call__(self, *path, safe=None):
+    def __call__(self, *path, **kwargs):
         """
         Enables calling directly the object with a string or sequence of
         strings, returning the corresponding subsection object, if existent.
@@ -270,6 +270,12 @@ class Section(object):
         :param bool safe: If True, when calling a non-existent subsection, its
             closest existing ancestor is returned.
         """
+        # The Python 3 definition was:
+        #def __call__(self, *path, safe=None):
+        # But to keep compatibility with Python 2 it has been changed to the
+        # current
+        safe = kwargs.get('safe')
+
         section = self
 
         for sname in path:

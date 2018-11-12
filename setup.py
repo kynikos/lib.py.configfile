@@ -3,8 +3,9 @@ from setuptools import setup, find_packages
 setup(
     name='configfile',
     version='1.2.2',
-    description=('Dynamically parse and edit configuration files.'),
-    long_description=('Dynamically parse and edit configuration files.'),
+    description='Dynamically parse and edit configuration files.',
+    long_description='Dynamically parse and edit configuration files with '
+        'support for subsections.',
     url='https://github.com/kynikos/lib.py.configfile',
     author='Dario Giovannetti',
     author_email='dev@dariogiovannetti.net',
@@ -25,5 +26,5 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
     keywords='configuration parser development',
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    packages=find_packages(exclude=['contrib', 'dev', 'docs', 'tests']),
 )

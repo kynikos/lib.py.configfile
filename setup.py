@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='configfile',
-    version='1.2.2',
+    version='1.2.4',
     description='Dynamically parse and edit configuration files.',
     long_description='Dynamically parse and edit configuration files with '
         'support for subsections.',

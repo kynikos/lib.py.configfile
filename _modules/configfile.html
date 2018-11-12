@@ -1,32 +1,24 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>configfile &mdash; ConfigFile 1.2.2 documentation</title>
-    
+    <title>configfile &#8212; ConfigFile 1.2.4 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.2.2',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="ConfigFile 1.2.2 documentation" href="../index.html" />
-    <link rel="up" title="Module code" href="index.html" /> 
-  </head>
-  <body role="document">
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -36,8 +28,8 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">ConfigFile 1.2.2 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">ConfigFile 1.2.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -47,21 +39,21 @@
           <div class="body" role="main">
             
   <h1>Source code for configfile</h1><div class="highlight"><pre>
-<span class="c"># ConfigFile class - Dynamically parse and edit configuration files.</span>
-<span class="c"># Copyright (C) 2011-2015 Dario Giovannetti &lt;dev@dariogiovannetti.net&gt;</span>
-<span class="c">#</span>
-<span class="c"># This program is free software: you can redistribute it and/or modify</span>
-<span class="c"># it under the terms of the GNU General Public License as published by</span>
-<span class="c"># the Free Software Foundation, either version 3 of the License, or</span>
-<span class="c"># (at your option) any later version.</span>
-<span class="c">#</span>
-<span class="c"># This program is distributed in the hope that it will be useful,</span>
-<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c"># GNU General Public License for more details.</span>
-<span class="c">#</span>
-<span class="c"># You should have received a copy of the GNU General Public License</span>
-<span class="c"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span></span><span class="c1"># ConfigFile class - Dynamically parse and edit configuration files.</span>
+<span class="c1"># Copyright (C) 2011-2015 Dario Giovannetti &lt;dev@dariogiovannetti.net&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This library provides the :py:class:`ConfigFile` class, whose goal is to</span>
@@ -226,7 +218,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">errno</span>
-<span class="kn">import</span> <span class="nn">re</span> <span class="kn">as</span> <span class="nn">re_</span>
+<span class="kn">import</span> <span class="nn">re</span> <span class="k">as</span> <span class="nn">re_</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">io</span>
 
@@ -237,44 +229,44 @@
 <span class="sd">    section. You should never need to instantiate this class directly, use</span>
 <span class="sd">    :py:class:`ConfigFile` instead.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># TODO: Compile only once (bug #20)</span>
-    <span class="n">_PARSE_SECTION</span> <span class="o">=</span> <span class="s">r&#39;^\s*\[(.+)\]\s*$&#39;</span>
-    <span class="n">_PARSE_OPTION</span> <span class="o">=</span> <span class="s">r&#39;^\s*([^\=]+?)\s*\=\s*(.*?)\s*$&#39;</span>
-    <span class="n">_PARSE_COMMENT</span> <span class="o">=</span> <span class="s">r&#39;^\s*[#;]{1}\s*(.*?)\s*$&#39;</span>
-    <span class="n">_PARSE_IGNORE</span> <span class="o">=</span> <span class="s">r&#39;^\s*$&#39;</span>
+    <span class="c1"># TODO: Compile only once (bug #20)</span>
+    <span class="n">_PARSE_SECTION</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^\s*\[(.+)\]\s*$&#39;</span>
+    <span class="n">_PARSE_OPTION</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^\s*([^\=]+?)\s*\=\s*(.*?)\s*$&#39;</span>
+    <span class="n">_PARSE_COMMENT</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^\s*[#;]</span><span class="si">{1}</span><span class="s1">\s*(.*?)\s*$&#39;</span>
+    <span class="n">_PARSE_IGNORE</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^\s*$&#39;</span>
 
-    <span class="n">_SECTION_SUB</span> <span class="o">=</span> <span class="s">r&#39;^[a-zA-Z_]+(?:\.?[a-zA-Z0-9_]+)*$&#39;</span>
-    <span class="n">_SECTION_PLAIN</span> <span class="o">=</span> <span class="s">r&#39;^[a-zA-Z_]+[a-zA-Z0-9_]*$&#39;</span>
+    <span class="n">_SECTION_SUB</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^[a-zA-Z_]+(?:\.?[a-zA-Z0-9_]+)*$&#39;</span>
+    <span class="n">_SECTION_PLAIN</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^[a-zA-Z_]+[a-zA-Z0-9_]*$&#39;</span>
 
-    <span class="n">_OPTION</span> <span class="o">=</span> <span class="s">r&#39;^[a-zA-Z_]+[a-zA-Z0-9_]*$&#39;</span>
-    <span class="n">_VALUE</span> <span class="o">=</span> <span class="s">r&#39;^.*$&#39;</span>
+    <span class="n">_OPTION</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^[a-zA-Z_]+[a-zA-Z0-9_]*$&#39;</span>
+    <span class="n">_VALUE</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^.*$&#39;</span>
 
-    <span class="n">_SECTION_SEP</span> <span class="o">=</span> <span class="s">r&#39;.&#39;</span>
-    <span class="n">_OPTION_SEP</span> <span class="o">=</span> <span class="s">r&#39; = &#39;</span>
-    <span class="c"># &quot;{}&quot; will be replaced with the section name by str.format</span>
-    <span class="n">_SECTION_MARKERS</span> <span class="o">=</span> <span class="s">r&#39;[{}]&#39;</span>
-    <span class="n">_COMMENT_MARKER</span> <span class="o">=</span> <span class="s">r&#39;# &#39;</span>
+    <span class="n">_SECTION_SEP</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;.&#39;</span>
+    <span class="n">_OPTION_SEP</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39; = &#39;</span>
+    <span class="c1"># &quot;{}&quot; will be replaced with the section name by str.format</span>
+    <span class="n">_SECTION_MARKERS</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;[</span><span class="si">{}</span><span class="s1">]&#39;</span>
+    <span class="n">_COMMENT_MARKER</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;# &#39;</span>
 
-    <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">=</span> <span class="s">&#39;$&#39;</span>
+    <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">=</span> <span class="s1">&#39;$&#39;</span>
     <span class="n">_INTERPOLATION_SPECIAL_ESC</span> <span class="o">=</span> <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">*</span> <span class="mi">2</span>
-    <span class="n">_INTERPOLATION_START</span> <span class="o">=</span> <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">+</span> <span class="s">&#39;{&#39;</span>
-    <span class="n">_INTERPOLATION_SEP</span> <span class="o">=</span> <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">+</span> <span class="s">&#39;:&#39;</span>
-    <span class="n">_INTERPOLATION_END</span> <span class="o">=</span> <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">+</span> <span class="s">&#39;}&#39;</span>
-    <span class="n">_INTERPOLATION_SPLIT</span> <span class="o">=</span> <span class="p">(</span><span class="s">r&#39;(&#39;</span> <span class="o">+</span> <span class="s">r&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re_</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">mark</span><span class="p">)</span> <span class="k">for</span> <span class="n">mark</span> <span class="ow">in</span> <span class="p">(</span>
+    <span class="n">_INTERPOLATION_START</span> <span class="o">=</span> <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">+</span> <span class="s1">&#39;{&#39;</span>
+    <span class="n">_INTERPOLATION_SEP</span> <span class="o">=</span> <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span>
+    <span class="n">_INTERPOLATION_END</span> <span class="o">=</span> <span class="n">_INTERPOLATION_SPECIAL</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span>
+    <span class="n">_INTERPOLATION_SPLIT</span> <span class="o">=</span> <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re_</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">mark</span><span class="p">)</span> <span class="k">for</span> <span class="n">mark</span> <span class="ow">in</span> <span class="p">(</span>
                             <span class="n">_INTERPOLATION_SPECIAL_ESC</span><span class="p">,</span> <span class="n">_INTERPOLATION_START</span><span class="p">,</span>
-                            <span class="n">_INTERPOLATION_SEP</span><span class="p">,</span> <span class="n">_INTERPOLATION_END</span><span class="p">))</span> <span class="o">+</span> <span class="s">r&#39;)&#39;</span><span class="p">)</span>
+                            <span class="n">_INTERPOLATION_SEP</span><span class="p">,</span> <span class="n">_INTERPOLATION_END</span><span class="p">))</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;)&#39;</span><span class="p">)</span>
 
-    <span class="n">_GET_BOOLEAN_TRUE</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;true&#39;</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="s">&#39;yes&#39;</span><span class="p">,</span> <span class="s">&#39;on&#39;</span><span class="p">,</span> <span class="s">&#39;enabled&#39;</span><span class="p">)</span>
-    <span class="n">_GET_BOOLEAN_FALSE</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;false&#39;</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="s">&#39;off&#39;</span><span class="p">,</span> <span class="s">&#39;disabled&#39;</span><span class="p">)</span>
-    <span class="n">_GET_BOOLEAN_DEFAULT</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_GET_BOOLEAN_TRUE</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;on&#39;</span><span class="p">,</span> <span class="s1">&#39;enabled&#39;</span><span class="p">)</span>
+    <span class="n">_GET_BOOLEAN_FALSE</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="s1">&#39;disabled&#39;</span><span class="p">)</span>
+    <span class="n">_GET_BOOLEAN_DEFAULT</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">_DICT_CLASS</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span>
 
-    <span class="c"># Use lambda to create a new object every time</span>
+    <span class="c1"># Use lambda to create a new object every time</span>
     <span class="n">_EMPTY_SECTION</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">())</span>
 
-<div class="viewcode-block" id="Section.__init__"><a class="viewcode-back" href="../index.html#configfile.Section.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">safe_calls</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                 <span class="n">inherit_options</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">subsections</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Section.__init__"><a class="viewcode-back" href="../index.html#configfile.Section.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">safe_calls</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">inherit_options</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">subsections</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor.</span>
 
@@ -292,7 +284,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_NAME</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_PARENT</span> <span class="o">=</span> <span class="n">parent</span>
-        <span class="c"># TODO: Move constant settings to a Settings class (bug #19)</span>
+        <span class="c1"># TODO: Move constant settings to a Settings class (bug #19)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_SAFE_CALLS</span> <span class="o">=</span> <span class="n">safe_calls</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span> <span class="o">=</span> <span class="n">inherit_options</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ENABLE_SUBSECTIONS</span> <span class="o">=</span> <span class="n">subsections</span>
@@ -303,10 +295,10 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">_SECTION_PLAIN</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">()</span></div>
 
-    <span class="c">### DATA MODEL ###</span>
-</div>
+    <span class="c1">### DATA MODEL ###</span>
+
 <div class="viewcode-block" id="Section.__call__"><a class="viewcode-back" href="../index.html#configfile.Section.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Enables calling directly the object with a string or sequence of</span>
@@ -319,11 +311,11 @@
 <span class="sd">        :param bool safe: If True, when calling a non-existent subsection, its</span>
 <span class="sd">            closest existing ancestor is returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># The Python 3 definition was:</span>
-        <span class="c">#def __call__(self, *path, safe=None):</span>
-        <span class="c"># But to keep compatibility with Python 2 it has been changed to the</span>
-        <span class="c"># current</span>
-        <span class="n">safe</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;safe&#39;</span><span class="p">)</span>
+        <span class="c1"># The Python 3 definition was:</span>
+        <span class="c1">#def __call__(self, *path, safe=None):</span>
+        <span class="c1"># But to keep compatibility with Python 2 it has been changed to the</span>
+        <span class="c1"># current</span>
+        <span class="n">safe</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;safe&#39;</span><span class="p">)</span>
 
         <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span>
 
@@ -331,7 +323,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">lsname</span> <span class="o">=</span> <span class="n">sname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
             <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;Section name must be a string: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Section name must be a string: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                                                                         <span class="n">sname</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_IGNORE_CASE</span><span class="p">:</span>
@@ -349,37 +341,37 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_finalize_call</span><span class="p">(</span><span class="n">safe</span><span class="p">,</span> <span class="n">sname</span><span class="p">)</span>
                     <span class="k">break</span>
 
-        <span class="k">return</span> <span class="n">section</span>
-</div>
+        <span class="k">return</span> <span class="n">section</span></div>
+
 <div class="viewcode-block" id="Section._finalize_call"><a class="viewcode-back" href="../index.html#configfile.Section._finalize_call">[docs]</a>    <span class="k">def</span> <span class="nf">_finalize_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">safe</span><span class="p">,</span> <span class="n">sname</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Auxiliary method for :py:meth:`__call__`.</span>
 
 <span class="sd">        Process a not-found section name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">safe</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">safe</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SAFE_CALLS</span><span class="p">:</span>
                 <span class="k">return</span>
         <span class="k">elif</span> <span class="n">safe</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&#39;Section not found: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sname</span><span class="p">))</span>
-</div>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Section not found: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sname</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="Section.__getitem__"><a class="viewcode-back" href="../index.html#configfile.Section.__getitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the value for the option specified.</span>
 
 <span class="sd">        :param str opt: The name of the option whose value must be returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                          <span class="n">inherit_options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span><span class="p">)</span>
-        <span class="c"># self.get returns None as a fallback value if opt is not found:</span>
-        <span class="c"># however, for compatibility with usual dictionary operations,</span>
-        <span class="c"># __getitem__ should better raise KeyError in this case</span>
-        <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&#39;Option not found: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span>
+        <span class="c1"># self.get returns None as a fallback value if opt is not found:</span>
+        <span class="c1"># however, for compatibility with usual dictionary operations,</span>
+        <span class="c1"># __getitem__ should better raise KeyError in this case</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Option not found: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">item</span>
-</div>
+            <span class="k">return</span> <span class="n">item</span></div>
+
 <div class="viewcode-block" id="Section.__setitem__"><a class="viewcode-back" href="../index.html#configfile.Section.__setitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stores the provided value in the specified option.</span>
@@ -399,10 +391,10 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">opt</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;Value must be a string: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Value must be a string: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;Option name must be a string: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span>
-</div>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Option name must be a string: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="Section.__delitem__"><a class="viewcode-back" href="../index.html#configfile.Section.__delitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes the specified option.</span>
@@ -412,7 +404,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">lopt</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;Option name must be a string: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Option name must be a string: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_IGNORE_CASE</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">:</span>
@@ -420,20 +412,20 @@
                         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">o</span><span class="p">]</span>
                         <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&#39;Option not found: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span>
+                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Option not found: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">opt</span><span class="p">]</span>
                 <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&#39;Option not found: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span>
-</div>
+                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Option not found: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="Section.__iter__"><a class="viewcode-back" href="../index.html#configfile.Section.__iter__">[docs]</a>    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Lets iterate over the options of the section (for example with a for</span>
 <span class="sd">        loop).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">)</span>
-</div>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Section.__contains__"><a class="viewcode-back" href="../index.html#configfile.Section.__contains__">[docs]</a>    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If item is a :py:class:`Section` object, this method returns True if</span>
@@ -448,20 +440,20 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_IGNORE_CASE</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-                    <span class="k">return</span> <span class="bp">True</span>
+                    <span class="k">return</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">False</span>
+                <span class="k">return</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span>
+            <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span></div>
 
-    <span class="c">### IMPORTING DATA ###</span>
-</div>
+    <span class="c1">### IMPORTING DATA ###</span>
+
 <div class="viewcode-block" id="Section.set"><a class="viewcode-back" href="../index.html#configfile.Section.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is an alias for :py:meth:`__setitem__`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="p">[</span><span class="n">opt</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
-</div>
+        <span class="bp">self</span><span class="p">[</span><span class="n">opt</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span></div>
+
 <div class="viewcode-block" id="Section.make_subsection"><a class="viewcode-back" href="../index.html#configfile.Section.make_subsection">[docs]</a>    <span class="k">def</span> <span class="nf">make_subsection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an empty subsection under the current section if it does not</span>
@@ -469,18 +461,18 @@
 
 <span class="sd">        :param str name: The name of the new subsection.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># TODO: Use this method, where possible, when creating new sections in</span>
-        <span class="c">#       the other methods</span>
+        <span class="c1"># TODO: Use this method, where possible, when creating new sections in</span>
+        <span class="c1">#       the other methods</span>
         <span class="n">sub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EMPTY_SECTION</span><span class="p">()</span>
         <span class="n">sub</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EMPTY_SECTION</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_import_object</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_import_object</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Section.delete"><a class="viewcode-back" href="../index.html#configfile.Section.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete the current section.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PARENT</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_NAME</span><span class="p">]</span>
-</div>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PARENT</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_NAME</span><span class="p">]</span></div>
+
 <div class="viewcode-block" id="Section.upgrade"><a class="viewcode-back" href="../index.html#configfile.Section.upgrade">[docs]</a>    <span class="k">def</span> <span class="nf">upgrade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Import sections and options from a file, file-like object, dictionary</span>
@@ -497,13 +489,13 @@
 <span class="sd">            and/or special objects.</span>
 <span class="sd">        :param bool interpolation: Enable/disable value interpolation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Necessary for Python 2 compatibility</span>
-        <span class="c"># The Python 3 definition was:</span>
-        <span class="c">#def upgrade(self, *sources, interpolation=False):</span>
-        <span class="n">interpolation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;interpolation&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="c1"># Necessary for Python 2 compatibility</span>
+        <span class="c1"># The Python 3 definition was:</span>
+        <span class="c1">#def upgrade(self, *sources, interpolation=False):</span>
+        <span class="n">interpolation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;interpolation&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_import</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_import</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Section.update"><a class="viewcode-back" href="../index.html#configfile.Section.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Import sections and options from a file, file-like object, dictionary</span>
@@ -520,13 +512,13 @@
 <span class="sd">            and/or special objects.</span>
 <span class="sd">        :param bool interpolation: Enable/disable value interpolation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Necessary for Python 2 compatibility</span>
-        <span class="c"># The Python 3 definition was:</span>
-        <span class="c">#def upgrade(self, *sources, interpolation=False):</span>
-        <span class="n">interpolation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;interpolation&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="c1"># Necessary for Python 2 compatibility</span>
+        <span class="c1"># The Python 3 definition was:</span>
+        <span class="c1">#def upgrade(self, *sources, interpolation=False):</span>
+        <span class="n">interpolation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;interpolation&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_import</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_import</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Section.reset"><a class="viewcode-back" href="../index.html#configfile.Section.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Import sections and options from a file, file-like object, dictionary</span>
@@ -543,13 +535,13 @@
 <span class="sd">            and/or special objects.</span>
 <span class="sd">        :param bool interpolation: Enable/disable value interpolation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Necessary for Python 2 compatibility</span>
-        <span class="c"># The Python 3 definition was:</span>
-        <span class="c">#def upgrade(self, *sources, interpolation=False):</span>
-        <span class="n">interpolation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;interpolation&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="c1"># Necessary for Python 2 compatibility</span>
+        <span class="c1"># The Python 3 definition was:</span>
+        <span class="c1">#def upgrade(self, *sources, interpolation=False):</span>
+        <span class="n">interpolation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;interpolation&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_import</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_import</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Section.add"><a class="viewcode-back" href="../index.html#configfile.Section.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Import sections and options from a file, file-like object, dictionary</span>
@@ -566,15 +558,15 @@
 <span class="sd">            and/or special objects.</span>
 <span class="sd">        :param bool interpolation: Enable/disable value interpolation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Necessary for Python 2 compatibility</span>
-        <span class="c"># The Python 3 definition was:</span>
-        <span class="c">#def upgrade(self, *sources, interpolation=False):</span>
-        <span class="n">interpolation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;interpolation&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="c1"># Necessary for Python 2 compatibility</span>
+        <span class="c1"># The Python 3 definition was:</span>
+        <span class="c1">#def upgrade(self, *sources, interpolation=False):</span>
+        <span class="n">interpolation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;interpolation&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_import</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="Section._import"><a class="viewcode-back" href="../index.html#configfile.Section._import">[docs]</a>    <span class="k">def</span> <span class="nf">_import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                                                        <span class="n">interpolation</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_import</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Section._import"><a class="viewcode-back" href="../index.html#configfile.Section._import">[docs]</a>    <span class="k">def</span> <span class="nf">_import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                        <span class="n">interpolation</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse some files, file-like objects, dictionaries or special objects</span>
 <span class="sd">        and add their configuration to the existing one.</span>
@@ -600,7 +592,7 @@
 <span class="sd">            importing.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_open_file</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
@@ -614,8 +606,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_import_object</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="n">add</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="n">reset</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">interpolation</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_interpolate</span><span class="p">()</span>
-</div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_interpolate</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="Section._open_file"><a class="viewcode-back" href="../index.html#configfile.Section._open_file">[docs]</a>    <span class="k">def</span> <span class="nf">_open_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfile</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open config file for reading.</span>
@@ -623,15 +615,15 @@
 <span class="sd">        :param str cfile: The name of the file to be parsed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">EnvironmentError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">NonExistentFileError</span><span class="p">(</span><span class="s">&#39;Cannot find {} ({})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="k">raise</span> <span class="n">NonExistentFileError</span><span class="p">(</span><span class="s1">&#39;Cannot find </span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                                                     <span class="n">e</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InvalidFileError</span><span class="p">(</span><span class="s">&#39;Cannot import configuration from {} &#39;</span>
-                                        <span class="s">&#39;({})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">))</span>
-</div>
+                <span class="k">raise</span> <span class="n">InvalidFileError</span><span class="p">(</span><span class="s1">&#39;Cannot import configuration from </span><span class="si">{}</span><span class="s1"> &#39;</span>
+                                        <span class="s1">&#39;(</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="Section._parse_file"><a class="viewcode-back" href="../index.html#configfile.Section._parse_file">[docs]</a>    <span class="k">def</span> <span class="nf">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse a text file and translate it into a compatible object, thus</span>
@@ -644,10 +636,10 @@
             <span class="n">lastsect</span> <span class="o">=</span> <span class="n">cdict</span>
 
             <span class="k">for</span> <span class="n">lno</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
-                <span class="c"># Note that the order the various types are evaluated</span>
-                <span class="c"># matters!</span>
-                <span class="c"># TODO: Really? What about sorting the tests according</span>
-                <span class="c">#       to their likelihood to pass?</span>
+                <span class="c1"># Note that the order the various types are evaluated</span>
+                <span class="c1"># matters!</span>
+                <span class="c1"># TODO: Really? What about sorting the tests according</span>
+                <span class="c1">#       to their likelihood to pass?</span>
 
                 <span class="k">if</span> <span class="n">re_</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_PARSE_IGNORE</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_I</span><span class="p">):</span>
                     <span class="k">continue</span>
@@ -676,11 +668,11 @@
                     <span class="n">lastsect</span> <span class="o">=</span> <span class="n">d</span>
                     <span class="k">continue</span>
 
-                <span class="k">raise</span> <span class="n">ParsingError</span><span class="p">(</span><span class="s">&#39;Invalid line in {}: {} (line {})&#39;</span>
-                                        <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">lno</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="n">ParsingError</span><span class="p">(</span><span class="s1">&#39;Invalid line in </span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1"> (line </span><span class="si">{}</span><span class="s1">)&#39;</span>
+                                        <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">lno</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">cdict</span>
-</div>
+        <span class="k">return</span> <span class="n">cdict</span></div>
+
 <div class="viewcode-block" id="Section._parse_subsections"><a class="viewcode-back" href="../index.html#configfile.Section._parse_subsections">[docs]</a>    <span class="k">def</span> <span class="nf">_parse_subsections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">re</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the sections hierarchy in a section line of a text file and</span>
@@ -691,9 +683,9 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ENABLE_SUBSECTIONS</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_SECTION_SEP</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">)</span>
-</div>
-<div class="viewcode-block" id="Section._import_object"><a class="viewcode-back" href="../index.html#configfile.Section._import_object">[docs]</a>    <span class="k">def</span> <span class="nf">_import_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Section._import_object"><a class="viewcode-back" href="../index.html#configfile.Section._import_object">[docs]</a>    <span class="k">def</span> <span class="nf">_import_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Import sections and options from a compatible object.</span>
 
@@ -740,8 +732,8 @@
 <span class="sd">        :param bool add: Whether non-pre-existing data will be imported.</span>
 <span class="sd">        :param bool reset: Whether pre-existing data will be cleared.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># TODO: Change &quot;reset&quot; mode to &quot;remove&quot; (complementing &quot;overwrite&quot; and</span>
-        <span class="c">#       &quot;add&quot;) (bug #25)</span>
+        <span class="c1"># TODO: Change &quot;reset&quot; mode to &quot;remove&quot; (complementing &quot;overwrite&quot; and</span>
+        <span class="c1">#       &quot;add&quot;) (bug #25)</span>
         <span class="k">if</span> <span class="n">reset</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">()</span>
@@ -753,16 +745,16 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_import_object_option</span><span class="p">(</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">reset</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span>
                                                                     <span class="n">cobj</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">o</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InvalidObjectError</span><span class="p">(</span><span class="s">&#39;Invalid option or value: {}: {}&#39;</span>
-                                                    <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cobj</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">o</span><span class="p">]))</span>
+                <span class="k">raise</span> <span class="n">InvalidObjectError</span><span class="p">(</span><span class="s1">&#39;Invalid option or value: </span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                                                    <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cobj</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">o</span><span class="p">]))</span>
 
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cobj</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re_</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_SECTION</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_I</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_import_object_subsection</span><span class="p">(</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">reset</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span>
                                                                     <span class="n">cobj</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">s</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InvalidObjectError</span><span class="p">(</span><span class="s">&#39;Invalid section name: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-</div>
+                <span class="k">raise</span> <span class="n">InvalidObjectError</span><span class="p">(</span><span class="s1">&#39;Invalid section name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="Section._import_object_option"><a class="viewcode-back" href="../index.html#configfile.Section._import_object_option">[docs]</a>    <span class="k">def</span> <span class="nf">_import_object_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">reset</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Auxiliary method for :py:meth:`_import_object`.</span>
@@ -771,37 +763,37 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">reset</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">opt</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_IGNORE_CASE</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-                    <span class="c"># Don&#39;t even think of merging these two tests</span>
+                    <span class="c1"># Don&#39;t even think of merging these two tests</span>
                     <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">o</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
-                        <span class="k">return</span> <span class="bp">True</span>
+                        <span class="k">return</span> <span class="kc">True</span>
 
                     <span class="k">break</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="c"># Going through the loop above makes sure the option is not yet</span>
-                <span class="c">#  in the section</span>
+                <span class="c1"># Going through the loop above makes sure the option is not yet</span>
+                <span class="c1">#  in the section</span>
                 <span class="k">if</span> <span class="n">add</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">opt</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
-                    <span class="k">return</span> <span class="bp">True</span>
+                    <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">elif</span> <span class="n">opt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">:</span>
-            <span class="c"># Don&#39;t even think of merging these two tests</span>
+            <span class="c1"># Don&#39;t even think of merging these two tests</span>
             <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">opt</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
-                <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">elif</span> <span class="n">add</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">opt</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="k">return</span> <span class="bp">False</span>
-</div>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
 <div class="viewcode-block" id="Section._import_object_subsection"><a class="viewcode-back" href="../index.html#configfile.Section._import_object_subsection">[docs]</a>    <span class="k">def</span> <span class="nf">_import_object_subsection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">reset</span><span class="p">,</span> <span class="n">sec</span><span class="p">,</span> <span class="n">secd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Auxiliary method for :py:meth:`_import_object`.</span>
@@ -810,36 +802,36 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">reset</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_import_object_subsection_create</span><span class="p">(</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">sec</span><span class="p">,</span> <span class="n">secd</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_IGNORE_CASE</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ss</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">sec</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">ss</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-                    <span class="c"># Don&#39;t test overwrite here</span>
+                    <span class="c1"># Don&#39;t test overwrite here</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="n">ss</span><span class="p">]</span><span class="o">.</span><span class="n">_import_object</span><span class="p">(</span><span class="n">secd</span><span class="p">,</span>
                                                 <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="n">add</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="bp">True</span>
+                    <span class="k">return</span> <span class="kc">True</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="c"># Going through the loop above makes sure the section is not</span>
-                <span class="c">#  yet a subsection of the visited section</span>
+                <span class="c1"># Going through the loop above makes sure the section is not</span>
+                <span class="c1">#  yet a subsection of the visited section</span>
                 <span class="k">if</span> <span class="n">add</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_import_object_subsection_create</span><span class="p">(</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">sec</span><span class="p">,</span>
                                                                         <span class="n">secd</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="bp">True</span>
+                    <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">elif</span> <span class="n">sec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">:</span>
-            <span class="c"># Don&#39;t test overwrite here</span>
+            <span class="c1"># Don&#39;t test overwrite here</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="n">sec</span><span class="p">]</span><span class="o">.</span><span class="n">_import_object</span><span class="p">(</span><span class="n">secd</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span>
                                                                     <span class="n">add</span><span class="o">=</span><span class="n">add</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">elif</span> <span class="n">add</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_import_object_subsection_create</span><span class="p">(</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">sec</span><span class="p">,</span> <span class="n">secd</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="k">return</span> <span class="bp">False</span>
-</div>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
 <div class="viewcode-block" id="Section._import_object_subsection_create"><a class="viewcode-back" href="../index.html#configfile.Section._import_object_subsection_create">[docs]</a>    <span class="k">def</span> <span class="nf">_import_object_subsection_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">sec</span><span class="p">,</span> <span class="n">secd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Auxiliary method for :py:meth:`_import_object_subsection`.</span>
@@ -852,8 +844,8 @@
                              <span class="n">subsections</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ENABLE_SUBSECTIONS</span><span class="p">,</span>
                              <span class="n">ignore_case</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_IGNORE_CASE</span><span class="p">)</span>
         <span class="n">subsection</span><span class="o">.</span><span class="n">_import_object</span><span class="p">(</span><span class="n">secd</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="n">add</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="n">sec</span><span class="p">]</span> <span class="o">=</span> <span class="n">subsection</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="n">sec</span><span class="p">]</span> <span class="o">=</span> <span class="n">subsection</span></div>
+
 <div class="viewcode-block" id="Section._interpolate"><a class="viewcode-back" href="../index.html#configfile.Section._interpolate">[docs]</a>    <span class="k">def</span> <span class="nf">_interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interpolate values among different options.</span>
@@ -885,31 +877,31 @@
         <span class="k">for</span> <span class="n">optname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">:</span>
             <span class="n">split</span> <span class="o">=</span> <span class="n">re_</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SPLIT</span><span class="p">,</span>
                               <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">optname</span><span class="p">])</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
-            <span class="n">resolve</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">resolve</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">split</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">resolve</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">resolve</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SPECIAL_ESC</span><span class="p">:</span>
                         <span class="n">value</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SPECIAL</span>
                     <span class="k">elif</span> <span class="n">chunk</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_START</span><span class="p">:</span>
-                        <span class="n">resolve</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">]</span>
+                        <span class="n">resolve</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">value</span> <span class="o">+=</span> <span class="n">chunk</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SPECIAL_ESC</span><span class="p">:</span>
                         <span class="n">resolve</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SPECIAL</span>
                     <span class="k">elif</span> <span class="n">chunk</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SEP</span><span class="p">:</span>
-                        <span class="n">resolve</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+                        <span class="n">resolve</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
                     <span class="k">elif</span> <span class="n">chunk</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_END</span><span class="p">:</span>
                         <span class="n">intoptname</span> <span class="o">=</span> <span class="n">resolve</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">resolve</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                            <span class="c"># TODO: It&#39;s currently not possible to write a</span>
-                            <span class="c">#       reference to a root option?!?</span>
+                            <span class="c1"># TODO: It&#39;s currently not possible to write a</span>
+                            <span class="c1">#       reference to a root option?!?</span>
                             <span class="n">intsection</span> <span class="o">=</span> <span class="bp">self</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="n">resolve</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">resolve</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
                                 <span class="n">intsection</span> <span class="o">=</span> <span class="bp">self</span>
                                 <span class="n">resolve</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
                             <span class="k">else</span><span class="p">:</span>
@@ -917,28 +909,28 @@
                             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">resolve</span><span class="p">:</span>
                                 <span class="n">intsection</span> <span class="o">=</span> <span class="n">intsection</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
 
-                        <span class="c"># Use get(intoptname) instead of _options[intoptname]</span>
-                        <span class="c"># so that options are properly inherited if the object</span>
-                        <span class="c"># is configured to do so</span>
+                        <span class="c1"># Use get(intoptname) instead of _options[intoptname]</span>
+                        <span class="c1"># so that options are properly inherited if the object</span>
+                        <span class="c1"># is configured to do so</span>
                         <span class="n">value</span> <span class="o">+=</span> <span class="n">intsection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">intoptname</span><span class="p">)</span>
-                        <span class="n">resolve</span> <span class="o">=</span> <span class="bp">None</span>
+                        <span class="n">resolve</span> <span class="o">=</span> <span class="kc">None</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">resolve</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">chunk</span>
 
-            <span class="k">if</span> <span class="n">resolve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="c"># The last interpolation wasn&#39;t closed, so interpret it as a</span>
-                <span class="c"># normal string</span>
+            <span class="k">if</span> <span class="n">resolve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># The last interpolation wasn&#39;t closed, so interpret it as a</span>
+                <span class="c1"># normal string</span>
                 <span class="n">value</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_START</span> <span class="o">+</span> \
                          <span class="bp">self</span><span class="o">.</span><span class="n">_INTERPOLATION_SEP</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">resolve</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">optname</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
         <span class="k">for</span> <span class="n">secname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="n">secname</span><span class="p">]</span><span class="o">.</span><span class="n">_interpolate</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="n">secname</span><span class="p">]</span><span class="o">.</span><span class="n">_interpolate</span><span class="p">()</span></div>
 
-    <span class="c">### EXPORTING DATA ###</span>
-</div>
-<div class="viewcode-block" id="Section.get"><a class="viewcode-back" href="../index.html#configfile.Section.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c1">### EXPORTING DATA ###</span>
+
+<div class="viewcode-block" id="Section.get"><a class="viewcode-back" href="../index.html#configfile.Section.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the value for the option specified.</span>
 
@@ -952,7 +944,7 @@
 <span class="sd">            this can be set as a default for the object, but this setting</span>
 <span class="sd">            overwrites it only for this call.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -968,14 +960,14 @@
                         <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">o</span><span class="p">]</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="c"># Note that if fallback is not specified, this returns None</span>
-                <span class="c"># which is not a string as expected</span>
+                <span class="c1"># Note that if fallback is not specified, this returns None</span>
+                <span class="c1"># which is not a string as expected</span>
                 <span class="k">return</span> <span class="n">fallback</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;Option name must be a string: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span>
-</div>
-<div class="viewcode-block" id="Section.get_str"><a class="viewcode-back" href="../index.html#configfile.Section.get_str">[docs]</a>    <span class="k">def</span> <span class="nf">get_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Option name must be a string: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Section.get_str"><a class="viewcode-back" href="../index.html#configfile.Section.get_str">[docs]</a>    <span class="k">def</span> <span class="nf">get_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is an alias for :py:meth:`get`.</span>
 
@@ -991,13 +983,13 @@
 <span class="sd">            this can be set as a default for the object, but this setting</span>
 <span class="sd">            overwrites it only for this call.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="n">fallback</span><span class="p">,</span>
-                                              <span class="n">inherit_options</span><span class="o">=</span><span class="n">inherit_options</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="Section.get_int"><a class="viewcode-back" href="../index.html#configfile.Section.get_int">[docs]</a>    <span class="k">def</span> <span class="nf">get_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                                              <span class="n">inherit_options</span><span class="o">=</span><span class="n">inherit_options</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Section.get_int"><a class="viewcode-back" href="../index.html#configfile.Section.get_int">[docs]</a>    <span class="k">def</span> <span class="nf">get_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method tries to return an integer from the value of an option.</span>
 
@@ -1011,13 +1003,13 @@
 <span class="sd">            this can be set as a default for the object, but this setting</span>
 <span class="sd">            overwrites it only for this call.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
 
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="n">fallback</span><span class="p">,</span>
-                                             <span class="n">inherit_options</span><span class="o">=</span><span class="n">inherit_options</span><span class="p">))</span>
-</div>
-<div class="viewcode-block" id="Section.get_float"><a class="viewcode-back" href="../index.html#configfile.Section.get_float">[docs]</a>    <span class="k">def</span> <span class="nf">get_float</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                                             <span class="n">inherit_options</span><span class="o">=</span><span class="n">inherit_options</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Section.get_float"><a class="viewcode-back" href="../index.html#configfile.Section.get_float">[docs]</a>    <span class="k">def</span> <span class="nf">get_float</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method tries to return a float from the value of an option.</span>
 
@@ -1031,14 +1023,14 @@
 <span class="sd">            this can be set as a default for the object, but this setting</span>
 <span class="sd">            overwrites it only for this call.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
 
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="n">fallback</span><span class="p">,</span>
-                                             <span class="n">inherit_options</span><span class="o">=</span><span class="n">inherit_options</span><span class="p">))</span>
-</div>
-<div class="viewcode-block" id="Section.get_bool"><a class="viewcode-back" href="../index.html#configfile.Section.get_bool">[docs]</a>    <span class="k">def</span> <span class="nf">get_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">true</span><span class="o">=</span><span class="p">(),</span> <span class="n">false</span><span class="o">=</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                                                         <span class="n">inherit_options</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                                             <span class="n">inherit_options</span><span class="o">=</span><span class="n">inherit_options</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Section.get_bool"><a class="viewcode-back" href="../index.html#configfile.Section.get_bool">[docs]</a>    <span class="k">def</span> <span class="nf">get_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">true</span><span class="o">=</span><span class="p">(),</span> <span class="n">false</span><span class="o">=</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                         <span class="n">inherit_options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method tries to return a boolean status (True or False) from the</span>
 <span class="sd">        value of an option.</span>
@@ -1060,28 +1052,28 @@
 <span class="sd">        Note that the characters in the strings are compared in lowercase, so</span>
 <span class="sd">        there is no need to specify all casing variations of a string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># TODO: Use default values in definition with Settings class (bug #19)</span>
+        <span class="c1"># TODO: Use default values in definition with Settings class (bug #19)</span>
         <span class="k">if</span> <span class="n">true</span> <span class="o">==</span> <span class="p">():</span>
             <span class="n">true</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_GET_BOOLEAN_TRUE</span>
         <span class="k">if</span> <span class="n">false</span> <span class="o">==</span> <span class="p">():</span>
             <span class="n">false</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_GET_BOOLEAN_FALSE</span>
-        <span class="k">if</span> <span class="n">default</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">default</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="n">default</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_GET_BOOLEAN_DEFAULT</span>
-        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
 
         <span class="n">v</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="n">fallback</span><span class="p">,</span>
                                       <span class="n">inherit_options</span><span class="o">=</span><span class="n">inherit_options</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">true</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">elif</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">false</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">False</span>
-        <span class="k">elif</span> <span class="n">default</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">default</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">default</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Unrecognized boolean status: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                                                    <span class="bp">self</span><span class="p">[</span><span class="n">opt</span><span class="p">]))</span>
-</div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unrecognized boolean status: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                                                    <span class="bp">self</span><span class="p">[</span><span class="n">opt</span><span class="p">]))</span></div>
+
 <div class="viewcode-block" id="Section._get_ancestors"><a class="viewcode-back" href="../index.html#configfile.Section._get_ancestors">[docs]</a>    <span class="k">def</span> <span class="nf">_get_ancestors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a list with the ancestors of the current section, but not the</span>
@@ -1094,25 +1086,25 @@
             <span class="n">slist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
             <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">_PARENT</span>
 
-        <span class="k">return</span> <span class="n">slist</span>
-</div>
+        <span class="k">return</span> <span class="n">slist</span></div>
+
 <div class="viewcode-block" id="Section._get_descendants"><a class="viewcode-back" href="../index.html#configfile.Section._get_descendants">[docs]</a>    <span class="k">def</span> <span class="nf">_get_descendants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a list with the descendants of the current section, but not the</span>
 <span class="sd">        current section itself.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Don&#39;t do `slist = self._subsections.values()` because the descendants</span>
-        <span class="c">#  for each subsection must be appended after the proper subsection,</span>
-        <span class="c">#  not at the end of the list</span>
+        <span class="c1"># Don&#39;t do `slist = self._subsections.values()` because the descendants</span>
+        <span class="c1">#  for each subsection must be appended after the proper subsection,</span>
+        <span class="c1">#  not at the end of the list</span>
         <span class="n">slist</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">slist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
             <span class="n">slist</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">_get_descendants</span><span class="p">())</span>
 
-        <span class="k">return</span> <span class="n">slist</span>
-</div>
-<div class="viewcode-block" id="Section.get_options"><a class="viewcode-back" href="../index.html#configfile.Section.get_options">[docs]</a>    <span class="k">def</span> <span class="nf">get_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">slist</span></div>
+
+<div class="viewcode-block" id="Section.get_options"><a class="viewcode-back" href="../index.html#configfile.Section.get_options">[docs]</a>    <span class="k">def</span> <span class="nf">get_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a dictionary with a copy of option names as keys and their</span>
 <span class="sd">        values as values.</span>
@@ -1123,7 +1115,7 @@
 <span class="sd">            parent sections; note that this can be set as a default for the</span>
 <span class="sd">            object, but this setting overwrites it only for this call.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">inherit_options</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="n">inherit_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_INHERIT_OPTIONS</span>
 
         <span class="k">if</span> <span class="n">ordered</span><span class="p">:</span>
@@ -1139,18 +1131,18 @@
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">slist</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">_options</span><span class="p">:</span>
                 <span class="n">d</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="n">o</span><span class="p">][:])</span>
-                <span class="c"># There should be no need to check _IGNORE_CASE, in fact it has</span>
-                <span class="c"># already been done at importing time</span>
+                <span class="c1"># There should be no need to check _IGNORE_CASE, in fact it has</span>
+                <span class="c1"># already been done at importing time</span>
 
-        <span class="k">return</span> <span class="n">d</span>
-</div>
+        <span class="k">return</span> <span class="n">d</span></div>
+
 <div class="viewcode-block" id="Section.get_sections"><a class="viewcode-back" href="../index.html#configfile.Section.get_sections">[docs]</a>    <span class="k">def</span> <span class="nf">get_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a view of the names of the child sections.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-</div>
-<div class="viewcode-block" id="Section.get_tree"><a class="viewcode-back" href="../index.html#configfile.Section.get_tree">[docs]</a>    <span class="k">def</span> <span class="nf">get_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Section.get_tree"><a class="viewcode-back" href="../index.html#configfile.Section.get_tree">[docs]</a>    <span class="k">def</span> <span class="nf">get_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a compatible object with options and subsections.</span>
 
@@ -1176,13 +1168,13 @@
                 <span class="n">n</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">_NAME</span>
                 <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">_PARENT</span>
 
-        <span class="k">return</span> <span class="n">d</span>
-</div>
-<div class="viewcode-block" id="Section._recurse_tree"><a class="viewcode-back" href="../index.html#configfile.Section._recurse_tree">[docs]</a>    <span class="k">def</span> <span class="nf">_recurse_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="Section._recurse_tree"><a class="viewcode-back" href="../index.html#configfile.Section._recurse_tree">[docs]</a>    <span class="k">def</span> <span class="nf">_recurse_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Auxiliary recursor for :py:meth:`get_tree`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_options</span><span class="p">(</span><span class="n">ordered</span><span class="o">=</span><span class="n">ordered</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_options</span><span class="p">(</span><span class="n">ordered</span><span class="o">=</span><span class="n">ordered</span><span class="p">,</span> <span class="n">inherit_options</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ordered</span><span class="p">:</span>
             <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">())</span>
@@ -1192,10 +1184,10 @@
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">:</span>
             <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">_recurse_tree</span><span class="p">(</span><span class="n">ordered</span><span class="o">=</span><span class="n">ordered</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">d</span>
-</div>
-<div class="viewcode-block" id="Section._export"><a class="viewcode-back" href="../index.html#configfile.Section._export">[docs]</a>    <span class="k">def</span> <span class="nf">_export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                                                                    <span class="n">path</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="Section._export"><a class="viewcode-back" href="../index.html#configfile.Section._export">[docs]</a>    <span class="k">def</span> <span class="nf">_export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                                    <span class="n">path</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export the configuration to one or more files.</span>
 
@@ -1207,12 +1199,12 @@
 <span class="sd">        :param  bool path: If True, section names are exported with their full</span>
 <span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># TODO: Change &quot;reset&quot; mode to &quot;remove&quot; (complementing &quot;overwrite&quot; and</span>
-        <span class="c">#       &quot;add&quot;) (bug #25)</span>
+        <span class="c1"># TODO: Change &quot;reset&quot; mode to &quot;remove&quot; (complementing &quot;overwrite&quot; and</span>
+        <span class="c1">#       &quot;add&quot;) (bug #25)</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_export_file</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="n">add</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="n">reset</span><span class="p">,</span>
-                                                                    <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
-</div>
+                                                                    <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Section.export_upgrade"><a class="viewcode-back" href="../index.html#configfile.Section.export_upgrade">[docs]</a>    <span class="k">def</span> <span class="nf">export_upgrade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">targets</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export sections and options to one or more files with upgrade mode.</span>
@@ -1228,13 +1220,13 @@
 <span class="sd">        :param bool path: If True, section names are exported with their full</span>
 <span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Necessary for Python 2 compatibility</span>
-        <span class="c"># The Python 3 definition was:</span>
-        <span class="c">#def export_upgrade(self, *targets, path=True):</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="c1"># Necessary for Python 2 compatibility</span>
+        <span class="c1"># The Python 3 definition was:</span>
+        <span class="c1">#def export_upgrade(self, *targets, path=True):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_export</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_export</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Section.export_update"><a class="viewcode-back" href="../index.html#configfile.Section.export_update">[docs]</a>    <span class="k">def</span> <span class="nf">export_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">targets</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export sections and options to one or more files with update mode.</span>
@@ -1250,13 +1242,13 @@
 <span class="sd">        :param bool path: If True, section names are exported with their full</span>
 <span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Necessary for Python 2 compatibility</span>
-        <span class="c"># The Python 3 definition was:</span>
-        <span class="c">#def export_upgrade(self, *targets, path=True):</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="c1"># Necessary for Python 2 compatibility</span>
+        <span class="c1"># The Python 3 definition was:</span>
+        <span class="c1">#def export_upgrade(self, *targets, path=True):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_export</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_export</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Section.export_reset"><a class="viewcode-back" href="../index.html#configfile.Section.export_reset">[docs]</a>    <span class="k">def</span> <span class="nf">export_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">targets</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export sections and options to one or more files with reset mode.</span>
@@ -1272,13 +1264,13 @@
 <span class="sd">        :param bool path: If True, section names are exported with their full</span>
 <span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Necessary for Python 2 compatibility</span>
-        <span class="c"># The Python 3 definition was:</span>
-        <span class="c">#def export_upgrade(self, *targets, path=True):</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="c1"># Necessary for Python 2 compatibility</span>
+        <span class="c1"># The Python 3 definition was:</span>
+        <span class="c1">#def export_upgrade(self, *targets, path=True):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_export</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_export</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Section.export_add"><a class="viewcode-back" href="../index.html#configfile.Section.export_add">[docs]</a>    <span class="k">def</span> <span class="nf">export_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">targets</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export sections and options to one or more files with add mode.</span>
@@ -1294,15 +1286,15 @@
 <span class="sd">        :param bool path: If True, section names are exported with their full</span>
 <span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Necessary for Python 2 compatibility</span>
-        <span class="c"># The Python 3 definition was:</span>
-        <span class="c">#def export_upgrade(self, *targets, path=True):</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="c1"># Necessary for Python 2 compatibility</span>
+        <span class="c1"># The Python 3 definition was:</span>
+        <span class="c1">#def export_upgrade(self, *targets, path=True):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_export</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="Section._export_file"><a class="viewcode-back" href="../index.html#configfile.Section._export_file">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfile</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                                                                    <span class="n">path</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_export</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Section._export_file"><a class="viewcode-back" href="../index.html#configfile.Section._export_file">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfile</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                                    <span class="n">path</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export the sections tree to a file.</span>
 
@@ -1314,12 +1306,12 @@
 <span class="sd">            path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
                 <span class="n">lines</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
             <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c"># Exclude leading blank lines</span>
+            <span class="c1"># Exclude leading blank lines</span>
             <span class="k">for</span> <span class="n">lineN</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">re_</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_PARSE_IGNORE</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_I</span><span class="p">):</span>
                     <span class="n">lines</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">lineN</span><span class="p">:]</span>
@@ -1327,27 +1319,27 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
             <span class="n">BASE_SECTION</span> <span class="o">=</span> <span class="bp">self</span>
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">ROOT_SECTION</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ancestors</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
                 <span class="n">ROOT_SECTION</span> <span class="o">=</span> <span class="bp">self</span>
-                <span class="n">readonly_section</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="n">readonly_section</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">remaining_descendants</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
-                    <span class="n">readonly_section</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="n">readonly_section</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="n">remaining_descendants</span> <span class="o">=</span> <span class="p">[</span><span class="n">BASE_SECTION</span><span class="p">,</span> <span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c"># The options without a section (i.e. at the top of the</span>
-                    <span class="c">#  file) must be considered part of the current section if</span>
-                    <span class="c">#  path is False</span>
-                    <span class="n">readonly_section</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="c1"># The options without a section (i.e. at the top of the</span>
+                    <span class="c1">#  file) must be considered part of the current section if</span>
+                    <span class="c1">#  path is False</span>
+                    <span class="n">readonly_section</span> <span class="o">=</span> <span class="kc">False</span>
                     <span class="n">remaining_descendants</span> <span class="o">=</span> <span class="p">[]</span>
 
-            <span class="n">remaining_options</span> <span class="o">=</span> <span class="n">BASE_SECTION</span><span class="o">.</span><span class="n">get_options</span><span class="p">(</span><span class="n">inherit_options</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="n">remaining_options</span> <span class="o">=</span> <span class="n">BASE_SECTION</span><span class="o">.</span><span class="n">get_options</span><span class="p">(</span><span class="n">inherit_options</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">remaining_descendants</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">BASE_SECTION</span><span class="o">.</span><span class="n">_get_descendants</span><span class="p">())</span>
             <span class="n">other_lines</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1355,7 +1347,7 @@
                 <span class="n">re_option</span> <span class="o">=</span> <span class="n">re_</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_PARSE_OPTION</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_I</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">re_option</span><span class="p">:</span>
-                    <span class="c"># This also changes other_lines in place</span>
+                    <span class="c1"># This also changes other_lines in place</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_export_other_lines</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">other_lines</span><span class="p">,</span>
                                                     <span class="n">readonly_section</span><span class="p">,</span> <span class="n">reset</span><span class="p">)</span>
 
@@ -1371,11 +1363,11 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">_export_file_remaining_options</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span>
                                         <span class="n">readonly_section</span><span class="p">,</span> <span class="n">remaining_options</span><span class="p">)</span>
 
-                    <span class="c"># This also changes other_lines in place</span>
+                    <span class="c1"># This also changes other_lines in place</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_export_other_lines_before_existing_section</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span>
                                         <span class="n">other_lines</span><span class="p">,</span> <span class="n">readonly_section</span><span class="p">,</span> <span class="n">reset</span><span class="p">)</span>
 
-                    <span class="c"># This also changes remaining_descendants in place</span>
+                    <span class="c1"># This also changes remaining_descendants in place</span>
                     <span class="p">(</span><span class="n">readonly_section</span><span class="p">,</span> <span class="n">remaining_options</span><span class="p">)</span> <span class="o">=</span> \
                                             <span class="bp">self</span><span class="o">.</span><span class="n">_export_file_existing_section</span><span class="p">(</span>
                                             <span class="n">stream</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">re_section</span><span class="p">,</span>
@@ -1383,27 +1375,27 @@
                                             <span class="n">remaining_descendants</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
                     <span class="k">continue</span>
 
-                <span class="c"># Comments, ignored/invalid lines</span>
+                <span class="c1"># Comments, ignored/invalid lines</span>
                 <span class="n">other_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">add</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_export_file_remaining_options</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">readonly_section</span><span class="p">,</span>
                                                             <span class="n">remaining_options</span><span class="p">)</span>
 
-            <span class="c"># Don&#39;t use _export_other_lines_before_existing_section here</span>
-            <span class="c">#  because any pre-existing unrecognized lines must be restored in</span>
-            <span class="c">#  any case, and since they&#39;re at the end of the original file,</span>
-            <span class="c">#  they weren&#39;t meant to separate any further sections, so let</span>
-            <span class="c">#  _export_file_remaining_sections handle the addition of a blank</span>
-            <span class="c">#  line</span>
-            <span class="c"># This also changes other_lines in place</span>
+            <span class="c1"># Don&#39;t use _export_other_lines_before_existing_section here</span>
+            <span class="c1">#  because any pre-existing unrecognized lines must be restored in</span>
+            <span class="c1">#  any case, and since they&#39;re at the end of the original file,</span>
+            <span class="c1">#  they weren&#39;t meant to separate any further sections, so let</span>
+            <span class="c1">#  _export_file_remaining_sections handle the addition of a blank</span>
+            <span class="c1">#  line</span>
+            <span class="c1"># This also changes other_lines in place</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_export_other_lines</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">other_lines</span><span class="p">,</span> <span class="n">readonly_section</span><span class="p">,</span>
                                                                         <span class="n">reset</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">add</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_export_file_remaining_sections</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">BASE_SECTION</span><span class="p">,</span>
-                                                <span class="n">remaining_descendants</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-</div>
+                                                <span class="n">remaining_descendants</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Section._export_file_existing_option"><a class="viewcode-back" href="../index.html#configfile.Section._export_file_existing_option">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_existing_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">re_option</span><span class="p">,</span>
                         <span class="n">readonly_section</span><span class="p">,</span> <span class="n">remaining_options</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">reset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1413,7 +1405,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">readonly_section</span><span class="p">:</span>
             <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_IGNORE_CASE</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">remaining_options</span><span class="p">:</span>
@@ -1422,16 +1414,16 @@
 
                 <span class="k">if</span> <span class="n">fkey</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">option</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
                     <span class="k">if</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">fvalue</span> <span class="o">!=</span> <span class="n">remaining_options</span><span class="p">[</span><span class="n">option</span><span class="p">]:</span>
-                        <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">fkey</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_OPTION_SEP</span><span class="p">,</span>
-                                            <span class="n">remaining_options</span><span class="p">[</span><span class="n">option</span><span class="p">],</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)))</span>
+                        <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">fkey</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_OPTION_SEP</span><span class="p">,</span>
+                                            <span class="n">remaining_options</span><span class="p">[</span><span class="n">option</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)))</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
                     <span class="k">del</span> <span class="n">remaining_options</span><span class="p">[</span><span class="n">option</span><span class="p">]</span>
 
-                    <span class="c"># There shouldn&#39;t be more occurrences of this option (even</span>
-                    <span class="c">#  with different casing)</span>
-                    <span class="k">return</span> <span class="bp">True</span>
+                    <span class="c1"># There shouldn&#39;t be more occurrences of this option (even</span>
+                    <span class="c1">#  with different casing)</span>
+                    <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fkey</span> <span class="o">=</span> <span class="n">re_option</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -1439,21 +1431,21 @@
 
             <span class="k">if</span> <span class="n">fkey</span> <span class="ow">in</span> <span class="n">remaining_options</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">remaining_options</span><span class="p">[</span><span class="n">fkey</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fvalue</span><span class="p">:</span>
-                    <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">fkey</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_OPTION_SEP</span><span class="p">,</span>
-                                            <span class="n">remaining_options</span><span class="p">[</span><span class="n">fkey</span><span class="p">],</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)))</span>
+                    <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">fkey</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_OPTION_SEP</span><span class="p">,</span>
+                                            <span class="n">remaining_options</span><span class="p">[</span><span class="n">fkey</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)))</span>
 
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
                 <span class="k">del</span> <span class="n">remaining_options</span><span class="p">[</span><span class="n">fkey</span><span class="p">]</span>
-                <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">reset</span><span class="p">:</span>
             <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="k">return</span> <span class="bp">False</span>
-</div>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
 <div class="viewcode-block" id="Section._export_file_remaining_options"><a class="viewcode-back" href="../index.html#configfile.Section._export_file_remaining_options">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_remaining_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">readonly_section</span><span class="p">,</span>
                                                             <span class="n">remaining_options</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1464,9 +1456,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">readonly_section</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">remaining_options</span><span class="p">:</span>
-                <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">option</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_OPTION_SEP</span><span class="p">,</span>
-                                            <span class="n">remaining_options</span><span class="p">[</span><span class="n">option</span><span class="p">],</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)))</span>
-</div>
+                <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">option</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_OPTION_SEP</span><span class="p">,</span>
+                                            <span class="n">remaining_options</span><span class="p">[</span><span class="n">option</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)))</span></div>
+
 <div class="viewcode-block" id="Section._export_file_existing_section"><a class="viewcode-back" href="../index.html#configfile.Section._export_file_existing_section">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_existing_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">re_section</span><span class="p">,</span>
                     <span class="n">ROOT_SECTION</span><span class="p">,</span> <span class="n">BASE_SECTION</span><span class="p">,</span> <span class="n">remaining_descendants</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1485,9 +1477,9 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">current_section</span> <span class="o">=</span> <span class="n">current_section</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="c"># The currently parsed section is not in the configuration</span>
-                <span class="c">#  object</span>
-                <span class="n">readonly_section</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="c1"># The currently parsed section is not in the configuration</span>
+                <span class="c1">#  object</span>
+                <span class="n">readonly_section</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">remaining_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">()</span>
                 <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1495,22 +1487,22 @@
             <span class="n">alist</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">current_section</span><span class="o">.</span><span class="n">_get_ancestors</span><span class="p">())</span>
 
             <span class="k">if</span> <span class="n">BASE_SECTION</span> <span class="ow">in</span> <span class="n">alist</span><span class="p">:</span>
-                <span class="n">readonly_section</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="n">readonly_section</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">remaining_options</span> <span class="o">=</span> <span class="n">current_section</span><span class="o">.</span><span class="n">get_options</span><span class="p">(</span>
-                                                        <span class="n">inherit_options</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                                                        <span class="n">inherit_options</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="n">remaining_descendants</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">current_section</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">readonly_section</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">readonly_section</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">remaining_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DICT_CLASS</span><span class="p">()</span>
 
-        <span class="c"># TODO: If reset (which for all the other modes by default is &quot;deep&quot;,</span>
-        <span class="c">#       i.e. it must affect the subsections too) this section and all</span>
-        <span class="c">#       the other &quot;old&quot; subsections must be removed from the file</span>
-        <span class="c">#       (bug #22)</span>
+        <span class="c1"># TODO: If reset (which for all the other modes by default is &quot;deep&quot;,</span>
+        <span class="c1">#       i.e. it must affect the subsections too) this section and all</span>
+        <span class="c1">#       the other &quot;old&quot; subsections must be removed from the file</span>
+        <span class="c1">#       (bug #22)</span>
         <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">(</span><span class="n">readonly_section</span><span class="p">,</span> <span class="n">remaining_options</span><span class="p">)</span>
-</div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">readonly_section</span><span class="p">,</span> <span class="n">remaining_options</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Section._export_file_remaining_sections"><a class="viewcode-back" href="../index.html#configfile.Section._export_file_remaining_sections">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_remaining_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">BASE_SECTION</span><span class="p">,</span>
                                                 <span class="n">remaining_descendants</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1519,8 +1511,8 @@
 <span class="sd">        Write the sections and their options from the origin object that</span>
 <span class="sd">        were not found in the destination file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Do not add an empty line if at the start of the file</span>
-        <span class="n">BR</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="k">if</span> <span class="n">stream</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+        <span class="c1"># Do not add an empty line if at the start of the file</span>
+        <span class="n">BR</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">stream</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">remaining_descendants</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">_options</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -1534,19 +1526,19 @@
 
                 <span class="n">ancestors</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
 
-                <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">BR</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SECTION_MARKERS</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">BR</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SECTION_MARKERS</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                                 <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_SECTION_SEP</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ancestors</span><span class="p">)))</span>
 
                 <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">section</span><span class="o">.</span><span class="n">_options</span><span class="p">:</span>
-                    <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">option</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_OPTION_SEP</span><span class="p">,</span>
-                                                    <span class="n">section</span><span class="p">[</span><span class="n">option</span><span class="p">],</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)))</span>
+                    <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">option</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_OPTION_SEP</span><span class="p">,</span>
+                                                    <span class="n">section</span><span class="p">[</span><span class="n">option</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)))</span>
 
-                <span class="c"># All the subsequent sections will need a blank line in any</span>
-                <span class="c">#  case (do not add a double line break after the last option</span>
-                <span class="c">#  because the last option of the last section must have only</span>
-                <span class="c">#  one break)</span>
-                <span class="n">BR</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
-</div>
+                <span class="c1"># All the subsequent sections will need a blank line in any</span>
+                <span class="c1">#  case (do not add a double line break after the last option</span>
+                <span class="c1">#  because the last option of the last section must have only</span>
+                <span class="c1">#  one break)</span>
+                <span class="n">BR</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+
 <div class="viewcode-block" id="Section._export_other_lines"><a class="viewcode-back" href="../index.html#configfile.Section._export_other_lines">[docs]</a>    <span class="k">def</span> <span class="nf">_export_other_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">other_lines</span><span class="p">,</span> <span class="n">readonly_section</span><span class="p">,</span>
                                                                         <span class="n">reset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1555,8 +1547,8 @@
         <span class="k">if</span> <span class="n">readonly_section</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">reset</span><span class="p">:</span>
             <span class="n">stream</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">other_lines</span><span class="p">)</span>
 
-        <span class="n">other_lines</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[]</span>
-</div>
+        <span class="n">other_lines</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[]</span></div>
+
 <div class="viewcode-block" id="Section._export_other_lines_before_existing_section"><a class="viewcode-back" href="../index.html#configfile.Section._export_other_lines_before_existing_section">[docs]</a>    <span class="k">def</span> <span class="nf">_export_other_lines_before_existing_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">other_lines</span><span class="p">,</span>
                                                     <span class="n">readonly_section</span><span class="p">,</span> <span class="n">reset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1565,11 +1557,11 @@
         <span class="k">if</span> <span class="n">readonly_section</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">reset</span><span class="p">:</span>
             <span class="n">stream</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">other_lines</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">stream</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+            <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="n">other_lines</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">other_lines</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[]</span></div></div>
 
-</div></div>
+
 <div class="viewcode-block" id="ConfigFile"><a class="viewcode-back" href="../index.html#configfile.ConfigFile">[docs]</a><span class="k">class</span> <span class="nc">ConfigFile</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The main configuration object.</span>
@@ -1600,26 +1592,26 @@
 <span class="sd">            once at importing: all links among options will be lost after</span>
 <span class="sd">            importing.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># The Python 3 definition was:</span>
-        <span class="c">#def __init__(self,</span>
-        <span class="c">#             *sources,</span>
-        <span class="c">#             mode=&#39;upgrade&#39;,</span>
-        <span class="c">#             safe_calls=False,</span>
-        <span class="c">#             inherit_options=False,</span>
-        <span class="c">#             subsections=True,</span>
-        <span class="c">#             ignore_case=True,</span>
-        <span class="c">#             interpolation=False):</span>
-        <span class="c"># But to keep compatibility with Python 2 it has been changed to the</span>
-        <span class="c"># current</span>
-        <span class="n">mode</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;mode&#39;</span><span class="p">,</span> <span class="s">&#39;upgrade&#39;</span><span class="p">)</span>
-        <span class="n">safe_calls</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;safe_calls&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-        <span class="n">inherit_options</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;inherit_options&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-        <span class="n">subsections</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;subsections&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
-        <span class="n">ignore_case</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ignore_case&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
-        <span class="n">interpolation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;interpolation&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="c1"># The Python 3 definition was:</span>
+        <span class="c1">#def __init__(self,</span>
+        <span class="c1">#             *sources,</span>
+        <span class="c1">#             mode=&#39;upgrade&#39;,</span>
+        <span class="c1">#             safe_calls=False,</span>
+        <span class="c1">#             inherit_options=False,</span>
+        <span class="c1">#             subsections=True,</span>
+        <span class="c1">#             ignore_case=True,</span>
+        <span class="c1">#             interpolation=False):</span>
+        <span class="c1"># But to keep compatibility with Python 2 it has been changed to the</span>
+        <span class="c1"># current</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="s1">&#39;upgrade&#39;</span><span class="p">)</span>
+        <span class="n">safe_calls</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;safe_calls&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">inherit_options</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;inherit_options&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">subsections</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;subsections&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">ignore_case</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ignore_case&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">interpolation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;interpolation&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="c"># Root section</span>
-        <span class="n">Section</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+        <span class="c1"># Root section</span>
+        <span class="n">Section</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                             <span class="n">safe_calls</span><span class="o">=</span><span class="n">safe_calls</span><span class="p">,</span>
                                             <span class="n">inherit_options</span><span class="o">=</span><span class="n">inherit_options</span><span class="p">,</span>
                                             <span class="n">subsections</span><span class="o">=</span><span class="n">subsections</span><span class="p">,</span>
@@ -1627,48 +1619,48 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">reset</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s">&quot;upgrade&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span>
-                <span class="s">&quot;update&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span>
-                <span class="s">&quot;reset&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span>
-                <span class="s">&quot;add&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span>
+                <span class="s2">&quot;upgrade&quot;</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                <span class="s2">&quot;update&quot;</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                <span class="s2">&quot;reset&quot;</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                <span class="s2">&quot;add&quot;</span><span class="p">:</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
             <span class="p">}[</span><span class="n">mode</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Unrecognized importing mode: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mode</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unrecognized importing mode: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mode</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_import</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="n">add</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="n">reset</span><span class="p">,</span>
-                                                <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">)</span>
+                                                <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">)</span></div></div>
 
 
-<span class="c">### EXCEPTIONS ###</span>
-</div></div>
+<span class="c1">### EXCEPTIONS ###</span>
+
 <div class="viewcode-block" id="ConfigFileError"><a class="viewcode-back" href="../index.html#configfile.ConfigFileError">[docs]</a><span class="k">class</span> <span class="nc">ConfigFileError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The root exception, useful for catching generic errors from this module.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
+    <span class="k">pass</span></div>
 
-</div>
+
 <div class="viewcode-block" id="ParsingError"><a class="viewcode-back" href="../index.html#configfile.ParsingError">[docs]</a><span class="k">class</span> <span class="nc">ParsingError</span><span class="p">(</span><span class="n">ConfigFileError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An error, overcome at parse time, due to bad file formatting.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
+    <span class="k">pass</span></div>
 
-</div>
+
 <div class="viewcode-block" id="NonExistentFileError"><a class="viewcode-back" href="../index.html#configfile.NonExistentFileError">[docs]</a><span class="k">class</span> <span class="nc">NonExistentFileError</span><span class="p">(</span><span class="n">ConfigFileError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A non-existent configuration file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
+    <span class="k">pass</span></div>
 
-</div>
+
 <div class="viewcode-block" id="InvalidFileError"><a class="viewcode-back" href="../index.html#configfile.InvalidFileError">[docs]</a><span class="k">class</span> <span class="nc">InvalidFileError</span><span class="p">(</span><span class="n">ConfigFileError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An invalid configuration file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
+    <span class="k">pass</span></div>
 
-</div>
+
 <div class="viewcode-block" id="InvalidObjectError"><a class="viewcode-back" href="../index.html#configfile.InvalidObjectError">[docs]</a><span class="k">class</span> <span class="nc">InvalidObjectError</span><span class="p">(</span><span class="n">ConfigFileError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An invalid key found in an importing object.</span>
@@ -1683,15 +1675,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1707,13 +1698,13 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">ConfigFile 1.2.2 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">ConfigFile 1.2.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2011-2015, Dario Giovannetti.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+        &#169; Copyright 2011-present, Dario Giovannetti.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

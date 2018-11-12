@@ -1,31 +1,24 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Welcome to ConfigFile’s documentation! &mdash; ConfigFile 1.2.2 documentation</title>
-    
+    <title>Welcome to ConfigFile’s documentation! &#8212; ConfigFile 1.2.4 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.2.2',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="ConfigFile 1.2.2 documentation" href="#" /> 
-  </head>
-  <body role="document">
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -35,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">ConfigFile 1.2.2 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="#">ConfigFile 1.2.4 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -45,16 +38,16 @@
           <div class="body" role="main">
             
   <div class="section" id="welcome-to-configfile-s-documentation">
-<h1>Welcome to ConfigFile&#8217;s documentation!<a class="headerlink" href="#welcome-to-configfile-s-documentation" title="Permalink to this headline">¶</a></h1>
+<h1>Welcome to ConfigFile’s documentation!<a class="headerlink" href="#welcome-to-configfile-s-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<span class="target" id="module-configfile"></span><p>This library provides the <a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><code class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></code></a> class, whose goal is to
+<span class="target" id="module-configfile"></span><p>This library provides the <a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFile</span></code></a> class, whose goal is to
 provide an interface for parsing, modifying and writing configuration files.</p>
 <p>Main features:</p>
 <ul class="simple">
 <li>Support for subsections. Support for sectionless options (root options).</li>
 <li>Read from multiple sources (files, file-like objects, dictionaries or special
-compatible objects) and compose them in a single <a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><code class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></code></a>
+compatible objects) and compose them in a single <a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFile</span></code></a>
 object.</li>
 <li>When importing and exporting it is possible to choose what to do with
 options only existing in the source, only existing in the destination, or
@@ -64,10 +57,10 @@ object. Export only a particular subsection of an existing object.</li>
 <li>Preserve the order of sections and options when exporting. Try the best to
 preserve any comments too.</li>
 <li>Access sections and options with the
-<code class="docutils literal"><span class="pre">root('Section',</span> <span class="pre">'Subsection')['option']</span></code> syntax or the
-<code class="docutils literal"><span class="pre">root('Section')('Subsection')['option']</span></code> syntax.</li>
+<code class="docutils literal notranslate"><span class="pre">root('Section',</span> <span class="pre">'Subsection')['option']</span></code> syntax or the
+<code class="docutils literal notranslate"><span class="pre">root('Section')('Subsection')['option']</span></code> syntax.</li>
 <li>save references to subsections with e.g.
-<code class="docutils literal"><span class="pre">subsection</span> <span class="pre">=</span> <span class="pre">section('Section',</span> <span class="pre">'Subsection')</span></code>.</li>
+<code class="docutils literal notranslate"><span class="pre">subsection</span> <span class="pre">=</span> <span class="pre">section('Section',</span> <span class="pre">'Subsection')</span></code>.</li>
 <li>Interpolation of option values between sections when importing.</li>
 </ul>
 <p>Author: Dario Giovannetti &lt;<a class="reference external" href="mailto:dev&#37;&#52;&#48;dariogiovannetti&#46;net">dev<span>&#64;</span>dariogiovannetti<span>&#46;</span>net</a>&gt;</p>
@@ -86,8 +79,8 @@ or write the author an email!</p>
 <div class="section" id="basic-usage">
 <h3>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h3>
 <p>Suppose you have these two files:</p>
-<p><code class="docutils literal"><span class="pre">/path/to/file</span></code>:</p>
-<div class="highlight-cfg"><div class="highlight"><pre><span class="na">root_option</span> <span class="o">=</span> <span class="s">demo</span>
+<p><code class="docutils literal notranslate"><span class="pre">/path/to/file</span></code>:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">root_option</span> <span class="o">=</span> <span class="s">demo</span>
 
 <span class="k">[Section1]</span>
 <span class="na">test</span> <span class="o">=</span> <span class="s">ok</span>
@@ -101,35 +94,35 @@ or write the author an email!</p>
 <span class="na">bar</span> <span class="o">=</span> <span class="s">yay</span>
 </pre></div>
 </div>
-<p><code class="docutils literal"><span class="pre">/path/to/other_file</span></code>:</p>
-<div class="highlight-cfg"><div class="highlight"><pre><span class="k">[Section2C]</span>
+<p><code class="docutils literal notranslate"><span class="pre">/path/to/other_file</span></code>:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[Section2C]</span>
 <span class="na">an_option</span> <span class="o">=</span> <span class="s">2</span>
 </pre></div>
 </div>
 <p>Now run this script:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">configfile</span> <span class="kn">import</span> <span class="n">ConfigFile</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">configfile</span> <span class="k">import</span> <span class="n">ConfigFile</span>
 
-<span class="n">conf</span> <span class="o">=</span> <span class="n">ConfigFile</span><span class="p">(</span><span class="s">&quot;/path/to/file&quot;</span><span class="p">)</span>
+<span class="n">conf</span> <span class="o">=</span> <span class="n">ConfigFile</span><span class="p">(</span><span class="s2">&quot;/path/to/file&quot;</span><span class="p">)</span>
 
-<span class="n">conf</span><span class="p">(</span><span class="s">&quot;Section2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upgrade</span><span class="p">(</span><span class="s">&quot;path/to/other_file&quot;</span><span class="p">)</span>
+<span class="n">conf</span><span class="p">(</span><span class="s2">&quot;Section2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upgrade</span><span class="p">(</span><span class="s2">&quot;path/to/other_file&quot;</span><span class="p">)</span>
 
-<span class="n">option</span> <span class="o">=</span> <span class="n">conf</span><span class="p">(</span><span class="s">&quot;Section2&quot;</span><span class="p">,</span> <span class="s">&quot;Section2C&quot;</span><span class="p">)[</span><span class="s">&quot;an_option&quot;</span><span class="p">]</span>
-<span class="k">print</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">option</span><span class="p">))</span>  <span class="c"># 2 &lt;class &#39;str&#39;&gt;</span>
+<span class="n">option</span> <span class="o">=</span> <span class="n">conf</span><span class="p">(</span><span class="s2">&quot;Section2&quot;</span><span class="p">,</span> <span class="s2">&quot;Section2C&quot;</span><span class="p">)[</span><span class="s2">&quot;an_option&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">option</span><span class="p">))</span>  <span class="c1"># 2 &lt;class &#39;str&#39;&gt;</span>
 
-<span class="n">option</span> <span class="o">=</span> <span class="n">conf</span><span class="p">(</span><span class="s">&quot;Section2&quot;</span><span class="p">)(</span><span class="s">&quot;Section2C&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="s">&quot;an_option&quot;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">option</span><span class="p">))</span>  <span class="c"># 2 &lt;class &#39;int&#39;&gt;</span>
+<span class="n">option</span> <span class="o">=</span> <span class="n">conf</span><span class="p">(</span><span class="s2">&quot;Section2&quot;</span><span class="p">)(</span><span class="s2">&quot;Section2C&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="s2">&quot;an_option&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">option</span><span class="p">))</span>  <span class="c1"># 2 &lt;class &#39;int&#39;&gt;</span>
 
-<span class="n">conf</span><span class="o">.</span><span class="n">export_add</span><span class="p">(</span><span class="s">&quot;/path/to/file&quot;</span><span class="p">)</span>
+<span class="n">conf</span><span class="o">.</span><span class="n">export_add</span><span class="p">(</span><span class="s2">&quot;/path/to/file&quot;</span><span class="p">)</span>
 
-<span class="n">conf</span><span class="p">[</span><span class="s">&quot;root_option&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;value&quot;</span>
+<span class="n">conf</span><span class="p">[</span><span class="s2">&quot;root_option&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;value&quot;</span>
 
-<span class="n">conf</span><span class="p">(</span><span class="s">&quot;Section3&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">export_reset</span><span class="p">(</span><span class="s">&quot;/path/to/another_file&quot;</span><span class="p">)</span>
+<span class="n">conf</span><span class="p">(</span><span class="s2">&quot;Section3&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">export_reset</span><span class="p">(</span><span class="s2">&quot;/path/to/another_file&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You will end up with these files (<code class="docutils literal"><span class="pre">/path/to/other_file</span></code> is left
+<p>You will end up with these files (<code class="docutils literal notranslate"><span class="pre">/path/to/other_file</span></code> is left
 untouched):</p>
-<p><code class="docutils literal"><span class="pre">/path/to/file</span></code>:</p>
-<div class="highlight-cfg"><div class="highlight"><pre><span class="na">root_option</span> <span class="o">=</span> <span class="s">demo</span>
+<p><code class="docutils literal notranslate"><span class="pre">/path/to/file</span></code>:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">root_option</span> <span class="o">=</span> <span class="s">demo</span>
 
 <span class="k">[Section1]</span>
 <span class="na">test</span> <span class="o">=</span> <span class="s">ok</span>
@@ -146,16 +139,16 @@ untouched):</p>
 <span class="na">bar</span> <span class="o">=</span> <span class="s">yay</span>
 </pre></div>
 </div>
-<p><code class="docutils literal"><span class="pre">/path/to/another_file</span></code>:</p>
-<div class="highlight-cfg"><div class="highlight"><pre><span class="na">bar</span> <span class="o">=</span> <span class="s">yay</span>
+<p><code class="docutils literal notranslate"><span class="pre">/path/to/another_file</span></code>:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">bar</span> <span class="o">=</span> <span class="s">yay</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="interpolation">
 <h3>Interpolation<a class="headerlink" href="#interpolation" title="Permalink to this headline">¶</a></h3>
 <p>Suppose you have this file:</p>
-<p><code class="docutils literal"><span class="pre">/path/to/file</span></code>:</p>
-<div class="highlight-cfg"><div class="highlight"><pre><span class="k">[Section1]</span>
+<p><code class="docutils literal notranslate"><span class="pre">/path/to/file</span></code>:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[Section1]</span>
 <span class="na">option</span> <span class="o">=</span> <span class="s">foo ${$:Section2$:optionA$}</span>
 
 <span class="k">[Section1.Section2]</span>
@@ -168,15 +161,15 @@ untouched):</p>
 </pre></div>
 </div>
 <p>Now run this script:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">configfile</span> <span class="kn">import</span> <span class="n">ConfigFile</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">configfile</span> <span class="k">import</span> <span class="n">ConfigFile</span>
 
-<span class="n">conf</span> <span class="o">=</span> <span class="n">ConfigFile</span><span class="p">(</span><span class="s">&quot;/path/to/file&quot;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">conf</span> <span class="o">=</span> <span class="n">ConfigFile</span><span class="p">(</span><span class="s2">&quot;/path/to/file&quot;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">conf</span><span class="p">(</span><span class="s">&#39;Section1&#39;</span><span class="p">)[</span><span class="s">&#39;option&#39;</span><span class="p">])</span>  <span class="c"># foo some value</span>
-<span class="k">print</span><span class="p">(</span><span class="n">conf</span><span class="p">(</span><span class="s">&#39;Section1&#39;</span><span class="p">,</span> <span class="s">&#39;Section2&#39;</span><span class="p">)[</span><span class="s">&#39;optionA&#39;</span><span class="p">])</span>  <span class="c"># some value</span>
-<span class="k">print</span><span class="p">(</span><span class="n">conf</span><span class="p">(</span><span class="s">&#39;Section1&#39;</span><span class="p">,</span> <span class="s">&#39;Section2&#39;</span><span class="p">)[</span><span class="s">&#39;optionB&#39;</span><span class="p">])</span>  <span class="c"># some value test</span>
-<span class="k">print</span><span class="p">(</span><span class="n">conf</span><span class="p">(</span><span class="s">&#39;Section1&#39;</span><span class="p">,</span> <span class="s">&#39;Section2&#39;</span><span class="p">)[</span><span class="s">&#39;optionC&#39;</span><span class="p">])</span>  <span class="c"># test some value</span>
-<span class="k">print</span><span class="p">(</span><span class="n">conf</span><span class="p">(</span><span class="s">&#39;Section3&#39;</span><span class="p">)[</span><span class="s">&#39;option&#39;</span><span class="p">])</span>  <span class="c"># some value bar</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">conf</span><span class="p">(</span><span class="s1">&#39;Section1&#39;</span><span class="p">)[</span><span class="s1">&#39;option&#39;</span><span class="p">])</span>  <span class="c1"># foo some value</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">conf</span><span class="p">(</span><span class="s1">&#39;Section1&#39;</span><span class="p">,</span> <span class="s1">&#39;Section2&#39;</span><span class="p">)[</span><span class="s1">&#39;optionA&#39;</span><span class="p">])</span>  <span class="c1"># some value</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">conf</span><span class="p">(</span><span class="s1">&#39;Section1&#39;</span><span class="p">,</span> <span class="s1">&#39;Section2&#39;</span><span class="p">)[</span><span class="s1">&#39;optionB&#39;</span><span class="p">])</span>  <span class="c1"># some value test</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">conf</span><span class="p">(</span><span class="s1">&#39;Section1&#39;</span><span class="p">,</span> <span class="s1">&#39;Section2&#39;</span><span class="p">)[</span><span class="s1">&#39;optionC&#39;</span><span class="p">])</span>  <span class="c1"># test some value</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">conf</span><span class="p">(</span><span class="s1">&#39;Section3&#39;</span><span class="p">)[</span><span class="s1">&#39;option&#39;</span><span class="p">])</span>  <span class="c1"># some value bar</span>
 </pre></div>
 </div>
 </div>
@@ -186,10 +179,10 @@ untouched):</p>
 <dl class="class">
 <dt id="configfile.Section">
 <em class="property">class </em><code class="descclassname">configfile.</code><code class="descname">Section</code><span class="sig-paren">(</span><em>name=None</em>, <em>parent=None</em>, <em>safe_calls=False</em>, <em>inherit_options=False</em>, <em>subsections=True</em>, <em>ignore_case=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The class for a section in the configuration file, including the root
 section. You should never need to instantiate this class directly, use
-<a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><code class="xref py py-class docutils literal"><span class="pre">ConfigFile</span></code></a> instead.</p>
+<a class="reference internal" href="#configfile.ConfigFile" title="configfile.ConfigFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigFile</span></code></a> instead.</p>
 <dl class="attribute">
 <dt id="configfile.Section._PARSE_SECTION">
 <code class="descname">_PARSE_SECTION</code><em class="property"> = '^\\s*\\[(.+)\\]\\s*$'</em><a class="headerlink" href="#configfile.Section._PARSE_SECTION" title="Permalink to this definition">¶</a></dt>
@@ -277,7 +270,7 @@ section. You should never need to instantiate this class directly, use
 
 <dl class="attribute">
 <dt id="configfile.Section._INTERPOLATION_SPLIT">
-<code class="descname">_INTERPOLATION_SPLIT</code><em class="property"> = '(\\$\\$|\\$\\{|\\$\\:|\\$\\})'</em><a class="headerlink" href="#configfile.Section._INTERPOLATION_SPLIT" title="Permalink to this definition">¶</a></dt>
+<code class="descname">_INTERPOLATION_SPLIT</code><em class="property"> = '(\\$\\$|\\$\\{|\\$:|\\$\\})'</em><a class="headerlink" href="#configfile.Section._INTERPOLATION_SPLIT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -298,7 +291,7 @@ section. You should never need to instantiate this class directly, use
 <dl class="attribute">
 <dt id="configfile.Section._DICT_CLASS">
 <code class="descname">_DICT_CLASS</code><a class="headerlink" href="#configfile.Section._DICT_CLASS" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">OrderedDict</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.OrderedDict</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -315,17 +308,17 @@ section. You should never need to instantiate this class directly, use
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the section.</li>
-<li><strong>parent</strong> (<a class="reference internal" href="#configfile.Section" title="configfile.Section"><em>Section</em></a>) &#8211; A reference to the parent section object.</li>
-<li><strong>safe_calls</strong> (<em>bool</em>) &#8211; If True, when calling a non-existent
+<li><strong>name</strong> (<em>str</em>) – The name of the section.</li>
+<li><strong>parent</strong> (<a class="reference internal" href="#configfile.Section" title="configfile.Section"><em>Section</em></a>) – A reference to the parent section object.</li>
+<li><strong>safe_calls</strong> (<em>bool</em>) – If True, when calling a non-existent
 subsection, its closest existing ancestor is returned.</li>
-<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; Whether the section will inherit the
+<li><strong>inherit_options</strong> (<em>bool</em>) – Whether the section will inherit the
 options from its ancestors.</li>
-<li><strong>subsections</strong> (<em>bool</em>) &#8211; If True, subsections are enabled; otherwise
+<li><strong>subsections</strong> (<em>bool</em>) – If True, subsections are enabled; otherwise
 they are disabled.</li>
-<li><strong>ignore_case</strong> (<em>bool</em>) &#8211; If True, section and option names will be
+<li><strong>ignore_case</strong> (<em>bool</em>) – If True, section and option names will be
 compared ignoring case differences; regular expressions will use
-<code class="docutils literal"><span class="pre">re.I</span></code> flag.</li>
+<code class="docutils literal notranslate"><span class="pre">re.I</span></code> flag.</li>
 </ul>
 </td>
 </tr>
@@ -343,10 +336,10 @@ strings, returning the corresponding subsection object, if existent.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>path</strong> (<em>str</em>) &#8211; A sequence of strings, representing a relative path of
+<li><strong>path</strong> (<em>str</em>) – A sequence of strings, representing a relative path of
 section names to the target descendant subsection, whose name is
 the last item.</li>
-<li><strong>safe</strong> (<em>bool</em>) &#8211; If True, when calling a non-existent subsection, its
+<li><strong>safe</strong> (<em>bool</em>) – If True, when calling a non-existent subsection, its
 closest existing ancestor is returned.</li>
 </ul>
 </td>
@@ -358,7 +351,7 @@ closest existing ancestor is returned.</li>
 <dl class="method">
 <dt id="configfile.Section._finalize_call">
 <code class="descname">_finalize_call</code><span class="sig-paren">(</span><em>safe</em>, <em>sname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._finalize_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._finalize_call" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section.__call__" title="configfile.Section.__call__"><code class="xref py py-meth docutils literal"><span class="pre">__call__()</span></code></a>.</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section.__call__" title="configfile.Section.__call__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__call__()</span></code></a>.</p>
 <p>Process a not-found section name.</p>
 </dd></dl>
 
@@ -370,7 +363,7 @@ closest existing ancestor is returned.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>opt</strong> (<em>str</em>) – The name of the option whose value must be returned.</td>
 </tr>
 </tbody>
 </table>
@@ -385,8 +378,8 @@ closest existing ancestor is returned.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option.</li>
-<li><strong>val</strong> (<em>str</em>) &#8211; The new value for the option.</li>
+<li><strong>opt</strong> (<em>str</em>) – The name of the option.</li>
+<li><strong>val</strong> (<em>str</em>) – The new value for the option.</li>
 </ul>
 </td>
 </tr>
@@ -402,7 +395,7 @@ closest existing ancestor is returned.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>opt</strong> (<em>str</em>) &#8211; The name of the option that must be deleted.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>opt</strong> (<em>str</em>) – The name of the option that must be deleted.</td>
 </tr>
 </tbody>
 </table>
@@ -418,14 +411,14 @@ loop).</p>
 <dl class="method">
 <dt id="configfile.Section.__contains__">
 <code class="descname">__contains__</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section.__contains__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.__contains__" title="Permalink to this definition">¶</a></dt>
-<dd><p>If item is a <a class="reference internal" href="#configfile.Section" title="configfile.Section"><code class="xref py py-class docutils literal"><span class="pre">Section</span></code></a> object, this method returns True if
+<dd><p>If item is a <a class="reference internal" href="#configfile.Section" title="configfile.Section"><code class="xref py py-class docutils literal notranslate"><span class="pre">Section</span></code></a> object, this method returns True if
 item (the object, not its name) is a subsection of self; otherwise this
 returns True if item is the name of an option in self.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>item</strong> (<em>Section or str</em>) &#8211; A <a class="reference internal" href="#configfile.Section" title="configfile.Section"><code class="xref py py-class docutils literal"><span class="pre">Section</span></code></a> object or the name of an option.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>item</strong> (<a class="reference internal" href="#configfile.Section" title="configfile.Section"><em>Section</em></a><em> or </em><em>str</em>) – A <a class="reference internal" href="#configfile.Section" title="configfile.Section"><code class="xref py py-class docutils literal notranslate"><span class="pre">Section</span></code></a> object or the name of an option.</td>
 </tr>
 </tbody>
 </table>
@@ -434,7 +427,7 @@ returns True if item is the name of an option in self.</p>
 <dl class="method">
 <dt id="configfile.Section.set">
 <code class="descname">set</code><span class="sig-paren">(</span><em>opt</em>, <em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.set" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is an alias for <a class="reference internal" href="#configfile.Section.__setitem__" title="configfile.Section.__setitem__"><code class="xref py py-meth docutils literal"><span class="pre">__setitem__()</span></code></a>.</p>
+<dd><p>This is an alias for <a class="reference internal" href="#configfile.Section.__setitem__" title="configfile.Section.__setitem__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__setitem__()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -446,7 +439,7 @@ exist.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; The name of the new subsection.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – The name of the new subsection.</td>
 </tr>
 </tbody>
 </table>
@@ -466,15 +459,15 @@ or special object with upgrade mode.</p>
 <p>If an option already exists, change its value; if it does not exist,
 create it and store its value. For example:</p>
 <p><em>{A:a,B:b,C:c} upgrade {A:d,D:e} =&gt; {A:d,B:b,C:c,D:e}</em></p>
-<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></code></a> for object compatibility.</p>
+<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_import_object()</span></code></a> for object compatibility.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sources</strong> &#8211; A sequence of files, file-like objects, dictionaries
+<li><strong>sources</strong> – A sequence of files, file-like objects, dictionaries
 and/or special objects.</li>
-<li><strong>interpolation</strong> (<em>bool</em>) &#8211; Enable/disable value interpolation.</li>
+<li><strong>interpolation</strong> (<em>bool</em>) – Enable/disable value interpolation.</li>
 </ul>
 </td>
 </tr>
@@ -490,15 +483,15 @@ or special object with update mode.</p>
 <p>If an option already exists, change its value; if it does not exist,
 do not do anything. For example:</p>
 <p><em>{A:a,B:b,C:c} update {A:d,D:e} =&gt; {A:d,B:b,C:c}</em></p>
-<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></code></a> for object compatibility.</p>
+<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_import_object()</span></code></a> for object compatibility.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sources</strong> &#8211; A sequence of files, file-like objects, dictionaries
+<li><strong>sources</strong> – A sequence of files, file-like objects, dictionaries
 and/or special objects.</li>
-<li><strong>interpolation</strong> (<em>bool</em>) &#8211; Enable/disable value interpolation.</li>
+<li><strong>interpolation</strong> (<em>bool</em>) – Enable/disable value interpolation.</li>
 </ul>
 </td>
 </tr>
@@ -514,15 +507,15 @@ or special object with reset mode.</p>
 <p>Delete all options and subsections and recreate everything from the
 importing object. For example:</p>
 <p><em>{A:a,B:b,C:c} reset {A:d,D:e} =&gt; {A:d,D:e}</em></p>
-<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></code></a> for object compatibility.</p>
+<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_import_object()</span></code></a> for object compatibility.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sources</strong> &#8211; A sequence of files, file-like objects, dictionaries
+<li><strong>sources</strong> – A sequence of files, file-like objects, dictionaries
 and/or special objects.</li>
-<li><strong>interpolation</strong> (<em>bool</em>) &#8211; Enable/disable value interpolation.</li>
+<li><strong>interpolation</strong> (<em>bool</em>) – Enable/disable value interpolation.</li>
 </ul>
 </td>
 </tr>
@@ -538,15 +531,15 @@ or special object with add mode.</p>
 <p>If an option already exists, do not do anything; if it does not exist,
 create it and store its value. For example:</p>
 <p><em>{A:a,B:b,C:c} add {A:d,D:e} =&gt; {A:a,B:b,C:c,D:e}</em></p>
-<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></code></a> for object compatibility.</p>
+<p>See <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_import_object()</span></code></a> for object compatibility.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sources</strong> &#8211; A sequence of files, file-like objects, dictionaries
+<li><strong>sources</strong> – A sequence of files, file-like objects, dictionaries
 and/or special objects.</li>
-<li><strong>interpolation</strong> (<em>bool</em>) &#8211; Enable/disable value interpolation.</li>
+<li><strong>interpolation</strong> (<em>bool</em>) – Enable/disable value interpolation.</li>
 </ul>
 </td>
 </tr>
@@ -565,21 +558,21 @@ and add their configuration to the existing one.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sources</strong> &#8211; A sequence of all the file names, file-like objects,
+<li><strong>sources</strong> – A sequence of all the file names, file-like objects,
 dictionaries or special objects to be parsed; a value of None will
 be ignored (useful for creating empty objects that will be
 populated programmatically).</li>
-<li><strong>overwrite</strong> (<em>bool</em>) &#8211; This sets whether the next source in the chain
+<li><strong>overwrite</strong> (<em>bool</em>) – This sets whether the next source in the chain
 overwrites already imported sections and options; see
-<a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></code></a> for more details.</li>
-<li><strong>add</strong> (<em>bool</em>) &#8211; This sets whether the next source in the chain adds
+<a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_import_object()</span></code></a> for more details.</li>
+<li><strong>add</strong> (<em>bool</em>) – This sets whether the next source in the chain adds
 non-pre-existing sections and options; see _import_object for more
 details.</li>
-<li><strong>reset</strong> (<em>bool</em>) &#8211; This sets whether the next source in the chain
+<li><strong>reset</strong> (<em>bool</em>) – This sets whether the next source in the chain
 removes all the data added by the previous sources.</li>
-<li><strong>interpolation</strong> (<em>bool</em>) &#8211; If True, option values will be interpolated
+<li><strong>interpolation</strong> (<em>bool</em>) – If True, option values will be interpolated
 using values from other options through the special syntax
-<code class="docutils literal"><span class="pre">${section$:section$:option$}</span></code>. Options will be interpolated only
+<code class="docutils literal notranslate"><span class="pre">${section$:section$:option$}</span></code>. Options will be interpolated only
 once at importing: all links among options will be lost after
 importing.</li>
 </ul>
@@ -597,7 +590,7 @@ importing.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cfile</strong> (<em>str</em>) &#8211; The name of the file to be parsed.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cfile</strong> (<em>str</em>) – The name of the file to be parsed.</td>
 </tr>
 </tbody>
 </table>
@@ -612,7 +605,7 @@ making it possible to import it.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stream</strong> &#8211; a file-like object to be read from.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stream</strong> – a file-like object to be read from.</td>
 </tr>
 </tbody>
 </table>
@@ -627,7 +620,7 @@ return them in a list.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>re</strong> &#8211; regular expression object.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>re</strong> – regular expression object.</td>
 </tr>
 </tbody>
 </table>
@@ -642,37 +635,37 @@ return them in a list.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cobj</strong> &#8211; <p>A special object composed of dictionaries (or compatible
+<li><strong>cobj</strong> – <p>A special object composed of dictionaries (or compatible
 mapping object) and tuples to be imported; a section is represented
 by a 2-tuple: its first value is a mapping object that associates
 the names of options to their values; its second value is a mapping
 object that associates the names of subsections to their 2-tuples.
 For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">cobj</span> <span class="o">=</span> <span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cobj</span> <span class="o">=</span> <span class="p">(</span>
     <span class="p">{</span>
-        <span class="s">&#39;option1&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
-        <span class="s">&#39;option2&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span>
+        <span class="s1">&#39;option1&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;option2&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s">&#39;sectionA&#39;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s1">&#39;sectionA&#39;</span><span class="p">:</span> <span class="p">(</span>
             <span class="p">{</span>
-                <span class="s">&#39;optionA1&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
-                <span class="s">&#39;optionA2&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;optionA1&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;optionA2&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="p">{</span>
-                <span class="s">&#39;sectionC&#39;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s1">&#39;sectionC&#39;</span><span class="p">:</span> <span class="p">(</span>
                     <span class="p">{</span>
-                        <span class="s">&#39;optionC1&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
-                        <span class="s">&#39;optionC2&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;optionC1&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;optionC2&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
                     <span class="p">},</span>
                     <span class="p">{},</span>
                 <span class="p">),</span>
             <span class="p">},</span>
         <span class="p">),</span>
-        <span class="s">&#39;sectionB&#39;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s1">&#39;sectionB&#39;</span><span class="p">:</span> <span class="p">(</span>
             <span class="p">{</span>
-                <span class="s">&#39;optionB1&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
-                <span class="s">&#39;optionB2&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span>
+                <span class="s1">&#39;optionB1&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;optionB2&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span>
             <span class="p">},</span>
             <span class="p">{},</span>
         <span class="p">),</span>
@@ -681,10 +674,10 @@ For example:</p>
 </pre></div>
 </div>
 </li>
-<li><strong>overwrite</strong> (<em>bool</em>) &#8211; Whether imported data will overwrite
+<li><strong>overwrite</strong> (<em>bool</em>) – Whether imported data will overwrite
 pre-existing data.</li>
-<li><strong>add</strong> (<em>bool</em>) &#8211; Whether non-pre-existing data will be imported.</li>
-<li><strong>reset</strong> (<em>bool</em>) &#8211; Whether pre-existing data will be cleared.</li>
+<li><strong>add</strong> (<em>bool</em>) – Whether non-pre-existing data will be imported.</li>
+<li><strong>reset</strong> (<em>bool</em>) – Whether pre-existing data will be cleared.</li>
 </ul>
 </td>
 </tr>
@@ -695,21 +688,21 @@ pre-existing data.</li>
 <dl class="method">
 <dt id="configfile.Section._import_object_option">
 <code class="descname">_import_object_option</code><span class="sig-paren">(</span><em>overwrite</em>, <em>add</em>, <em>reset</em>, <em>opt</em>, <em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._import_object_option"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import_object_option" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></code></a>.</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_import_object()</span></code></a>.</p>
 <p>Import the currently-examined option.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._import_object_subsection">
 <code class="descname">_import_object_subsection</code><span class="sig-paren">(</span><em>overwrite</em>, <em>add</em>, <em>reset</em>, <em>sec</em>, <em>secd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._import_object_subsection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import_object_subsection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">_import_object()</span></code></a>.</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_import_object()</span></code></a>.</p>
 <p>Import the currently-examined subsection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._import_object_subsection_create">
 <code class="descname">_import_object_subsection_create</code><span class="sig-paren">(</span><em>overwrite</em>, <em>add</em>, <em>sec</em>, <em>secd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._import_object_subsection_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._import_object_subsection_create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._import_object_subsection" title="configfile.Section._import_object_subsection"><code class="xref py py-meth docutils literal"><span class="pre">_import_object_subsection()</span></code></a>.</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._import_object_subsection" title="configfile.Section._import_object_subsection"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_import_object_subsection()</span></code></a>.</p>
 <p>Import the currently-examined subsection.</p>
 </dd></dl>
 
@@ -717,21 +710,21 @@ pre-existing data.</li>
 <dt id="configfile.Section._interpolate">
 <code class="descname">_interpolate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._interpolate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._interpolate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interpolate values among different options.</p>
-<p>The <code class="docutils literal"><span class="pre">$</span></code> sign is a special character: a <code class="docutils literal"><span class="pre">$</span></code> not followed by <code class="docutils literal"><span class="pre">$</span></code>,
-<code class="docutils literal"><span class="pre">{</span></code>, <code class="docutils literal"><span class="pre">:</span></code> or <code class="docutils literal"><span class="pre">}</span></code> will be left <code class="docutils literal"><span class="pre">$</span></code>; <code class="docutils literal"><span class="pre">$$</span></code> will be translated as
-<code class="docutils literal"><span class="pre">$</span></code> both inside or outside an interpolation path; <code class="docutils literal"><span class="pre">${</span></code> will be
+<p>The <code class="docutils literal notranslate"><span class="pre">$</span></code> sign is a special character: a <code class="docutils literal notranslate"><span class="pre">$</span></code> not followed by <code class="docutils literal notranslate"><span class="pre">$</span></code>,
+<code class="docutils literal notranslate"><span class="pre">{</span></code>, <code class="docutils literal notranslate"><span class="pre">:</span></code> or <code class="docutils literal notranslate"><span class="pre">}</span></code> will be left <code class="docutils literal notranslate"><span class="pre">$</span></code>; <code class="docutils literal notranslate"><span class="pre">$$</span></code> will be translated as
+<code class="docutils literal notranslate"><span class="pre">$</span></code> both inside or outside an interpolation path; <code class="docutils literal notranslate"><span class="pre">${</span></code> will be
 considered as the beginning of an interpolation path, unless it is
 found inside another interpolation path, and in the latter case it will
-be left <code class="docutils literal"><span class="pre">${</span></code>; <code class="docutils literal"><span class="pre">$:</span></code> will be considered as a separator between
+be left <code class="docutils literal notranslate"><span class="pre">${</span></code>; <code class="docutils literal notranslate"><span class="pre">$:</span></code> will be considered as a separator between
 sections of an interpolation path, unless it is found outside of an
 interpolation path, and in the latter case it will be left
-<code class="docutils literal"><span class="pre">$:</span></code>; <code class="docutils literal"><span class="pre">$}</span></code> will be considered as the end of an interpolation path,
+<code class="docutils literal notranslate"><span class="pre">$:</span></code>; <code class="docutils literal notranslate"><span class="pre">$}</span></code> will be considered as the end of an interpolation path,
 unless it is found outside of an interpolation path, and in the latter
-case it will be left <code class="docutils literal"><span class="pre">$}</span></code>.</p>
+case it will be left <code class="docutils literal notranslate"><span class="pre">$}</span></code>.</p>
 <p>Normally all paths will be resolved based on the root section of the
 file; anyway, if the interpolation path has only one item, it will be
 resolved as an option relative to the current section; otherwise, if
-the path starts with <code class="docutils literal"><span class="pre">$:</span></code>, the first item will be considered as a
+the path starts with <code class="docutils literal notranslate"><span class="pre">$:</span></code>, the first item will be considered as a
 section (or an option, if last in the list) relative to the current
 section.</p>
 </dd></dl>
@@ -745,11 +738,11 @@ section.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</li>
-<li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
+<li><strong>opt</strong> (<em>str</em>) – The name of the option whose value must be returned.</li>
+<li><strong>fallback</strong> (<em>str</em><em> or </em><em>None</em>) – If set to a string, and the option is not found, this
 method returns that string; if set to None (default) it returns
 KeyError.</li>
-<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
+<li><strong>inherit_options</strong> (<em>bool</em>) – If True, if the option is not found in the
 current section, it is searched in the parent sections; note that
 this can be set as a default for the object, but this setting
 overwrites it only for this call.</li>
@@ -763,18 +756,18 @@ overwrites it only for this call.</li>
 <dl class="method">
 <dt id="configfile.Section.get_str">
 <code class="descname">get_str</code><span class="sig-paren">(</span><em>opt</em>, <em>fallback=None</em>, <em>inherit_options=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section.get_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section.get_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is an alias for <a class="reference internal" href="#configfile.Section.get" title="configfile.Section.get"><code class="xref py py-meth docutils literal"><span class="pre">get()</span></code></a>.</p>
+<dd><p>This is an alias for <a class="reference internal" href="#configfile.Section.get" title="configfile.Section.get"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code></a>.</p>
 <p>This will always return a string.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</li>
-<li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
+<li><strong>opt</strong> (<em>str</em>) – The name of the option whose value must be returned.</li>
+<li><strong>fallback</strong> (<em>str</em><em> or </em><em>None</em>) – If set to a string, and the option is not found, this
 method returns that string; if set to None (default) it returns
 KeyError.</li>
-<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
+<li><strong>inherit_options</strong> (<em>bool</em>) – If True, if the option is not found in the
 current section, it is searched in the parent sections; note that
 this can be set as a default for the object, but this setting
 overwrites it only for this call.</li>
@@ -794,11 +787,11 @@ overwrites it only for this call.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</li>
-<li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
+<li><strong>opt</strong> (<em>str</em>) – The name of the option whose value must be returned.</li>
+<li><strong>fallback</strong> (<em>str</em><em> or </em><em>None</em>) – If set to a string, and the option is not found, this
 method returns that string; if set to None (default) it returns
 KeyError.</li>
-<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
+<li><strong>inherit_options</strong> (<em>bool</em>) – If True, if the option is not found in the
 current section, it is searched in the parent sections; note that
 this can be set as a default for the object, but this setting
 overwrites it only for this call.</li>
@@ -818,11 +811,11 @@ overwrites it only for this call.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</li>
-<li><strong>fallback</strong> (<em>str or None</em>) &#8211; If set to a string, and the option is not found, this
+<li><strong>opt</strong> (<em>str</em>) – The name of the option whose value must be returned.</li>
+<li><strong>fallback</strong> (<em>str</em><em> or </em><em>None</em>) – If set to a string, and the option is not found, this
 method returns that string; if set to None (default) it returns
 KeyError.</li>
-<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
+<li><strong>inherit_options</strong> (<em>bool</em>) – If True, if the option is not found in the
 current section, it is searched in the parent sections; note that
 this can be set as a default for the object, but this setting
 overwrites it only for this call.</li>
@@ -843,16 +836,16 @@ value of an option.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>opt</strong> (<em>str</em>) &#8211; The name of the option whose value must be returned.</li>
-<li><strong>true</strong> (<em>tuple</em>) &#8211; A tuple with the strings to be recognized as True.</li>
-<li><strong>false</strong> (<em>tuple</em>) &#8211; A tuple with the strings to be recognized as False.</li>
-<li><strong>default</strong> &#8211; If the value is neither in true nor in false tuples,
+<li><strong>opt</strong> (<em>str</em>) – The name of the option whose value must be returned.</li>
+<li><strong>true</strong> (<em>tuple</em>) – A tuple with the strings to be recognized as True.</li>
+<li><strong>false</strong> (<em>tuple</em>) – A tuple with the strings to be recognized as False.</li>
+<li><strong>default</strong> – If the value is neither in true nor in false tuples,
 return this boolean status; if set to None, it raises a ValueError
 exception.</li>
-<li><strong>fallback</strong> &#8211; If set to None (default), and the option is not found,
+<li><strong>fallback</strong> – If set to None (default), and the option is not found,
 it raises KeyError; otherwise this value is evaluated with the true
 and false tuples, or the default value.</li>
-<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if the option is not found in the
+<li><strong>inherit_options</strong> (<em>bool</em>) – If True, if the option is not found in the
 current section, it is searched in the parent sections; note that
 this can be set as a default for the object, but this setting
 overwrites it only for this call.</li>
@@ -889,9 +882,9 @@ values as values.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ordered</strong> (<em>bool</em>) &#8211; If True, return an ordered dictionary; otherwise
+<li><strong>ordered</strong> (<em>bool</em>) – If True, return an ordered dictionary; otherwise
 return a normal dictionary.</li>
-<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, options are searched also in the
+<li><strong>inherit_options</strong> (<em>bool</em>) – If True, options are searched also in the
 parent sections; note that this can be set as a default for the
 object, but this setting overwrites it only for this call.</li>
 </ul>
@@ -916,9 +909,9 @@ object, but this setting overwrites it only for this call.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ordered</strong> (<em>bool</em>) &#8211; If True, the object uses ordered dictionaries;
+<li><strong>ordered</strong> (<em>bool</em>) – If True, the object uses ordered dictionaries;
 otherwise it uses normal dictionaries.</li>
-<li><strong>path</strong> (<em>bool</em>) &#8211; If True, return the current section as a subsection
+<li><strong>path</strong> (<em>bool</em>) – If True, return the current section as a subsection
 of the parent sections.</li>
 </ul>
 </td>
@@ -930,7 +923,7 @@ of the parent sections.</li>
 <dl class="method">
 <dt id="configfile.Section._recurse_tree">
 <code class="descname">_recurse_tree</code><span class="sig-paren">(</span><em>ordered=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._recurse_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._recurse_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary recursor for <a class="reference internal" href="#configfile.Section.get_tree" title="configfile.Section.get_tree"><code class="xref py py-meth docutils literal"><span class="pre">get_tree()</span></code></a>.</p>
+<dd><p>Auxiliary recursor for <a class="reference internal" href="#configfile.Section.get_tree" title="configfile.Section.get_tree"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_tree()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -942,12 +935,12 @@ of the parent sections.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>targets</strong> &#8211; A sequence with the target file names.</li>
-<li><strong>overwrite</strong> (<em>bool</em>) &#8211; This sets whether sections and options in the
+<li><strong>targets</strong> – A sequence with the target file names.</li>
+<li><strong>overwrite</strong> (<em>bool</em>) – This sets whether sections and options in the
 file are overwritten; see _import_object for more details.</li>
-<li><strong>add</strong> (<em>bool</em>) &#8211; This sets whether non-pre-existing sections and option
+<li><strong>add</strong> (<em>bool</em>) – This sets whether non-pre-existing sections and option
 are added; see _import_object for more details.</li>
-<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+<li><strong>path</strong> (<em>bool</em>) – If True, section names are exported with their full
 path.</li>
 </ul>
 </td>
@@ -963,14 +956,14 @@ path.</li>
 <p>If an option already exists, change its value; if it does not exist,
 create it and store its value. For example:</p>
 <p><em>{A:d,D:e} upgrade {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c,D:e}</em></p>
-<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a> for object compatibility.</p>
+<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_export_file()</span></code></a> for object compatibility.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>targets</strong> &#8211; A sequence with the target file names.</li>
-<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+<li><strong>targets</strong> – A sequence with the target file names.</li>
+<li><strong>path</strong> (<em>bool</em>) – If True, section names are exported with their full
 path.</li>
 </ul>
 </td>
@@ -986,14 +979,14 @@ path.</li>
 <p>If an option already exists, change its value; if it does not exist,
 do not do anything. For example:</p>
 <p><em>{A:d,D:e} update {A:a,B:b,C:c} =&gt; {A:d,B:b,C:c}</em></p>
-<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a> for object compatibility.</p>
+<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_export_file()</span></code></a> for object compatibility.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>targets</strong> &#8211; A sequence with the target file names.</li>
-<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+<li><strong>targets</strong> – A sequence with the target file names.</li>
+<li><strong>path</strong> (<em>bool</em>) – If True, section names are exported with their full
 path.</li>
 </ul>
 </td>
@@ -1009,14 +1002,14 @@ path.</li>
 <p>Delete all options and subsections and recreate everything from the
 importing object. For example:</p>
 <p><em>{A:d,D:e} reset {A:a,B:b,C:c} =&gt; {A:d,D:e}</em></p>
-<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a> for object compatibility.</p>
+<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_export_file()</span></code></a> for object compatibility.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>targets</strong> &#8211; A sequence with the target file names.</li>
-<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+<li><strong>targets</strong> – A sequence with the target file names.</li>
+<li><strong>path</strong> (<em>bool</em>) – If True, section names are exported with their full
 path.</li>
 </ul>
 </td>
@@ -1032,14 +1025,14 @@ path.</li>
 <p>If an option already exists, do not do anything; if it does not exist,
 create it and store its value. For example:</p>
 <p><em>{A:d,D:e} add {A:a,B:b,C:c} =&gt; {A:a,B:b,C:c,D:e}</em></p>
-<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a> for object compatibility.</p>
+<p>See <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_export_file()</span></code></a> for object compatibility.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>targets</strong> &#8211; A sequence with the target file names.</li>
-<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+<li><strong>targets</strong> – A sequence with the target file names.</li>
+<li><strong>path</strong> (<em>bool</em>) – If True, section names are exported with their full
 path.</li>
 </ul>
 </td>
@@ -1057,11 +1050,11 @@ path.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>efile</strong> (<em>str</em>) &#8211; The target file name.</li>
-<li><strong>overwrite</strong> (<em>bool</em>) &#8211; Whether sections and options already existing in
+<li><strong>efile</strong> (<em>str</em>) – The target file name.</li>
+<li><strong>overwrite</strong> (<em>bool</em>) – Whether sections and options already existing in
 the file are overwritten.</li>
-<li><strong>add</strong> (<em>bool</em>) &#8211; Whether non-pre-existing data will be exported.</li>
-<li><strong>path</strong> (<em>bool</em>) &#8211; If True, section names are exported with their full
+<li><strong>add</strong> (<em>bool</em>) – Whether non-pre-existing data will be exported.</li>
+<li><strong>path</strong> (<em>bool</em>) – If True, section names are exported with their full
 path.</li>
 </ul>
 </td>
@@ -1073,14 +1066,14 @@ path.</li>
 <dl class="method">
 <dt id="configfile.Section._export_file_existing_option">
 <code class="descname">_export_file_existing_option</code><span class="sig-paren">(</span><em>stream</em>, <em>line</em>, <em>re_option</em>, <em>readonly_section</em>, <em>remaining_options</em>, <em>overwrite</em>, <em>reset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._export_file_existing_option"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_existing_option" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a>.</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_export_file()</span></code></a>.</p>
 <p>Write the option currently examined from the destination file.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._export_file_remaining_options">
 <code class="descname">_export_file_remaining_options</code><span class="sig-paren">(</span><em>stream</em>, <em>readonly_section</em>, <em>remaining_options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._export_file_remaining_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_remaining_options" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a>.</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_export_file()</span></code></a>.</p>
 <p>Write the options from the origin object that were not found in the
 destination file.</p>
 </dd></dl>
@@ -1088,14 +1081,14 @@ destination file.</p>
 <dl class="method">
 <dt id="configfile.Section._export_file_existing_section">
 <code class="descname">_export_file_existing_section</code><span class="sig-paren">(</span><em>stream</em>, <em>line</em>, <em>re_section</em>, <em>ROOT_SECTION</em>, <em>BASE_SECTION</em>, <em>remaining_descendants</em>, <em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._export_file_existing_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_existing_section" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a>.</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_export_file()</span></code></a>.</p>
 <p>Write the section currently examined from the destination file.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._export_file_remaining_sections">
 <code class="descname">_export_file_remaining_sections</code><span class="sig-paren">(</span><em>stream</em>, <em>BASE_SECTION</em>, <em>remaining_descendants</em>, <em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._export_file_remaining_sections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_file_remaining_sections" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a>.</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_export_file()</span></code></a>.</p>
 <p>Write the sections and their options from the origin object that
 were not found in the destination file.</p>
 </dd></dl>
@@ -1103,13 +1096,13 @@ were not found in the destination file.</p>
 <dl class="method">
 <dt id="configfile.Section._export_other_lines">
 <code class="descname">_export_other_lines</code><span class="sig-paren">(</span><em>stream</em>, <em>other_lines</em>, <em>readonly_section</em>, <em>reset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._export_other_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_other_lines" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a>.</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_export_file()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="configfile.Section._export_other_lines_before_existing_section">
 <code class="descname">_export_other_lines_before_existing_section</code><span class="sig-paren">(</span><em>stream</em>, <em>other_lines</em>, <em>readonly_section</em>, <em>reset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#Section._export_other_lines_before_existing_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.Section._export_other_lines_before_existing_section" title="Permalink to this definition">¶</a></dt>
-<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal"><span class="pre">_export_file()</span></code></a>.</p>
+<dd><p>Auxiliary method for <a class="reference internal" href="#configfile.Section._export_file" title="configfile.Section._export_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_export_file()</span></code></a>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1117,7 +1110,7 @@ were not found in the destination file.</p>
 <dl class="class">
 <dt id="configfile.ConfigFile">
 <em class="property">class </em><code class="descclassname">configfile.</code><code class="descname">ConfigFile</code><span class="sig-paren">(</span><em>*sources</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/configfile.html#ConfigFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.ConfigFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#configfile.Section" title="configfile.Section"><code class="xref py py-class docutils literal"><span class="pre">configfile.Section</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#configfile.Section" title="configfile.Section"><code class="xref py py-class docutils literal notranslate"><span class="pre">configfile.Section</span></code></a></p>
 <p>The main configuration object.</p>
 <dl class="method">
 <dt id="configfile.ConfigFile.__init__">
@@ -1129,23 +1122,23 @@ were not found in the destination file.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>sources</strong> (str, dict or special object (see
-<a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal"><span class="pre">Section._import_object()</span></code></a>)) &#8211; A sequence of all the files, file-like objects,
+<a class="reference internal" href="#configfile.Section._import_object" title="configfile.Section._import_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Section._import_object()</span></code></a>)) – A sequence of all the files, file-like objects,
 dictionaries and special objects to be parsed.</li>
-<li><strong>mode</strong> (<em>str</em>) &#8211; This sets if and how the next source in the chain
+<li><strong>mode</strong> (<em>str</em>) – This sets if and how the next source in the chain
 overwrites already imported sections and options; available choices
-are <code class="docutils literal"><span class="pre">'upgrade'</span></code>, <code class="docutils literal"><span class="pre">'update'</span></code>, <code class="docutils literal"><span class="pre">'reset'</span></code> and <code class="docutils literal"><span class="pre">'add'</span></code> (see the
+are <code class="docutils literal notranslate"><span class="pre">'upgrade'</span></code>, <code class="docutils literal notranslate"><span class="pre">'update'</span></code>, <code class="docutils literal notranslate"><span class="pre">'reset'</span></code> and <code class="docutils literal notranslate"><span class="pre">'add'</span></code> (see the
 respective methods for more details).</li>
-<li><strong>safe_calls</strong> (<em>bool</em>) &#8211; If True, when calling a non-existent
+<li><strong>safe_calls</strong> (<em>bool</em>) – If True, when calling a non-existent
 subsection, its closest existing ancestor is returned.</li>
-<li><strong>inherit_options</strong> (<em>bool</em>) &#8211; If True, if an option is not found in a
+<li><strong>inherit_options</strong> (<em>bool</em>) – If True, if an option is not found in a
 section, it is searched in the parent sections.</li>
-<li><strong>ignore_case</strong> (<em>bool</em>) &#8211; If True, section and option names will be
+<li><strong>ignore_case</strong> (<em>bool</em>) – If True, section and option names will be
 compared ignoring case differences; regular expressions will use
-<code class="docutils literal"><span class="pre">re.I</span></code> flag.</li>
-<li><strong>subsections</strong> (<em>bool</em>) &#8211; If True (default) subsections are allowed.</li>
-<li><strong>interpolation</strong> (<em>bool</em>) &#8211; If True, option values will be interpolated
+<code class="docutils literal notranslate"><span class="pre">re.I</span></code> flag.</li>
+<li><strong>subsections</strong> (<em>bool</em>) – If True (default) subsections are allowed.</li>
+<li><strong>interpolation</strong> (<em>bool</em>) – If True, option values will be interpolated
 using values from other options through the special syntax
-<code class="docutils literal"><span class="pre">${section$:section$:option$}</span></code>. Options will be interpolated only
+<code class="docutils literal notranslate"><span class="pre">${section$:section$:option$}</span></code>. Options will be interpolated only
 once at importing: all links among options will be lost after
 importing.</li>
 </ul>
@@ -1160,35 +1153,35 @@ importing.</li>
 <dl class="exception">
 <dt id="configfile.ConfigFileError">
 <em class="property">exception </em><code class="descclassname">configfile.</code><code class="descname">ConfigFileError</code><a class="reference internal" href="_modules/configfile.html#ConfigFileError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.ConfigFileError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>The root exception, useful for catching generic errors from this module.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="configfile.ParsingError">
 <em class="property">exception </em><code class="descclassname">configfile.</code><code class="descname">ParsingError</code><a class="reference internal" href="_modules/configfile.html#ParsingError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.ParsingError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><code class="xref py py-class docutils literal"><span class="pre">configfile.ConfigFileError</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><code class="xref py py-class docutils literal notranslate"><span class="pre">configfile.ConfigFileError</span></code></a></p>
 <p>An error, overcome at parse time, due to bad file formatting.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="configfile.NonExistentFileError">
 <em class="property">exception </em><code class="descclassname">configfile.</code><code class="descname">NonExistentFileError</code><a class="reference internal" href="_modules/configfile.html#NonExistentFileError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.NonExistentFileError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><code class="xref py py-class docutils literal"><span class="pre">configfile.ConfigFileError</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><code class="xref py py-class docutils literal notranslate"><span class="pre">configfile.ConfigFileError</span></code></a></p>
 <p>A non-existent configuration file.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="configfile.InvalidFileError">
 <em class="property">exception </em><code class="descclassname">configfile.</code><code class="descname">InvalidFileError</code><a class="reference internal" href="_modules/configfile.html#InvalidFileError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.InvalidFileError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><code class="xref py py-class docutils literal"><span class="pre">configfile.ConfigFileError</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><code class="xref py py-class docutils literal notranslate"><span class="pre">configfile.ConfigFileError</span></code></a></p>
 <p>An invalid configuration file.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="configfile.InvalidObjectError">
 <em class="property">exception </em><code class="descclassname">configfile.</code><code class="descname">InvalidObjectError</code><a class="reference internal" href="_modules/configfile.html#InvalidObjectError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#configfile.InvalidObjectError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><code class="xref py py-class docutils literal"><span class="pre">configfile.ConfigFileError</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#configfile.ConfigFileError" title="configfile.ConfigFileError"><code class="xref py py-class docutils literal notranslate"><span class="pre">configfile.ConfigFileError</span></code></a></p>
 <p>An invalid key found in an importing object.</p>
 </dd></dl>
 
@@ -1201,9 +1194,9 @@ importing.</li>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
+  <h3><a href="#">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Welcome to ConfigFile&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#">Welcome to ConfigFile’s documentation!</a><ul>
 <li><a class="reference internal" href="#examples">Examples</a><ul>
 <li><a class="reference internal" href="#basic-usage">Basic usage</a></li>
 <li><a class="reference internal" href="#interpolation">Interpolation</a></li>
@@ -1217,21 +1210,20 @@ importing.</li>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/index.txt"
+      <li><a href="_sources/index.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1247,12 +1239,12 @@ importing.</li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">ConfigFile 1.2.2 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="#">ConfigFile 1.2.4 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2011-2015, Dario Giovannetti.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+        &#169; Copyright 2011-present, Dario Giovannetti.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

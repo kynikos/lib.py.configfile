@@ -1,5 +1,5 @@
 ConfigFile class - Dynamically parse and edit configuration files.
 
-License: GPLv3 (see LICENSE).
+License: MIT (see LICENSE).
 
 Documentation: https://kynikos.github.io/lib.py.configfile/

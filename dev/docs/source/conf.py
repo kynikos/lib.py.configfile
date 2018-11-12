@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'ConfigFile'
-copyright = '2011-2015, Dario Giovannetti'
+copyright = '2011-present, Dario Giovannetti'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
